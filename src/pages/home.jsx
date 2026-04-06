@@ -1,0 +1,114 @@
+import { Link } from "react-router-dom";
+import { FaCheckCircle, FaCode, FaLightbulb, FaRocket } from "react-icons/fa";
+import CompanySlider from "../utils/slideshow";
+import Hero from "../components/sections/hero";
+import OurServices from "../components/sections/ourservices";
+import VerticalTabs from "../components/verticaltabs";
+import Servicesslide from "../components/sections/Servicesslide";
+import StatsSection from "../components/sections/BusinessSection";
+import QuickContact from "../components/sections/Quickcontact";
+import Subscription from "../components/sections/subscription";
+import SEO from "../utils/seo";
+import CataloguePreview from "../components/sections/CataloguePreview";
+import TestimonialSection from "../components/sections/TestimonialSection";
+
+const pillars = [
+  { title:"Product Strategy",     text:"Clear discovery, scope definition, and execution roadmap aligned to your business goals.", Icon:FaLightbulb },
+  { title:"Design & Experience",  text:"Modern visual systems and user journeys built for trust, usability, and conversion.",     Icon:FaCheckCircle },
+  { title:"Engineering Delivery", text:"Scalable frontend/backend implementation with performance and quality assurance.",         Icon:FaCode },
+  { title:"Launch & Growth",      text:"Post-launch support, optimization, and continuous improvements for measurable impact.",   Icon:FaRocket },
+];
+
+const processFlow = [
+  { step:"01", title:"Discovery Session", text:"We map your goals, audience, and product priorities to define a practical plan." },
+  { step:"02", title:"Design & Build",    text:"Our team designs and implements digital assets with quality checks at every stage." },
+  { step:"03", title:"Deploy & Support",  text:"We launch, monitor, and optimize with ongoing support based on data and feedback." },
+];
+
+export default function Home() {
+  return (
+    <div className="bg-[#120b1f] text-[#e8ddf8]">
+      <SEO
+        title="Lasglowtech | Web Development, Tutoring, Service Catalogue & Instant Checkout Nigeria"
+        description="Lasglowtech delivers web and mobile development, UI/UX design, professional IT tutoring and training, and a service catalogue with instant checkout. Nigeria's growth-focused digital partner."
+        keywords="Lasglowtech, web development Nigeria, mobile app development, UI UX design, IT tutoring, tech training Nigeria, service catalogue, instant checkout, digital agency Nigeria"
+        url="https://www.lasglowtech.com.ng"
+      />
+
+      <Hero />
+      <CompanySlider />
+      <VerticalTabs />
+      <OurServices />
+
+      {/* Why Lasglowtech */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#1a1030]">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center max-w-3xl mx-auto mb-14">
+            <span className="section-tag justify-center"><span className="dot-live" />Why Lasglowtech</span>
+            <h2 className="font-extrabold text-3xl md:text-4xl text-white tracking-tight mb-4">Built for brands that want results</h2>
+            <p className="text-[#9b8cb5] leading-relaxed">We combine product thinking, design excellence, and technical depth to help businesses launch and scale with confidence.</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {pillars.map(({ title, text, Icon }) => (
+              <div key={title} className="brand-card p-6 group">
+                <div className="w-11 h-11 rounded-xl bg-[#8700ff]/15 flex items-center justify-center mb-5 group-hover:bg-[#8700ff]/25 transition-colors">
+                  <Icon className="w-5 h-5 text-[#8700ff]" />
+                </div>
+                <h3 className="font-bold text-base text-white mb-3 group-hover:text-orange-500 transition-colors">{title}</h3>
+                <p className="text-xs text-[#9b8cb5] leading-relaxed">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How we deliver */}
+      <section className="py-20 md:py-28 px-6 md:px-12 bg-[#120b1f]">
+        <div className="max-w-7xl mx-auto">
+          <div className="brand-card overflow-hidden">
+            <div className="px-6 md:px-10 py-6 border-b border-[#8700ff]/15">
+              <span className="section-tag"><span className="dot-live" />Execution model</span>
+              <h2 className="font-extrabold text-2xl md:text-3xl text-white tracking-tight">How we deliver</h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
+              {processFlow.map((item, i) => (
+                <div key={item.step} className={`p-6 md:p-8 ${i < processFlow.length - 1 ? "md:border-r border-[#8700ff]/15" : ""}`}>
+                  <p className="font-extrabold text-2xl text-orange-500 mb-3">{item.step}</p>
+                  <h3 className="font-bold text-base text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-[#9b8cb5] leading-relaxed">{item.text}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA links */}
+      <section className="py-16 px-6 md:px-12 bg-[#1a1030] border-t border-[#8700ff]/15">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="font-extrabold text-2xl md:text-3xl text-white text-center mb-8 tracking-tight">More ways to work with us</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {[
+              { to:"/careers", title:"Tutoring & training", desc:"Structured programmes to upskill your team or start a career in tech — with real-world projects and LMS access.", cta:"Explore careers & learning →" },
+              { to:"/catalogues", title:"Service catalogue & instant checkout", desc:"Choose a fixed-price package, pay online, and get started. No lengthy quotes — browse and checkout instantly.", cta:"Browse catalogue →" },
+            ].map(({ to, title, desc, cta }) => (
+              <Link key={to} to={to} className="brand-card p-6 group block">
+                <h3 className="font-bold text-base text-white mb-2 group-hover:text-orange-500 transition-colors">{title}</h3>
+                <p className="text-sm text-[#9b8cb5] leading-relaxed mb-4">{desc}</p>
+                <span className="text-sm font-bold text-[#8700ff] group-hover:translate-x-1 inline-block transition-transform">{cta}</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CataloguePreview />
+      <Servicesslide />
+      <TestimonialSection />
+      <StatsSection />
+      <QuickContact />
+      <Subscription />
+    </div>
+  );
+}
+
