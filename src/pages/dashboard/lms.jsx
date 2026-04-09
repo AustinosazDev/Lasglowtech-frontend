@@ -18,6 +18,9 @@ const QUILL_MODULES = {
   ],
 };
 const QUILL_FORMATS = ["header", "bold", "italic", "underline", "strike", "list", "bullet", "link"];
+const certificateAssetBaseUrl = (instance.defaults.baseURL || "").replace(/\/$/, "");
+const buildCertificateLogoUrl = (version = Date.now()) =>
+  certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png?t=${version}` : "";
 
 const defaultCourse = {
   id: null,
@@ -68,6 +71,8 @@ const LmsAdmin = () => {
     signatureLabel: "Authorized Signatory",
   });
   const [resourcePdfUploading, setResourcePdfUploading] = useState(false);
+  const [certificateLogoUploading, setCertificateLogoUploading] = useState(false);
+  const [certificateLogoVersion, setCertificateLogoVersion] = useState(Date.now());
   const [certificateSettings, setCertificateSettings] = useState({
     defaultMessage: "",
     defaultSignatureLabel: "Authorized Signatory",
@@ -75,6 +80,7 @@ const LmsAdmin = () => {
   const [certSettingsSaving, setCertSettingsSaving] = useState(false);
   const selectedModuleCourseId = moduleForm.courseId || "";
   const certificatePreviewRef = useRef(null);
+  const certificateLogoUrl = useMemo(() => buildCertificateLogoUrl(certificateLogoVersion), [certificateLogoVersion]);
 
   const loadCourses = async () => {
     setLoading(true);
@@ -281,6 +287,30 @@ const LmsAdmin = () => {
       toast.error(err.response?.data?.error || "PDF upload failed.");
     } finally {
       setResourcePdfUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const uploadCertificateLogo = async (e) => {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type) && !/\.(png|jpe?g|webp)$/i.test(file.name)) {
+      toast.error("Please select a PNG, JPG, or WEBP logo.");
+      return;
+    }
+    setCertificateLogoUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await instance.post("/admin/upload/certificate-logo", formData, {
+        headers: { ...headers, "Content-Type": undefined },
+      });
+      setCertificateLogoVersion(Date.now());
+      toast.success("Certificate logo updated.");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Logo upload failed.");
+    } finally {
+      setCertificateLogoUploading(false);
       e.target.value = "";
     }
   };
@@ -760,23 +790,29 @@ const LmsAdmin = () => {
             <div className="brand-card p-4 md:p-5 bg-white/5">
               <CertificatePreview
                 recipientName="Precious Abdul"
-                courseName="Graphic Design"
-                date="2026-08-02"
-                certificateCode="8726315"
-                signatureLabel={certificateSettings.defaultSignatureLabel || "Director's Sign"}
+                courseName="Freelancing and Client Acquisition"
+                date="2026-04-09"
+                certificateCode="LGT-CERT-2"
+                signatureLabel={certificateSettings.defaultSignatureLabel || "Authorized Signatory"}
                 bodyMessage={
                   certificateSettings.defaultMessage ||
                   "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career."
                 }
+                logoUrl={certificateLogoUrl}
               />
             </div>
             <div className="brand-card p-5">
-              <p className="text-sm font-medium text-textcolor2 mb-2">What changed</p>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li>The old certificate artwork has been removed.</li>
-                <li>Preview, issued certificates, learner downloads, and email attachments now share one design.</li>
-                <li>Batch issue is available from the enrollments tab.</li>
-              </ul>
+              <p className="text-sm font-medium text-textcolor2 mb-2">Certificate assets</p>
+              <p className="text-sm text-gray-400 mb-4">
+                Upload the Lasglowtech certificate logo here. It will be reused across admin preview, issued certificates, learner downloads, and email attachments.
+              </p>
+              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors cursor-pointer">
+                <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={uploadCertificateLogo} />
+                {certificateLogoUploading ? "Uploading..." : "Upload Certificate Logo"}
+              </label>
+              <p className="text-xs text-gray-500 mt-3">
+                Best fit: upload a transparent wordmark logo like the PDF sample so the top-left header stays aligned.
+              </p>
             </div>
           </div>
 
@@ -1098,6 +1134,7 @@ const LmsAdmin = () => {
               <div className="brand-card p-4 bg-white/5">
                 <CertificatePreview
                   ref={certificatePreviewRef}
+                  logoUrl={certificateLogoUrl}
                   recipientName={
                     issueCertBatchMode
                       ? `${selectedEnrollmentIds.length} Learners`
@@ -1106,7 +1143,7 @@ const LmsAdmin = () => {
                   courseName={issueCertBatchMode ? "Lasglowtech Programmes" : issueCertEnrollment.courseTitle}
                   date={issueCertForm.signedDate}
                   certificateCode={issueCertBatchMode ? `LGT-BATCH-${selectedEnrollmentIds.length}` : `LGT-CERT-${issueCertEnrollment.enrollmentId || "PREVIEW"}`}
-                  signatureLabel={issueCertForm.signatureLabel || "Director's Sign"}
+                  signatureLabel={issueCertForm.signatureLabel || "Authorized Signatory"}
                   bodyMessage={
                     issueCertForm.bodyMessage ||
                     "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career."

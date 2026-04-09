@@ -89,6 +89,8 @@ const courseFallbacks = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200",
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200",
 ];
+const certificateAssetBaseUrl = (instance.defaults.baseURL || "").replace(/\/$/, "");
+const certificateLogoUrl = certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png` : "";
 
 const resolveAssetUrl = (url = "") => {
   if (!url) return "";
@@ -1199,6 +1201,7 @@ const CareersDashboard = () => {
         <div className="fixed -left-[9999px] top-0 w-[1400px] pointer-events-none opacity-0">
           <CertificatePreview
             ref={certificatePreviewRef}
+            logoUrl={certificateLogoUrl}
             recipientName={certificatePreviewData.recipientName}
             courseName={certificatePreviewData.courseName}
             date={certificatePreviewData.date}
@@ -1235,6 +1238,7 @@ const CareersDashboard = () => {
               </div>
             </div>
             <CertificatePreview
+              logoUrl={certificateLogoUrl}
               recipientName={certificatePreviewData.recipientName}
               courseName={certificatePreviewData.courseName}
               date={certificatePreviewData.date}
