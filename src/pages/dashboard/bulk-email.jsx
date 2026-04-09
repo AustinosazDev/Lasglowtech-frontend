@@ -89,7 +89,7 @@ const BulkEmailAdmin = () => {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h1 className="text-xl font-semibold text-textcolor2">Bulk email campaigns</h1>
           <p className="text-sm text-gray-500 mt-0.5">Send updates to manual emails or CSV exported from Excel.</p>
@@ -152,7 +152,7 @@ const BulkEmailAdmin = () => {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h2 className="text-xl font-semibold text-textcolor2">Send from CSV (Excel export)</h2>
           <p className="text-sm text-gray-500 mt-0.5">Upload a .csv file with any column containing emails.</p>
@@ -176,7 +176,7 @@ const BulkEmailAdmin = () => {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-lg font-semibold text-textcolor2">Recent campaigns</h3>
           <p className="text-sm text-gray-500 mt-0.5">History of sent bulk emails.</p>
@@ -186,7 +186,7 @@ const BulkEmailAdmin = () => {
         {!!campaigns.length && (
           <div className="space-y-4">
             {campaigns.map((item) => (
-              <article key={item.id} className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-4 hover:border-Primarycolor/30 transition-colors">
+              <article key={item.id} className="brand-card p-4">
                 <p className="font-semibold text-textcolor2">{item.subject}</p>
                 <p className="text-xs text-gray-400 mt-1">
                   Recipients: {item.total_recipients} · Sent: {item.total_sent} · Failed: {item.total_failed}

@@ -1,8 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import html2canvas from "html2canvas";
 import {
   FaChartLine,
   FaFileAlt,
@@ -27,6 +28,7 @@ import { jsPDF } from "jspdf";
 import instance from "../config/axios.config";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
+import CertificatePreview from "../components/certificate-preview";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -145,6 +147,10 @@ const CareersDashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [personalNotes, setPersonalNotes] = useState("");
+  const [certificatePreviewData, setCertificatePreviewData] = useState(null);
+  const [certificatePreviewOpen, setCertificatePreviewOpen] = useState(false);
+  const [certificateActionKey, setCertificateActionKey] = useState("");
+  const certificatePreviewRef = useRef(null);
 
   const firstName = String(latest?.full_name || user?.username || "Learner").split(" ")[0];
 
@@ -317,43 +323,81 @@ const CareersDashboard = () => {
     }
   };
 
-  /** Certificate is issued only when all modules are completed (100% progress). */
-  const fetchCertificateHtml = async (enrollmentId) => {
-    const res = await instance.get(`/lms/my/enrollments/${enrollmentId}/certificate`, {
-      headers: { Authorization: `Bearer ${token}` },
-      responseType: "blob",
+  const waitForPreviewRender = () =>
+    new Promise((resolve) => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(resolve);
+      });
     });
-    return new Blob([res.data], { type: "text/html;charset=utf-8" });
+
+  const buildCertificateFilename = (certificateData, fallbackTitle = "course") => {
+    const title = certificateData?.courseName || fallbackTitle || "course";
+    const slug = String(title)
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const code = String(certificateData?.certificateCode || "")
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+
+    return `${slug || "certificate"}${code ? `-${code}` : ""}.pdf`;
+  };
+
+  const fetchCertificateData = async (enrollmentId) => {
+    const res = await instance.get(`/lms/my/enrollments/${enrollmentId}/certificate-data`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  };
+
+  const downloadCertificatePdf = async (certificateData, fallbackTitle) => {
+    setCertificatePreviewData(certificateData);
+    await waitForPreviewRender();
+    const element = certificatePreviewRef.current;
+    if (!element) {
+      throw new Error("Certificate preview could not be prepared.");
+    }
+
+    const canvas = await html2canvas(element, {
+      backgroundColor: "#ffffff",
+      scale: 2,
+      useCORS: true,
+    });
+    const imageData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [canvas.width, canvas.height],
+    });
+    pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
+    pdf.save(buildCertificateFilename(certificateData, fallbackTitle));
   };
 
   const downloadCertificate = async (enrollmentId, courseTitle) => {
     try {
-      const blob = await fetchCertificateHtml(enrollmentId);
-      const href = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = href;
-      link.download = `certificate-${String(courseTitle || "course").replace(/\s+/g, "-").toLowerCase()}.html`;
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      URL.revokeObjectURL(href);
+      setCertificateActionKey(`download-${enrollmentId}`);
+      const certificateData = await fetchCertificateData(enrollmentId);
+      await downloadCertificatePdf(certificateData, courseTitle);
     } catch (err) {
       toast.error(err.response?.data?.error || "Certificate not available yet.");
+    } finally {
+      setCertificateActionKey("");
     }
   };
 
   const previewCertificate = async (enrollmentId) => {
     try {
-      const blob = await fetchCertificateHtml(enrollmentId);
-      const href = URL.createObjectURL(blob);
-      const w = window.open(href, "_blank", "noopener,noreferrer");
-      if (w) setTimeout(() => URL.revokeObjectURL(href), 10000);
-      else {
-        URL.revokeObjectURL(href);
-        toast.info("Popup blocked? Try Download Certificate instead.");
-      }
+      setCertificateActionKey(`preview-${enrollmentId}`);
+      const certificateData = await fetchCertificateData(enrollmentId);
+      setCertificatePreviewData(certificateData);
+      setCertificatePreviewOpen(true);
     } catch (err) {
       toast.error(err.response?.data?.error || "Certificate not available yet.");
+    } finally {
+      setCertificateActionKey("");
     }
   };
 
@@ -465,17 +509,17 @@ const CareersDashboard = () => {
                     <h2 className="text-xl font-semibold text-textcolor2 mb-1">Overview</h2>
                     <p className="text-sm text-gray-500 mb-5">Your activity at a glance</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                      <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 hover:shadow-lg hover:shadow-Primarycolor/5 transition-all duration-200">
+                      <article className="brand-card p-6">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Applications</p>
                         <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{applications.length}</p>
                         <p className="text-sm text-gray-400 mt-1">Career applications submitted</p>
                       </article>
-                      <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 hover:shadow-lg hover:shadow-Primarycolor/5 transition-all duration-200">
+                      <article className="brand-card p-6">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Enrolled</p>
                         <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{enrollments.length}</p>
                         <p className="text-sm text-gray-400 mt-1">Active courses</p>
                       </article>
-                      <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 hover:shadow-lg hover:shadow-Primarycolor/5 transition-all duration-200">
+                      <article className="brand-card p-6">
                         <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Latest status</p>
                         <p className="mt-2">
                           <span
@@ -490,7 +534,7 @@ const CareersDashboard = () => {
                       </article>
                     </div>
                   </div>
-                  <div className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6">
+                  <div className="brand-card p-6">
                     <h2 className="text-lg font-semibold text-textcolor2 mb-1">Quick actions</h2>
                     <p className="text-sm text-gray-400 mb-5">Jump to a section from the sidebar or use the buttons below.</p>
                     <div className="flex flex-wrap gap-3">
@@ -522,7 +566,7 @@ const CareersDashboard = () => {
 
               {/* Applications */}
               {activeSection === "applications" && (
-                <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+                <section className="brand-card overflow-hidden">
                   <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <div>
                       <h2 className="text-xl font-semibold text-textcolor2">Career application</h2>
@@ -586,7 +630,7 @@ const CareersDashboard = () => {
 
               {/* My Learning */}
               {activeSection === "learning" && (
-                <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+                <section className="brand-card overflow-hidden">
                   <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <h2 className="text-xl font-semibold text-textcolor2">My learning progress</h2>
                     <p className="text-sm text-gray-500 mt-0.5">Progress across enrolled courses</p>
@@ -599,7 +643,7 @@ const CareersDashboard = () => {
                     {enrollments.map((en) => (
                       <article
                         key={en.enrollmentId}
-                        className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-6 hover:border-Primarycolor/30 transition-colors"
+                        className="brand-card p-6"
                       >
                         <div className="flex flex-wrap items-center justify-between gap-2">
                           <p className="font-semibold text-textcolor2">{en.course.title}</p>
@@ -634,16 +678,18 @@ const CareersDashboard = () => {
                                 <button
                                   type="button"
                                   onClick={() => previewCertificate(en.enrollmentId)}
+                                  disabled={certificateActionKey === `preview-${en.enrollmentId}` || certificateActionKey === `download-${en.enrollmentId}`}
                                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors"
                                 >
-                                  <FaExternalLinkAlt /> Preview Certificate
+                                  <FaExternalLinkAlt /> {certificateActionKey === `preview-${en.enrollmentId}` ? "Loading..." : "Preview Certificate"}
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => downloadCertificate(en.enrollmentId, en.course.title)}
+                                  disabled={certificateActionKey === `download-${en.enrollmentId}` || certificateActionKey === `preview-${en.enrollmentId}`}
                                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 text-sm transition-colors"
                                 >
-                                  <FaDownload /> Download Certificate
+                                  <FaDownload /> {certificateActionKey === `download-${en.enrollmentId}` ? "Preparing PDF..." : "Download Certificate"}
                                 </button>
                               </>
                             )}
@@ -662,7 +708,7 @@ const CareersDashboard = () => {
 
               {/* Course Modules (LMS) – hierarchical weeks + mobile bottom tabs */}
               {activeSection === "modules" && (
-                <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+                <section className="brand-card overflow-hidden">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <div>
                       <h2 className="text-xl font-semibold text-textcolor2">Course modules</h2>
@@ -734,7 +780,7 @@ const CareersDashboard = () => {
                             moduleSidebarOpen ? "md:w-80 flex-shrink-0" : "md:w-0 md:overflow-hidden md:opacity-0"
                           } hidden md:block transition-all duration-300 ease-in-out`}
                         >
-                          <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-4 sticky top-24">
+                          <div className="brand-card p-4 sticky top-24">
                             {enrollments.find((e) => String(e.enrollmentId) === String(selectedEnrollmentId)) && (
                               <>
                                 <p className="text-sm font-semibold text-textcolor2 mb-1">
@@ -830,7 +876,7 @@ const CareersDashboard = () => {
 
                         {/* Mobile: show either list or content based on tab */}
                         {mobileModulesTab === "modules" && (
-                          <div className="md:hidden w-full rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-4">
+                          <div className="md:hidden w-full brand-card p-4">
                             <p className="text-sm font-semibold text-textcolor2 mb-3">Lessons</p>
                             <input
                               type="text"
@@ -887,7 +933,7 @@ const CareersDashboard = () => {
                         )}
 
                         {/* Module content – hidden on mobile when Modules tab is active */}
-                        <article className={`flex-1 min-w-0 rounded-xl border border-Primarycolor/20 bg-bgcolor/30 p-6 ${mobileModulesTab === "modules" ? "hidden md:block" : ""}`}>
+                        <article className={`flex-1 min-w-0 brand-card p-6 ${mobileModulesTab === "modules" ? "hidden md:block" : ""}`}>
                         {!selectedModule && (
                           <p className="text-gray-400 text-sm">Select a module from the list to view content.</p>
                         )}
@@ -918,7 +964,7 @@ const CareersDashboard = () => {
 
                             {/* PDF document viewer – admin-uploaded course note (reference-style) */}
                             {!!selectedModule.resourceUrl && isPdfResource(selectedModule.resourceUrl) && (
-                              <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/40 overflow-hidden">
+                              <div className="brand-card overflow-hidden">
                                 <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-Primarycolor/20 bg-bgcolor/50">
                                   <span className="text-sm font-semibold text-textcolor2 truncate pr-2">
                                     {selectedModule.title}
@@ -955,7 +1001,7 @@ const CareersDashboard = () => {
 
                             {/* Course notes – text/HTML (when no PDF or in addition) */}
                             {!!selectedModule.moduleContent && (
-                              <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/40 overflow-hidden">
+                              <div className="brand-card overflow-hidden">
                                 <div className="flex items-center justify-between gap-3 px-5 py-3 border-b border-Primarycolor/20 bg-bgcolor/30">
                                   <span className="text-sm font-semibold text-textcolor2">Course notes</span>
                                   <button
@@ -986,7 +1032,7 @@ const CareersDashboard = () => {
                               const videoUrl = selectedModule.videoUrl;
                               const ytId = getYouTubeVideoId(videoUrl);
                               return (
-                                <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/40 p-4">
+                                <div className="brand-card p-4">
                                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Video – watch without leaving the site</p>
                                   {ytId ? (
                                     <div className="w-full rounded-lg overflow-hidden bg-black aspect-video">
@@ -1013,7 +1059,7 @@ const CareersDashboard = () => {
                             })()}
 
                             {/* My notes */}
-                            <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/40 overflow-hidden">
+                            <div className="brand-card overflow-hidden">
                               <div className="flex items-center gap-2 px-5 py-3 border-b border-Primarycolor/20 bg-bgcolor/30">
                                 <FaStickyNote className="w-4 h-4 text-Secondarycolor" />
                                 <span className="text-sm font-semibold text-textcolor2">My notes</span>
@@ -1046,7 +1092,7 @@ const CareersDashboard = () => {
 
                             {/* References */}
                             {!!selectedModule.referenceLinks?.length && (
-                              <div className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/40 p-4">
+                              <div className="brand-card p-4">
                                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">References</p>
                                 <ul className="space-y-2">
                                   {selectedModule.referenceLinks.map((link) => (
@@ -1105,7 +1151,7 @@ const CareersDashboard = () => {
 
               {/* Browse Courses */}
               {activeSection === "browse" && (
-                <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+                <section className="brand-card overflow-hidden">
                   <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <h2 className="text-xl font-semibold text-textcolor2">Available courses</h2>
                     <p className="text-sm text-gray-500 mt-0.5">Enroll to start your learning path</p>
@@ -1115,7 +1161,7 @@ const CareersDashboard = () => {
                     {courses.map((course) => (
                       <article
                         key={course.id}
-                        className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 overflow-hidden hover:border-Primarycolor/40 hover:shadow-lg hover:shadow-Primarycolor/5 transition-all duration-200"
+                        className="brand-card overflow-hidden"
                       >
                         <img
                           src={course.imageUrl || courseFallbacks[course.id % courseFallbacks.length]}
@@ -1148,6 +1194,57 @@ const CareersDashboard = () => {
           )}
         </div>
       </main>
+
+      {certificatePreviewData && (
+        <div className="fixed -left-[9999px] top-0 w-[1400px] pointer-events-none opacity-0">
+          <CertificatePreview
+            ref={certificatePreviewRef}
+            recipientName={certificatePreviewData.recipientName}
+            courseName={certificatePreviewData.courseName}
+            date={certificatePreviewData.date}
+            certificateCode={certificatePreviewData.certificateCode}
+            signatureLabel={certificatePreviewData.signatureLabel}
+            bodyMessage={certificatePreviewData.bodyMessage}
+          />
+        </div>
+      )}
+
+      {certificatePreviewOpen && certificatePreviewData && (
+        <div className="fixed inset-0 z-[70] bg-black/75 backdrop-blur-sm p-4 md:p-8 flex items-center justify-center">
+          <div className="brand-card w-full max-w-6xl max-h-[95vh] overflow-auto p-4 md:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+              <div>
+                <h3 className="text-xl font-semibold text-textcolor2">Certificate Preview</h3>
+                <p className="text-sm text-gray-400">Your issued Lasglowtech certificate is ready for PDF download.</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => downloadCertificatePdf(certificatePreviewData, certificatePreviewData.courseName)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 text-sm transition-colors"
+                >
+                  <FaDownload /> Download PDF
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCertificatePreviewOpen(false)}
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+            <CertificatePreview
+              recipientName={certificatePreviewData.recipientName}
+              courseName={certificatePreviewData.courseName}
+              date={certificatePreviewData.date}
+              certificateCode={certificatePreviewData.certificateCode}
+              signatureLabel={certificatePreviewData.signatureLabel}
+              bodyMessage={certificatePreviewData.bodyMessage}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Mobile bottom nav – icon tabs for more viewBox (reference style) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm py-2 safe-area-pb">

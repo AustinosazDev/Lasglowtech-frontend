@@ -39,19 +39,15 @@ const CataloguePreview = () => {
             <p className="text-xs uppercase tracking-[0.2em] text-Secondarycolor">Marketplace</p>
             <h2 className="text-xl md:text-2xl font-semibold text-textcolor2 mt-2">Browse Premium Service Catalogues</h2>
             <p className="text-muted text-sm max-w-2xl mt-2">
-              Pick a service package, pay online, and get started fast. Our catalogue supports <strong className="text-textcolor2">instant checkout</strong> You can also explore our <strong className="text-textcolor2"> careerg</strong> programmes.
+              Pick a service package, pay online, and get started fast. Our catalogue supports <strong className="text-textcolor2">instant checkout</strong> and clear detail pages before payment.
             </p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {items.map((item, index) => (
-            <Link key={item.id} to="/catalogues" className="block">
-              <article
-                className={`rounded-xl border overflow-hidden bg-bgcolor hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 ${
-                  item.isPopular ? "border-Secondarycolor/60 shadow-Secondarycolor/20" : "border-Primarycolor/30 hover:shadow-Primarycolor/20"
-                }`}
-              >
+            <Link key={item.id} to={`/catalogues/${item.slug}`} className="block">
+              <article className={`brand-card rounded-xl overflow-hidden ${item.isPopular ? "ring-1 ring-Secondarycolor/40" : ""}`}>
                 <img
                   src={cardImage(item, index)}
                   alt={item.title}
@@ -70,15 +66,6 @@ const CataloguePreview = () => {
                   </div>
                   <h3 className="text-base font-semibold text-textcolor2">{item.title}</h3>
                   <p className="text-sm text-muted mt-1">{item.summary}</p>
-                  {!!item.features?.length && (
-                    <ul className="mt-3 space-y-1">
-                      {item.features.slice(0, 2).map((feature) => (
-                        <li key={feature} className="text-xs text-muted">
-                          • {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                   {item.isPaymentEnabled && (
                     <p className="text-base font-semibold text-Secondarycolor mt-4">{formatNaira(item.price)}</p>
                   )}
@@ -87,7 +74,7 @@ const CataloguePreview = () => {
             </Link>
           ))}
           {!items.length && (
-            <div className="col-span-full rounded-xl border border-Primarycolor/20 p-6 text-muted">
+            <div className="col-span-full brand-card p-6 text-muted">
               Catalogue preview will appear after admin creates and publishes catalogue items.
             </div>
           )}
@@ -98,4 +85,3 @@ const CataloguePreview = () => {
 };
 
 export default CataloguePreview;
-

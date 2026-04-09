@@ -61,7 +61,7 @@ export default function Blogs() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/60 overflow-hidden shadow-xl shadow-black/20"
+            className="brand-card overflow-hidden shadow-xl shadow-black/20"
           >
             <Link to={featured.slug ? `/blog/${featured.slug}` : "/blogs"} className="block group">
               <div className="grid md:grid-cols-2 gap-0">
@@ -116,4 +116,3 @@ export default function Blogs() {
     </div>
   );
 }
-

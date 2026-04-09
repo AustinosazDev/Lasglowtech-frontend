@@ -98,7 +98,7 @@ const ContactsAdmin = () => {
         aria-label="Contact messages dashboard"
       >
         <section
-          className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden"
+          className="brand-card overflow-hidden"
           aria-labelledby="contacts-heading"
         >
           <header className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
@@ -146,7 +146,7 @@ const ContactsAdmin = () => {
                 {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-5 md:p-6 animate-pulse"
+                    className="brand-card p-5 md:p-6 animate-pulse"
                   >
                     <div className="flex flex-col md:flex-row md:items-start gap-4">
                       <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-Primarycolor/20" />
@@ -166,7 +166,7 @@ const ContactsAdmin = () => {
               <div className="space-y-4">
                 {sortedContacts.length === 0 && (
                   <div
-                    className="text-center py-12 px-4 rounded-xl border border-Primarycolor/20 bg-bgcolor/30"
+                    className="brand-card text-center py-12 px-4"
                     role="status"
                   >
                     {filteredContacts.length === 0 && contacts.length > 0 ? (
@@ -180,7 +180,7 @@ const ContactsAdmin = () => {
                 {sortedContacts.map((item) => (
                   <article
                     key={item.id}
-                    className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-5 md:p-6 hover:border-Primarycolor/30 transition-colors"
+                    className="brand-card p-5 md:p-6"
                     aria-labelledby={`contact-name-${item.id}`}
                   >
                     <div className="flex flex-col md:flex-row md:items-start gap-4">
@@ -230,7 +230,7 @@ const ContactsAdmin = () => {
                             </time>
                           </p>
                         )}
-                        <div className="rounded-lg border border-Primarycolor/20 bg-bgcolor2/50 p-4">
+                        <div className="brand-card rounded-lg p-4">
                           <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
                             {item.message || "—"}
                           </p>

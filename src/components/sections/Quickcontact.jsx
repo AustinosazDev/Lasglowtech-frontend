@@ -10,7 +10,7 @@ export default function QuickContact() {
       <div className="relative max-w-7xl mx-auto px-6 md:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Image */}
-          <div className="relative rounded-2xl overflow-hidden border border-[#8700ff]/25 shadow-2xl shadow-[#8700ff]/10">
+          <div className="relative brand-card rounded-2xl overflow-hidden shadow-2xl shadow-[#8700ff]/10">
             <img src={Slide2} alt="Lasglowtech workspace" className="w-full h-72 md:h-[420px] object-cover" />
             <div className="absolute inset-0 bg-gradient-to-r from-[#1a1030]/60 to-transparent" />
           </div>

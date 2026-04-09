@@ -43,7 +43,7 @@ const BlogList = () => {
   };
 
   return (
-    <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+    <section className="brand-card overflow-hidden">
       <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
         <h1 className="text-xl font-semibold text-textcolor2">Blog list</h1>
         <p className="text-sm text-gray-500 mt-0.5">Manage blog content and keep articles fresh.</p>
@@ -54,7 +54,7 @@ const BlogList = () => {
           {posts.map((blog) => (
             <article
               key={blog.id}
-              className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-5 hover:border-Primarycolor/30 transition-colors"
+              className="brand-card p-5"
             >
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 <div className="flex-1 min-w-0">

@@ -262,7 +262,7 @@ const CareersAcademy = () => {
               return (
                 <div
                   key={item.title}
-                  className="p-6 rounded-2xl border border-Primarycolor/20 bg-bgcolor2/40 hover:border-Primarycolor/30 transition-colors"
+                  className="brand-card p-6"
                 >
                   <span className="inline-flex w-12 h-12 rounded-xl bg-Primarycolor/20 text-Secondarycolor items-center justify-center">
                     <Icon className="w-6 h-6" />
@@ -291,12 +291,12 @@ const CareersAcademy = () => {
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="rounded-2xl border border-Primarycolor/20 bg-bgcolor2/40 h-64 animate-pulse"
+                  className="brand-card h-64 animate-pulse"
                 />
               ))}
             </div>
           ) : displayCourses.length === 0 ? (
-            <div className="rounded-2xl border border-Primarycolor/20 bg-bgcolor2/40 p-12 text-center">
+            <div className="brand-card p-12 text-center">
               <p className="text-muted">No courses published yet. Check back later.</p>
               <Link to="/" className="inline-block mt-4 text-Secondarycolor hover:underline">
                 Back to main site
@@ -308,7 +308,7 @@ const CareersAcademy = () => {
                 <Link
                   key={course.id}
                   to={`/careers/courses/${course.slug || course.id}`}
-                  className="group rounded-2xl border border-Primarycolor/20 bg-bgcolor2/40 overflow-hidden hover:border-Primarycolor/40 hover:shadow-lg transition-all"
+                  className="group brand-card rounded-2xl overflow-hidden"
                 >
                   <div className="aspect-video bg-bgcolor/60 relative overflow-hidden">
                     <img

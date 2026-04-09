@@ -1,29 +1,3 @@
-// import { Link } from "react-router-dom";
-// import { FaArrowRight } from "react-icons/fa";
-
-// export default function Blogcard({ post }) {
-//   if (!post) return null;
-//   return (
-//     <Link to={`/blog/${post.slug}`} className="brand-card flex flex-col group overflow-hidden block h-full">
-//       {post.coverImage && (
-//         <div className="h-48 overflow-hidden">
-//           <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-//         </div>
-//       )}
-//       <div className="p-5 flex flex-col flex-1">
-//         {post.category && (
-//           <span className="text-xs font-extrabold text-orange-500 uppercase tracking-widest mb-2">{post.category}</span>
-//         )}
-//         <h3 className="font-extrabold text-base text-white mb-2 group-hover:text-orange-500 transition-colors line-clamp-2">{post.title}</h3>
-//         <p className="text-xs text-[#9b8cb5] leading-relaxed line-clamp-3 flex-1">{post.excerpt || post.summary}</p>
-//         <div className="mt-4 flex items-center justify-between">
-//           {post.createdAt && <span className="text-xs text-[#9b8cb5]">{new Date(post.createdAt).toLocaleDateString("en-NG", { day:"numeric", month:"short", year:"numeric" })}</span>}
-//           <span className="inline-flex items-center gap-1 text-xs font-bold text-[#8700ff] group-hover:gap-2 transition-all">Read <FaArrowRight className="w-2.5 h-2.5" /></span>
-//         </div>
-//       </div>
-//     </Link>
-//   );
-// }
 
 import React, { useEffect, useMemo, useState } from "react";
 import { IoShareSocialSharp } from "react-icons/io5";
@@ -84,7 +58,7 @@ const Blogcard = () => {
         {currentBlogs.map((blog, index) => (
           <article
             key={blog.id}
-            className="group rounded-xl brand-card r overflow-hidden
+            className="group rounded-xl brand-card  overflow-hidden
         shadow-md hover:shadow-xl
         hover:scale-[1.02] transition-all duration-300 flex flex-col"
           >

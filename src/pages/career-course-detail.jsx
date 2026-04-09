@@ -145,7 +145,7 @@ const CareerCourseDetail = () => {
           Back to courses
         </Link>
 
-        <div className="rounded-2xl border border-Primarycolor/20 bg-bgcolor2/40 overflow-hidden mb-8">
+        <div className="brand-card overflow-hidden mb-8">
           <div className="aspect-video md:aspect-[21/9] bg-bgcolor/60 relative">
             <img
               src={course.imageUrl || PLACEHOLDER_IMAGE}

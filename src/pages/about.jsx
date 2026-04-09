@@ -68,7 +68,7 @@ export default function About() {
       {/* Who we are */}
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-16 md:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          <div className="rounded-2xl overflow-hidden border border-[#8700ff]/20 shadow-2xl shadow-[#8700ff]/10">
+          <div className="brand-card rounded-2xl overflow-hidden shadow-2xl shadow-[#8700ff]/10">
             <img src={ABOUT_IMG} alt="Lasglowtech team" className="w-full h-72 md:h-80 object-cover" />
           </div>
           <div>
@@ -112,7 +112,7 @@ export default function About() {
             <p className="text-[#9b8cb5] text-sm mb-6 leading-relaxed">We follow a structured but flexible process so you always know where things stand.</p>
             <div className="space-y-4">
               {process.map((step, i) => (
-                <div key={step.title} className="rounded-xl border border-[#8700ff]/15 bg-[#120b1f]/60 p-5">
+                <div key={step.title} className="brand-card p-5">
                   <p className="text-orange-500 font-extrabold text-sm mb-1">{String(i+1).padStart(2,"0")}. {step.title}</p>
                   <p className="text-sm text-[#9b8cb5] leading-relaxed">{step.text}</p>
                 </div>
@@ -151,4 +151,3 @@ export default function About() {
     </div>
   );
 }
-

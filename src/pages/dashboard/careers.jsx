@@ -98,7 +98,7 @@ const CareersAdmin = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
       <aside className="lg:w-52 flex-shrink-0">
-        <nav className="hidden lg:block sticky top-24 rounded-xl border border-Primarycolor/20 bg-bgcolor2/60 p-3 space-y-1">
+        <nav className="hidden lg:block sticky top-24 brand-card p-3 space-y-1">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1.5">Jump to</p>
           {careerNav.map((item) => (
             <button
@@ -127,7 +127,7 @@ const CareersAdmin = () => {
       </aside>
 
       <main className="flex-1 min-w-0">
-    <section id="career-applications" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden scroll-mt-6">
+    <section id="career-applications" className="brand-card overflow-hidden scroll-mt-6">
       <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
         <h2 className="text-xl font-semibold text-textcolor2">Career applications</h2>
         <p className="text-sm text-gray-500 mt-0.5">
@@ -145,7 +145,7 @@ const CareersAdmin = () => {
             {applications.map((app) => (
               <article
                 key={app.id}
-                className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 overflow-hidden"
+                className="brand-card overflow-hidden"
               >
                 {/* Candidate info */}
                 <div className="p-5 md:p-6 border-b border-Primarycolor/20">

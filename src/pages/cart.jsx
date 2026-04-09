@@ -55,7 +55,7 @@ const CartPage = () => {
         </div>
 
         {!items.length && (
-          <div className="mt-10 rounded-2xl border border-Primarycolor/30 bg-bgcolor p-8 text-center">
+          <div className="mt-10 brand-card p-8 text-center">
             <p className="text-gray-300">Your cart is empty.</p>
             <Link
               to="/catalogues"
@@ -71,7 +71,7 @@ const CartPage = () => {
             {items.map((item) => (
               <article
                 key={item.slug}
-                className="rounded-2xl border border-Primarycolor/30 bg-bgcolor p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4"
+                className="brand-card p-4 md:p-5 flex flex-col md:flex-row md:items-center gap-4"
               >
                 <img
                   src={item.imageUrl}

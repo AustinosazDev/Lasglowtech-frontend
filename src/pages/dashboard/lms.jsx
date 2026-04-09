@@ -1,9 +1,12 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import CertificatePreview from "../../components/certificate-preview";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -54,16 +57,16 @@ const LmsAdmin = () => {
   const [enrollments, setEnrollments] = useState([]);
   const [enrollmentsLoading, setEnrollmentsLoading] = useState(false);
   const [enrollmentCourseFilter, setEnrollmentCourseFilter] = useState("");
+  const [selectedEnrollmentIds, setSelectedEnrollmentIds] = useState([]);
   const [issuingId, setIssuingId] = useState(null);
   const [issueCertEnrollment, setIssueCertEnrollment] = useState(null);
+  const [issueCertBatchMode, setIssueCertBatchMode] = useState(false);
   const [issueCertForm, setIssueCertForm] = useState({
     recipientFullName: "",
     bodyMessage: "",
     signedDate: new Date().toISOString().slice(0, 10),
     signatureLabel: "Authorized Signatory",
   });
-  const [certBgUploading, setCertBgUploading] = useState(false);
-  const [certLogoUploading, setCertLogoUploading] = useState(false);
   const [resourcePdfUploading, setResourcePdfUploading] = useState(false);
   const [certificateSettings, setCertificateSettings] = useState({
     defaultMessage: "",
@@ -71,6 +74,7 @@ const LmsAdmin = () => {
   });
   const [certSettingsSaving, setCertSettingsSaving] = useState(false);
   const selectedModuleCourseId = moduleForm.courseId || "";
+  const certificatePreviewRef = useRef(null);
 
   const loadCourses = async () => {
     setLoading(true);
@@ -218,10 +222,15 @@ const LmsAdmin = () => {
     try {
       const params = enrollmentCourseFilter ? { courseId: enrollmentCourseFilter } : {};
       const res = await instance.get("/lms/admin/enrollments", { headers, params });
-      setEnrollments(res.data || []);
+      const next = res.data || [];
+      setEnrollments(next);
+      setSelectedEnrollmentIds((prev) =>
+        prev.filter((id) => next.some((item) => item.enrollmentId === id && !item.certificateSentAt))
+      );
     } catch (error) {
       toast.error("Unable to load enrollments.");
       setEnrollments([]);
+      setSelectedEnrollmentIds([]);
     } finally {
       setEnrollmentsLoading(false);
     }
@@ -244,52 +253,6 @@ const LmsAdmin = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.error || "Could not load certificate.");
-    }
-  };
-
-  const uploadCertificateBackground = async (e) => {
-    const file = e?.target?.files?.[0];
-    if (!file) return;
-    if (!/^image\/(png|jpeg|jpg)$/.test(file.type)) {
-      toast.error("Please choose a PNG or JPEG image.");
-      return;
-    }
-    setCertBgUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      await instance.post("/admin/upload/certificate-background", formData, {
-        headers: { ...headers, "Content-Type": undefined },
-      });
-      toast.success("Certificate background updated. New certificates will use it.");
-    } catch (err) {
-      toast.error(err.response?.data?.error || "Upload failed.");
-    } finally {
-      setCertBgUploading(false);
-      e.target.value = "";
-    }
-  };
-
-  const uploadCertificateLogo = async (e) => {
-    const file = e?.target?.files?.[0];
-    if (!file) return;
-    if (!/^image\/(png|jpeg|jpg)$/.test(file.type)) {
-      toast.error("Please choose a PNG or JPEG image.");
-      return;
-    }
-    setCertLogoUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      await instance.post("/admin/upload/certificate-logo", formData, {
-        headers: { ...headers, "Content-Type": undefined },
-      });
-      toast.success("Certificate logo updated.");
-    } catch (err) {
-      toast.error(err.response?.data?.error || "Upload failed.");
-    } finally {
-      setCertLogoUploading(false);
-      e.target.value = "";
     }
   };
 
@@ -343,6 +306,7 @@ const LmsAdmin = () => {
   };
 
   const openIssueModal = (en) => {
+    setIssueCertBatchMode(false);
     setIssueCertEnrollment(en);
     setIssueCertForm({
       recipientFullName: en.learnerName || "",
@@ -352,23 +316,96 @@ const LmsAdmin = () => {
     });
   };
 
+  const openBatchIssueModal = () => {
+    if (!selectedEnrollmentIds.length) {
+      toast.error("Select at least one enrollment first.");
+      return;
+    }
+    setIssueCertBatchMode(true);
+    setIssueCertEnrollment({
+      learnerName: `${selectedEnrollmentIds.length} learners`,
+      courseTitle: "Selected courses",
+    });
+    setIssueCertForm({
+      recipientFullName: "",
+      bodyMessage: certificateSettings.defaultMessage || "",
+      signedDate: new Date().toISOString().slice(0, 10),
+      signatureLabel: certificateSettings.defaultSignatureLabel || "Authorized Signatory",
+    });
+  };
+
+  const downloadCertificatePreviewPdf = async () => {
+    const element = certificatePreviewRef.current;
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element, {
+        backgroundColor: "#ffffff",
+        scale: 2,
+        useCORS: true,
+      });
+      const imageData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: [canvas.width, canvas.height],
+      });
+      pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
+      pdf.save(
+        `${issueCertBatchMode ? "batch" : (issueCertForm.recipientFullName || issueCertEnrollment?.learnerName || "certificate")
+          .replace(/\s+/g, "-")
+          .toLowerCase()}-certificate.pdf`
+      );
+    } catch (error) {
+      toast.error("Could not generate PDF preview.");
+    }
+  };
+
+  const toggleEnrollmentSelection = (enrollmentId) => {
+    setSelectedEnrollmentIds((prev) =>
+      prev.includes(enrollmentId) ? prev.filter((id) => id !== enrollmentId) : [...prev, enrollmentId]
+    );
+  };
+
+  const toggleSelectAllEnrollments = () => {
+    const selectableIds = enrollments.filter((item) => !item.certificateSentAt).map((item) => item.enrollmentId);
+    const allSelected = selectableIds.length > 0 && selectableIds.every((id) => selectedEnrollmentIds.includes(id));
+    setSelectedEnrollmentIds(allSelected ? [] : selectableIds);
+  };
+
   const issueCertificate = async () => {
     if (!issueCertEnrollment) return;
     const enrollmentId = issueCertEnrollment.enrollmentId;
-    setIssuingId(enrollmentId);
+    setIssuingId(issueCertBatchMode ? "batch" : enrollmentId);
     try {
-      await instance.post(
-        `/lms/admin/enrollments/${enrollmentId}/issue-certificate`,
-        {
-          recipientFullName: issueCertForm.recipientFullName.trim() || issueCertEnrollment.learnerName,
-          bodyMessage: issueCertForm.bodyMessage.trim() || undefined,
-          signedDate: issueCertForm.signedDate || undefined,
-          signatureLabel: issueCertForm.signatureLabel.trim() || undefined,
-        },
-        { headers }
-      );
-      toast.success("Certificate issued and email sent. Learner can download only after this acknowledgment.");
+      if (issueCertBatchMode) {
+        const res = await instance.post(
+          "/lms/admin/enrollments/issue-certificates/batch",
+          {
+            enrollmentIds: selectedEnrollmentIds,
+            bodyMessage: issueCertForm.bodyMessage.trim() || undefined,
+            signedDate: issueCertForm.signedDate || undefined,
+            signatureLabel: issueCertForm.signatureLabel.trim() || undefined,
+          },
+          { headers }
+        );
+        toast.success(res.data?.message || "Batch certificate generation completed.");
+        setSelectedEnrollmentIds([]);
+      } else {
+        await instance.post(
+          `/lms/admin/enrollments/${enrollmentId}/issue-certificate`,
+          {
+            recipientFullName: issueCertForm.recipientFullName.trim() || issueCertEnrollment.learnerName,
+            bodyMessage: issueCertForm.bodyMessage.trim() || undefined,
+            signedDate: issueCertForm.signedDate || undefined,
+            signatureLabel: issueCertForm.signatureLabel.trim() || undefined,
+          },
+          { headers }
+        );
+        toast.success("Certificate issued and email sent. Learner can download only after this acknowledgment.");
+      }
       setIssueCertEnrollment(null);
+      setIssueCertBatchMode(false);
       loadEnrollments();
     } catch (error) {
       toast.error(error.response?.data?.error || "Failed to issue certificate.");
@@ -389,7 +426,7 @@ const LmsAdmin = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
       <aside className="lg:w-52 flex-shrink-0">
-        <nav className="sticky top-24 rounded-xl border border-Primarycolor/20 bg-bgcolor2/60 p-3 space-y-1">
+        <nav className="sticky top-24 brand-card p-3 space-y-1">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1.5">LMS</p>
           {lmsNav.map((item) => (
             <button
@@ -410,7 +447,7 @@ const LmsAdmin = () => {
 
       <main className="flex-1 min-w-0">
       {activeLmsView === "lms-create-course" && (
-      <section id="lms-create-course" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section id="lms-create-course" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h2 className="text-xl font-semibold text-textcolor2">LMS manager</h2>
           <p className="text-sm text-gray-500 mt-0.5">Create learning courses and structured modules.</p>
@@ -508,7 +545,7 @@ const LmsAdmin = () => {
       )}
 
       {activeLmsView === "lms-modules" && (
-      <section id="lms-modules" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section id="lms-modules" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">
             {moduleForm.id ? "Edit module" : "Add module"}
@@ -656,7 +693,7 @@ const LmsAdmin = () => {
           </div>
         </form>
 
-        <div className="mt-6 rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-5">
+        <div className="brand-card mt-6 p-5">
           <h4 className="text-lg font-semibold text-textcolor2">Module library</h4>
           <p className="text-sm text-gray-500 mt-0.5">
             Select a course to list its modules. You can update or delete any module—click Edit to change it or Delete to remove it (with confirmation).
@@ -668,7 +705,7 @@ const LmsAdmin = () => {
           {!!selectedModuleCourseId && !!courseModules.length && (
             <div className="space-y-3">
               {courseModules.map((module) => (
-                <article key={module.id} className="rounded-lg border border-Primarycolor/20 p-3">
+                <article key={module.id} className="brand-card rounded-lg p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
                       <p className="font-semibold text-white">
@@ -711,42 +748,35 @@ const LmsAdmin = () => {
       )}
 
       {activeLmsView === "lms-certificate" && (
-      <section id="lms-certificate" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section id="lms-certificate" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h3 className="text-xl font-semibold text-textcolor2">Custom certificate design & defaults</h3>
+          <h3 className="text-xl font-semibold text-textcolor2">Certificate design & defaults</h3>
           <p className="text-sm text-gray-500 mt-0.5">
-            Upload your own logo and custom background image for certificates. Name, course, date and code are overlaid. Set default text used when issuing.
+            The previous certificate background/logo system has been removed. All certificates now use the new standardized Lasglowtech design below.
           </p>
         </div>
         <div className="p-6 space-y-6">
-          <div className="flex flex-wrap gap-4 items-start">
-            <div>
-              <p className="text-sm font-medium text-textcolor2 mb-2">Certificate logo</p>
-              <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-Primarycolor/50 text-textcolor2 text-sm cursor-pointer hover:bg-Primarycolor/10 transition-colors">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/jpg"
-                  onChange={uploadCertificateLogo}
-                  disabled={certLogoUploading}
-                  className="sr-only"
-                />
-                {certLogoUploading ? "Uploading…" : "Upload logo"}
-              </label>
-              <p className="text-xs text-gray-500 mt-1">PNG/JPEG. Shown on certificates (replaces site logo if set).</p>
+          <div className="grid xl:grid-cols-[minmax(0,1fr)_340px] gap-6 items-start">
+            <div className="brand-card p-4 md:p-5 bg-white/5">
+              <CertificatePreview
+                recipientName="Precious Abdul"
+                courseName="Graphic Design"
+                date="2026-08-02"
+                certificateCode="8726315"
+                signatureLabel={certificateSettings.defaultSignatureLabel || "Director's Sign"}
+                bodyMessage={
+                  certificateSettings.defaultMessage ||
+                  "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career."
+                }
+              />
             </div>
-            <div>
-              <p className="text-sm font-medium text-textcolor2 mb-2">Certificate background (custom design)</p>
-              <label className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border border-Primarycolor/50 text-textcolor2 text-sm cursor-pointer hover:bg-Primarycolor/10 transition-colors">
-                <input
-                  type="file"
-                  accept="image/png,image/jpeg,image/jpg"
-                  onChange={uploadCertificateBackground}
-                  disabled={certBgUploading}
-                  className="sr-only"
-                />
-                {certBgUploading ? "Uploading…" : "Upload custom background"}
-              </label>
-              <p className="text-xs text-gray-500 mt-1">Upload your full certificate design (PNG/JPEG). Learner name, course, date and code are overlaid.</p>
+            <div className="brand-card p-5">
+              <p className="text-sm font-medium text-textcolor2 mb-2">What changed</p>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li>The old certificate artwork has been removed.</li>
+                <li>Preview, issued certificates, learner downloads, and email attachments now share one design.</li>
+                <li>Batch issue is available from the enrollments tab.</li>
+              </ul>
             </div>
           </div>
 
@@ -788,10 +818,10 @@ const LmsAdmin = () => {
       )}
 
       {activeLmsView === "lms-enrollments" && (
-      <section id="lms-enrollments" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section id="lms-enrollments" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">Enrollments & certificates</h3>
-          <p className="text-sm text-gray-500 mt-0.5">View enrollments and issue or preview certificates.</p>
+          <p className="text-sm text-gray-500 mt-0.5">View enrollments, preview the new certificate design, issue one certificate, or issue many at once.</p>
         </div>
         <div className="p-6">
           <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -813,6 +843,25 @@ const LmsAdmin = () => {
             >
               Refresh
             </button>
+            <button
+              type="button"
+              onClick={toggleSelectAllEnrollments}
+              className="px-3 py-2 rounded-md border border-Primarycolor/50 text-textcolor2 text-sm"
+              disabled={!enrollments.filter((item) => !item.certificateSentAt).length}
+            >
+              {enrollments.filter((item) => !item.certificateSentAt).every((item) => selectedEnrollmentIds.includes(item.enrollmentId)) &&
+              selectedEnrollmentIds.length
+                ? "Clear selection"
+                : "Select all eligible"}
+            </button>
+            <button
+              type="button"
+              onClick={openBatchIssueModal}
+              disabled={!selectedEnrollmentIds.length || !!issuingId}
+              className="px-4 py-2 rounded-md bg-Secondarycolor/85 text-white text-sm font-medium disabled:opacity-50"
+            >
+              {issuingId === "batch" ? "Generating batch..." : `Batch generate (${selectedEnrollmentIds.length})`}
+            </button>
           </div>
           {enrollmentsLoading && <p className="text-gray-400 text-sm">Loading enrollments…</p>}
           {!enrollmentsLoading && enrollments.length === 0 && (
@@ -823,6 +872,7 @@ const LmsAdmin = () => {
               <table className="w-full text-sm text-left">
                 <thead>
                   <tr className="border-b border-Primarycolor/20 text-gray-300">
+                    <th className="py-2 pr-4 font-semibold">Select</th>
                     <th className="py-2 pr-4 font-semibold">Learner</th>
                     <th className="py-2 pr-4 font-semibold">Course</th>
                     <th className="py-2 pr-4 font-semibold">Progress</th>
@@ -834,6 +884,14 @@ const LmsAdmin = () => {
                 <tbody>
                   {enrollments.map((en) => (
                     <tr key={en.enrollmentId} className="border-b border-Primarycolor/10 text-gray-200">
+                      <td className="py-2 pr-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedEnrollmentIds.includes(en.enrollmentId)}
+                          disabled={!!en.certificateSentAt}
+                          onChange={() => toggleEnrollmentSelection(en.enrollmentId)}
+                        />
+                      </td>
                       <td className="py-2 pr-4">
                         <span className="font-medium">{en.learnerName}</span>
                         <span className="block text-xs text-gray-500">{en.learnerEmail}</span>
@@ -876,7 +934,7 @@ const LmsAdmin = () => {
       )}
 
       {activeLmsView === "lms-courses-list" && (
-      <section id="lms-courses-list" className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section id="lms-courses-list" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">Courses</h3>
           <p className="text-sm text-gray-500 mt-0.5">All LMS courses and their modules.</p>
@@ -886,7 +944,7 @@ const LmsAdmin = () => {
         {!loading && (
           <div className="space-y-4">
             {courses.map((course) => (
-              <div key={course.id} className="p-5 rounded-xl border border-Primarycolor/20 bg-bgcolor/50 hover:border-Primarycolor/30 transition-colors">
+              <div key={course.id} className="brand-card p-5 rounded-xl">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div>
                     <p className="text-white font-semibold">{course.title}</p>
@@ -937,72 +995,124 @@ const LmsAdmin = () => {
       )}
 
       {issueCertEnrollment && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60" onClick={() => !issuingId && setIssueCertEnrollment(null)}>
-          <div className="bg-bgcolor2 border border-Primarycolor/30 rounded-xl max-w-md w-full p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <h4 className="text-lg font-semibold text-textcolor2 mb-2">Issue certificate</h4>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60"
+          onClick={() => {
+            if (!issuingId) {
+              setIssueCertEnrollment(null);
+              setIssueCertBatchMode(false);
+            }
+          }}
+        >
+          <div className="brand-card rounded-xl max-w-6xl w-full p-6 shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <h4 className="text-lg font-semibold text-textcolor2 mb-2">
+              {issueCertBatchMode ? "Batch certificate generation" : "Issue certificate"}
+            </h4>
             <p className="text-sm text-gray-400 mb-4">
-              Acknowledge completion and payment for <strong>{issueCertEnrollment.learnerName}</strong> ({issueCertEnrollment.courseTitle}). The learner can download the certificate only after you issue it.
+              {issueCertBatchMode
+                ? `Generate certificates for ${selectedEnrollmentIds.length} selected enrollments using the shared date, message, and signature below.`
+                : <>Acknowledge completion and payment for <strong>{issueCertEnrollment.learnerName}</strong> ({issueCertEnrollment.courseTitle}). The learner can download the certificate only after you issue it.</>}
             </p>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-xs text-gray-400 mb-1">Recipient full name</label>
-                <input
-                  type="text"
-                  value={issueCertForm.recipientFullName}
-                  onChange={(e) => setIssueCertForm((p) => ({ ...p, recipientFullName: e.target.value }))}
-                  placeholder="Name as on certificate"
-                  className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
-                />
-              </div>
-              <div>
-                <label className="block text-xs text-gray-400 mb-1">Message on certificate (optional)</label>
-                <textarea
-                  value={issueCertForm.bodyMessage}
-                  onChange={(e) => setIssueCertForm((p) => ({ ...p, bodyMessage: e.target.value }))}
-                  placeholder="e.g. has successfully completed the programme. Completion and payment verified."
-                  rows={3}
-                  className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm resize-none"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="grid lg:grid-cols-[360px_minmax(0,1fr)] gap-6 items-start">
+              <div className="space-y-3">
+                {!issueCertBatchMode && (
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Recipient full name</label>
+                    <input
+                      type="text"
+                      value={issueCertForm.recipientFullName}
+                      onChange={(e) => setIssueCertForm((p) => ({ ...p, recipientFullName: e.target.value }))}
+                      placeholder="Name as on certificate"
+                      className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
+                    />
+                  </div>
+                )}
+                {issueCertBatchMode && (
+                  <div className="brand-card p-3">
+                    <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Recipients</p>
+                    <p className="text-sm text-textcolor2">{selectedEnrollmentIds.length} selected enrollments</p>
+                  </div>
+                )}
                 <div>
-                  <label className="block text-xs text-gray-400 mb-1">Date</label>
-                  <input
-                    type="date"
-                    value={issueCertForm.signedDate}
-                    onChange={(e) => setIssueCertForm((p) => ({ ...p, signedDate: e.target.value }))}
-                    className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
+                  <label className="block text-xs text-gray-400 mb-1">Message on certificate (optional)</label>
+                  <textarea
+                    value={issueCertForm.bodyMessage}
+                    onChange={(e) => setIssueCertForm((p) => ({ ...p, bodyMessage: e.target.value }))}
+                    placeholder="e.g. has successfully completed the programme. Completion and payment verified."
+                    rows={3}
+                    className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm resize-none"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-400 mb-1">Signature label</label>
-                  <input
-                    type="text"
-                    value={issueCertForm.signatureLabel}
-                    onChange={(e) => setIssueCertForm((p) => ({ ...p, signatureLabel: e.target.value }))}
-                    placeholder="Authorized Signatory"
-                    className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
-                  />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Date</label>
+                    <input
+                      type="date"
+                      value={issueCertForm.signedDate}
+                      onChange={(e) => setIssueCertForm((p) => ({ ...p, signedDate: e.target.value }))}
+                      className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-gray-400 mb-1">Signature label</label>
+                    <input
+                      type="text"
+                      value={issueCertForm.signatureLabel}
+                      onChange={(e) => setIssueCertForm((p) => ({ ...p, signatureLabel: e.target.value }))}
+                      placeholder="Authorized Signatory"
+                      className="w-full p-2.5 rounded-md bg-[#f6f5fa] text-black text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex gap-2 mt-5">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIssueCertEnrollment(null);
+                      setIssueCertBatchMode(false);
+                    }}
+                    disabled={!!issuingId}
+                    className="flex-1 py-2.5 rounded-md border border-Primarycolor/30 text-textcolor2 text-sm"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={downloadCertificatePreviewPdf}
+                    className="flex-1 py-2.5 rounded-md border border-Primarycolor/40 text-textcolor2 text-sm"
+                  >
+                    Download PDF preview
+                  </button>
+                  <button
+                    type="button"
+                    onClick={issueCertificate}
+                    disabled={!!issuingId}
+                    className="flex-1 py-2.5 rounded-md bg-Secondarycolor text-white text-sm font-medium disabled:opacity-50"
+                  >
+                    {issuingId ? "Generating..." : issueCertBatchMode ? "Generate batch" : "Issue certificate"}
+                  </button>
                 </div>
               </div>
-            </div>
-            <div className="flex gap-2 mt-5">
-              <button
-                type="button"
-                onClick={() => setIssueCertEnrollment(null)}
-                disabled={!!issuingId}
-                className="flex-1 py-2.5 rounded-md border border-Primarycolor/30 text-textcolor2 text-sm"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={issueCertificate}
-                disabled={!!issuingId}
-                className="flex-1 py-2.5 rounded-md bg-Secondarycolor text-white text-sm font-medium disabled:opacity-50"
-              >
-                {issuingId ? "Issuing…" : "Issue certificate"}
-              </button>
+
+              <div className="brand-card p-4 bg-white/5">
+                <CertificatePreview
+                  ref={certificatePreviewRef}
+                  recipientName={
+                    issueCertBatchMode
+                      ? `${selectedEnrollmentIds.length} Learners`
+                      : issueCertForm.recipientFullName || issueCertEnrollment.learnerName
+                  }
+                  courseName={issueCertBatchMode ? "Lasglowtech Programmes" : issueCertEnrollment.courseTitle}
+                  date={issueCertForm.signedDate}
+                  certificateCode={issueCertBatchMode ? `LGT-BATCH-${selectedEnrollmentIds.length}` : `LGT-CERT-${issueCertEnrollment.enrollmentId || "PREVIEW"}`}
+                  signatureLabel={issueCertForm.signatureLabel || "Director's Sign"}
+                  bodyMessage={
+                    issueCertForm.bodyMessage ||
+                    "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career."
+                  }
+                />
+              </div>
             </div>
           </div>
         </div>

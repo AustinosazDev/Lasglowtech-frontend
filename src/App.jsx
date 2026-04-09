@@ -26,6 +26,7 @@ import Links from "./pages/bio";
 import Checkout from "./pages/checkout";
 import PaymentSuccess from "./pages/payment-success";
 import Catalogues from "./pages/catalogues";
+import CatalogueDetail from "./pages/catalogue-detail";
 import CartPage from "./pages/cart";
 import LoginPage from "./pages/auth-login";
 import RegisterPage from "./pages/auth-register";
@@ -62,6 +63,7 @@ function App() {
   const hideLayout =
     location.pathname === "/bio" ||
     location.pathname === "/catalogues" ||
+    location.pathname.startsWith("/catalogues/") ||
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/careers") ||
     location.pathname === "/admin/login" ||
@@ -85,6 +87,7 @@ function App() {
         <Route path="/checkout/:slug" element={<ProtectedRoute allowedRoles={["client"]}><Checkout /></ProtectedRoute>} />
         <Route path="/payment/success" element={<ProtectedRoute allowedRoles={["client"]}><PaymentSuccess /></ProtectedRoute>} />
         <Route path="/catalogues" element={<Catalogues />} />
+        <Route path="/catalogues/:slug" element={<CatalogueDetail />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/my/orders" element={<ProtectedRoute allowedRoles={["client"]}><MyOrders /></ProtectedRoute>} />
         <Route path="/client/dashboard" element={<ProtectedRoute allowedRoles={["client"]}><ClientDashboard /></ProtectedRoute>} />

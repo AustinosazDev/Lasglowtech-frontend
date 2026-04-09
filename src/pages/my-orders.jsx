@@ -57,7 +57,7 @@ const MyOrders = () => {
           </Link>
         </div>
 
-        <div className="rounded-xl border border-Primarycolor/25 bg-bgcolor/95 shadow-sm overflow-hidden">
+        <div className="brand-card shadow-sm overflow-hidden">
           <div className="p-4 md:p-5">
             {loading && <p className="text-gray-400 text-[0.875rem]">Loading orders...</p>}
             {!loading && error && <p className="text-red-300 text-[0.875rem]">{error}</p>}

@@ -34,7 +34,7 @@ const AdminLayout = () => {
         <button
           type="button"
           onClick={() => setMobileNavOpen((o) => !o)}
-          className="p-2.5 rounded-lg border border-Primarycolor/30 bg-bgcolor2/80 backdrop-blur text-textcolor2 hover:bg-Primarycolor/20 transition"
+          className="brand-card p-2.5 rounded-lg text-textcolor2 hover:bg-Primarycolor/20 transition"
           aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
         >
           {mobileNavOpen ? <FaTimes className="w-5 h-5" /> : <FaBars className="w-5 h-5" />}
@@ -55,7 +55,7 @@ const AdminLayout = () => {
           className={`
             fixed md:relative inset-y-0 left-0 z-20
             w-72 md:w-72 md:transition-[width] md:duration-200 ease-out
-            border-r border-Primarycolor/20 p-4 md:p-6 bg-bgcolor2/95 md:bg-bgcolor2/60 backdrop-blur
+            brand-card p-4 md:p-6
             flex flex-col
             ${mobileNavOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
             ${sidebarOpen ? "md:w-72" : "md:w-[4.5rem] md:overflow-hidden"}
@@ -69,7 +69,7 @@ const AdminLayout = () => {
                 <button
                   type="button"
                   onClick={toggleSidebar}
-                  className="hidden md:flex p-2 rounded-lg text-gray-400 hover:text-textcolor2 hover:bg-Primarycolor/20 transition shrink-0"
+                  className="brand-card hidden md:flex p-2 rounded-lg text-gray-400 hover:text-textcolor2 hover:bg-Primarycolor/20 transition shrink-0"
                   aria-label="Collapse sidebar"
                 >
                   <FaChevronLeft className="w-4 h-4" />
@@ -80,7 +80,7 @@ const AdminLayout = () => {
               <button
                 type="button"
                 onClick={toggleSidebar}
-                className="hidden md:flex w-full justify-center p-2 rounded-lg text-gray-400 hover:text-textcolor2 hover:bg-Primarycolor/20 transition"
+                className="brand-card hidden md:flex w-full justify-center p-2 rounded-lg text-gray-400 hover:text-textcolor2 hover:bg-Primarycolor/20 transition"
                 aria-label="Expand sidebar"
               >
                 <FaChevronRight className="w-4 h-4" />
@@ -104,7 +104,7 @@ const AdminLayout = () => {
                   to={item.to}
                   onClick={closeMobileNav}
                   title={!sidebarOpen ? item.label : undefined}
-                  className={`w-full flex items-center gap-3 px-3 md:px-4 py-2.5 md:py-3 rounded-xl transition-colors ${
+                  className={`brand-card w-full flex items-center gap-3 px-3 md:px-4 py-2.5 md:py-3 rounded-xl transition-colors ${
                     active
                       ? "bg-Primarycolor/30 border border-Primarycolor/40 text-Secondarycolor font-medium"
                       : "text-gray-400 hover:bg-Primarycolor/10 hover:text-textcolor2"
@@ -123,7 +123,7 @@ const AdminLayout = () => {
                 clearAdminSession();
                 navigate("/admin/login", { replace: true });
               }}
-              className="mt-6 w-full px-4 py-3 rounded-xl border border-red-400/50 text-red-300 hover:bg-red-500/10 font-medium transition-colors"
+              className="brand-card mt-6 w-full px-4 py-3 rounded-xl border border-red-400/50 text-red-300 hover:bg-red-500/10 font-medium transition-colors"
             >
               Logout
             </button>
@@ -134,7 +134,7 @@ const AdminLayout = () => {
                 clearAdminSession();
                 navigate("/admin/login", { replace: true });
               }}
-              className="mt-6 w-full flex justify-center p-3 rounded-xl border border-red-400/50 text-red-300 hover:bg-red-500/10 transition"
+              className="brand-card mt-6 w-full flex justify-center p-3 rounded-xl border border-red-400/50 text-red-300 hover:bg-red-500/10 transition"
               title="Logout"
               aria-label="Logout"
             >

@@ -13,7 +13,7 @@ const Subscriptions = () => {
   }, []);
 
   return (
-    <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+    <section className="brand-card overflow-hidden">
       <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
         <h2 className="text-xl font-semibold text-textcolor2">Newsletter subscribers</h2>
         <p className="text-sm text-gray-500 mt-0.5">People interested in updates and offers.</p>
@@ -26,7 +26,7 @@ const Subscriptions = () => {
             {data.map((sub) => (
               <li
                 key={sub.id}
-                className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 px-4 py-3 text-gray-300 text-sm hover:border-Primarycolor/30 transition-colors"
+                className="brand-card px-4 py-3 text-gray-300 text-sm"
               >
                 {sub.email}
               </li>

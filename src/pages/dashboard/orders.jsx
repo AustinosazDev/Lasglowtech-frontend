@@ -40,7 +40,7 @@ const OrdersAdmin = () => {
         <p className="text-gray-500 mt-1">Review catalogue transactions and payment status.</p>
       </div>
 
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-4 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h2 className="text-lg font-semibold text-textcolor2">All orders</h2>
           <p className="text-sm text-gray-500 mt-0.5">{orders.length} order(s)</p>

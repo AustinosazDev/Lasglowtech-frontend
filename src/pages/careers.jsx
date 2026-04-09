@@ -187,7 +187,7 @@ const Careers = () => {
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
           {/* Sidebar: Why Lasglowtech + Checklist */}
           <aside className="lg:col-span-2 space-y-6">
-            <div className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 p-6">
+            <div className="brand-card p-6">
               <h2 className="text-xl font-semibold text-textcolor2 mb-2">Why learn with Lasglowtech</h2>
               <p className="text-sm text-gray-400 mb-6 leading-relaxed">
                 We combine mentorship, practical assignments, and performance feedback to help you build job-ready skills.
@@ -199,7 +199,7 @@ const Careers = () => {
                   return (
                     <div
                       key={item.title}
-                      className="flex gap-4 p-4 rounded-xl border border-Primarycolor/20 bg-bgcolor/50 hover:border-Primarycolor/30 transition-colors"
+                      className="brand-card flex gap-4 p-4"
                     >
                       <span className="w-10 h-10 rounded-xl bg-Primarycolor/20 text-Secondarycolor flex items-center justify-center flex-shrink-0">
                         <Icon className="w-5 h-5" />
@@ -214,7 +214,7 @@ const Careers = () => {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 p-5">
+            <div className="brand-card p-5">
               <h3 className="text-sm font-semibold text-Secondarycolor mb-3 flex items-center gap-2">
                 <FaCheckCircle className="w-4 h-4" />
                 Application checklist
@@ -237,7 +237,7 @@ const Careers = () => {
           </aside>
 
           {/* Form */}
-          <section className="lg:col-span-3 rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 p-6 md:p-8">
+          <section className="lg:col-span-3 brand-card p-6 md:p-8">
             <h2 className="text-2xl font-semibold text-textcolor2 mb-1">Submit your application</h2>
             <p className="text-sm text-gray-500 mb-8">Complete the form below to start your admission review.</p>
 

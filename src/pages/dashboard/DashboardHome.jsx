@@ -48,33 +48,33 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Published blogs</p>
           <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.posts}</p>
         </article>
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Newsletter subscribers</p>
           <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.subscribers}</p>
         </article>
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Catalogue items</p>
           <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.catalogues}</p>
         </article>
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Total revenue</p>
           <p className="text-2xl font-bold text-Secondarycolor mt-2 tabular-nums">NGN {stats.totalRevenue.toLocaleString()}</p>
         </article>
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Revenue this month</p>
           <p className="text-2xl font-bold text-textcolor2 mt-2 tabular-nums">NGN {stats.revenueThisMonth.toLocaleString()}</p>
         </article>
-        <article className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 p-6 hover:border-Primarycolor/40 transition-colors">
+        <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Pending orders</p>
           <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.pendingOrders}</p>
         </article>
       </div>
 
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/50 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-4 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h2 className="text-lg font-semibold text-textcolor2">Recent orders</h2>
           <p className="text-sm text-gray-500 mt-0.5">Latest payment activity</p>

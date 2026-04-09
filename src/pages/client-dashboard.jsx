@@ -71,11 +71,11 @@ const ClientDashboard = () => {
       />
 
       <section className="max-w-6xl mx-auto">
-        <div className="rounded-2xl border border-Primarycolor/30 bg-bgcolor p-5 md:py-16">
+        <div className="brand-card p-5 md:py-16">
           <h1 className="text-2xl md:text-3xl font-semibold">Welcome, {firstName}</h1>
           <p className="text-sm text-gray-400 mt-1">Manage your service orders and payment status.</p>
           {!loading && (
-            <div className="mt-4 rounded-xl border border-Primarycolor/20 bg-bgcolor2/60 p-3 text-sm">
+            <div className="brand-card mt-4 p-3 text-sm">
               {pendingOrders.length > 0 && (
                 <p className="text-yellow-300">You have {pendingOrders.length} order(s) awaiting processing.</p>
               )}
@@ -91,15 +91,15 @@ const ClientDashboard = () => {
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-            <article className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/50 p-4">
+            <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Total Orders</p>
               <p className="text-2xl font-semibold mt-1">{orders.length}</p>
             </article>
-            <article className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/50 p-4">
+            <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Paid Orders</p>
               <p className="text-2xl font-semibold mt-1">{paidOrders.length}</p>
             </article>
-            <article className="rounded-xl border border-Primarycolor/20 bg-bgcolor2/50 p-4">
+            <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Total Spend</p>
               <p className="text-2xl font-semibold mt-1">NGN {totalSpend.toLocaleString()}</p>
             </article>
@@ -115,7 +115,7 @@ const ClientDashboard = () => {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-Primarycolor/30 bg-bgcolor p-5 md:p-6 mt-6">
+        <div className="brand-card p-5 md:p-6 mt-6">
           <h2 className="text-lg font-semibold mb-3">My Orders</h2>
           {loading && <p className="text-gray-400">Loading orders...</p>}
           {!loading && error && <p className="text-red-300">{error}</p>}
@@ -126,7 +126,7 @@ const ClientDashboard = () => {
               {orders.length > 0 && (
                 <div className="space-y-3">
                   {orders.map((item) => (
-                    <article key={item.id} className="rounded-xl border border-Primarycolor/20 p-4 bg-bgcolor2/40">
+                    <article key={item.id} className="brand-card p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <p className="font-semibold">{item.service_name}</p>
                         <span
@@ -165,4 +165,3 @@ const ClientDashboard = () => {
 };
 
 export default ClientDashboard;
-

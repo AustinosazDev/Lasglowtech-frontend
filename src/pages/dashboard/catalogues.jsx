@@ -281,13 +281,13 @@ const CataloguesAdmin = () => {
 
   return (
     <div className="space-y-8">
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h2 className="text-xl font-semibold text-textcolor2">Catalogue manager</h2>
           <p className="text-sm text-gray-500 mt-0.5">Create and publish service cards for the marketplace.</p>
         </div>
         <div className="p-6">
-        <div className="mb-6 rounded-xl border border-Primarycolor/20 bg-bgcolor/50 p-4">
+        <div className="brand-card mb-6 p-4">
           <p className="text-sm text-gray-300 mb-2">Quick package templates</p>
           <div className="flex flex-col md:flex-row gap-3">
             <select
@@ -446,7 +446,7 @@ const CataloguesAdmin = () => {
         </div>
       </section>
 
-      <section className="rounded-2xl border border-Primarycolor/25 bg-bgcolor2/40 overflow-hidden">
+      <section className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">Catalogue items</h3>
           <p className="text-sm text-gray-500 mt-0.5">Search and filter your service packages.</p>
@@ -485,7 +485,7 @@ const CataloguesAdmin = () => {
               {filteredItems.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-xl border border-Primarycolor/20 bg-bgcolor/50 overflow-hidden hover:border-Primarycolor/40 transition-colors flex flex-col"
+                  className="brand-card overflow-hidden flex flex-col"
                 >
                   <div className="relative aspect-[16/10] bg-bgcolor2 overflow-hidden">
                     {item.imageUrl ? (

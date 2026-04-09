@@ -67,7 +67,7 @@ const Update = () => {
   };
 
   return (
-    <div className="rounded-2xl border border-Primarycolor/20 bg-bgcolor2 p-6">
+    <div className="brand-card p-6">
       <div className="">
         <h1 className="text-2xl font-bold text-white mb-4">
           {postid ? "Update Blog" : "Create New Blog"}

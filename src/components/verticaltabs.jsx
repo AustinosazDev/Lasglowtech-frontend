@@ -24,7 +24,7 @@ export default function VerticalTabs() {
           <div className="flex md:flex-col gap-3 md:gap-4 flex-shrink-0">
             {panels.map((p, i) => (
               <button key={i} onClick={() => setActive(i)}
-                className={`flex items-center gap-3 text-left w-full rounded-xl px-4 py-3 transition-all duration-300 ${active === i ? "bg-[#8700ff]/15 border border-[#8700ff]/40" : "border border-transparent hover:bg-[#8700ff]/08"}`}>
+                className={`brand-card flex items-center gap-3 text-left w-full rounded-xl px-4 py-3 transition-all duration-300 ${active === i ? "bg-[#8700ff]/15 border border-[#8700ff]/40" : "hover:bg-[#8700ff]/08"}`}>
                 <div className={`md:w-1 md:h-10  h-3 w-16 md:rounded-full flex-shrink-0 transition-all duration-300 ${active === i ? "bg-orange-500" : "bg-[#8700ff]/30"}`} />
                 <span className={`hidden md:block text-sm font-bold transition-colors ${active === i ? "text-orange-500" : "text-[#9b8cb5]"}`}>{p.subtitle}</span>
               </button>
@@ -43,7 +43,7 @@ export default function VerticalTabs() {
 
             <AnimatePresence mode="wait">
               <motion.div key={active + "i"} initial={{ opacity:0, x:20 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:20 }} transition={{ duration:0.4 }}
-                className="rounded-2xl overflow-hidden border border-[#8700ff]/20 shadow-2xl shadow-[#8700ff]/10">
+                className="brand-card rounded-2xl overflow-hidden shadow-2xl shadow-[#8700ff]/10">
                 <img src={panels[active].image} alt={panels[active].title} className="w-full h-64 md:h-80 object-cover" />
               </motion.div>
             </AnimatePresence>
@@ -53,5 +53,4 @@ export default function VerticalTabs() {
     </section>
   );
 }
-
 

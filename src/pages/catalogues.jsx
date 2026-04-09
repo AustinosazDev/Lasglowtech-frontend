@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { FaShoppingCart, FaTimes, FaBoxOpen, FaArrowRight, FaChevronLeft } from "react-icons/fa";
+import { FaShoppingCart, FaArrowRight, FaChevronLeft, FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
-import { addToCart, readCart, removeFromCart } from "../utils/cart";
+import { readCart } from "../utils/cart";
 import SEO from "../utils/seo";
 import { LOGO } from "../components/images";
 
@@ -37,7 +37,6 @@ const Catalogues = () => {
   const [cartItems, setCartItems] = useState(() => readCart());
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedItem, setSelectedItem] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
@@ -98,48 +97,15 @@ const Catalogues = () => {
 
   const cartSlugSet = useMemo(() => new Set(cartItems.map((item) => item.slug)), [cartItems]);
 
-  const buildCartItem = (item, index) => ({
-    id: item.id,
-    slug: item.slug,
-    title: item.title,
-    summary: item.summary,
-    price: item.price,
-    paymentType: item.paymentType,
-    isPaymentEnabled: Boolean(item.isPaymentEnabled),
-    imageUrl: cardImage(item, index),
-  });
-
-  const openDetails = (item) => {
-    setSelectedItem(item);
-  };
-
-  const closeDetails = () => {
-    setSelectedItem(null);
-  };
-
-  const handleAddToCart = (item, index) => {
-    const safeIndex = index < 0 ? 0 : index;
-    addToCart(buildCartItem(item, safeIndex));
-    setCartItems(readCart());
-    toast.success("Added to cart.");
-  };
-
-  const handleRemoveFromCart = (slug) => {
-    removeFromCart(slug);
-    setCartItems(readCart());
-    toast.info("Removed from cart.");
-  };
-
   return (
     <div className="min-h-screen bg-bgcolor text-textcolor2">
       <SEO
         title="Service Catalogue | Buy Digital Services Online with Instant Checkout | Lasglowtech"
-        description="Browse Lasglowtech service packages—web, mobile, design—and checkout instantly online. Fixed-price packages, secure payment, no lengthy quotes. Nigeria's digital service catalogue."
+        description="Browse Lasglowtech service packages, compare what each one includes, and move into checkout with confidence."
         keywords="Lasglowtech catalogue, buy services online Nigeria, instant checkout, service packages, web development package, digital agency Nigeria"
         url="https://www.lasglowtech.com.ng/catalogues"
       />
 
-      {/* Catalogue nav bar – sticky, back to site + cart */}
       <header className="sticky top-0 z-50 border-b border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
           <Link to="/" className="flex items-center gap-2 text-textcolor2 hover:text-Secondarycolor transition-colors">
@@ -170,7 +136,6 @@ const Catalogues = () => {
         </div>
       </header>
 
-      {/* Hero – SoftVenix-style: tagline, “Grow Now With” + accent, description, two CTAs (no avatars) */}
       <section className="relative border-b border-Primarycolor/20 bg-bgcolor overflow-hidden py-16 sm:py-20 md:py-24 flex items-center justify-center">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <p className="text-sm font-semibold tracking-[0.2em] text-gray-500 uppercase mb-6">
@@ -181,7 +146,7 @@ const Catalogues = () => {
             <span className="block mt-1 text-Secondarycolor">Our Services</span>
           </h1>
           <p className="mt-6 text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          Select the package that fits your needs, checkout in seconds, and watch your project take off. Simple, fast, and hassle-free.
+            Compare packages, open the full service breakdown on its own page, then move into checkout when you are ready.
           </p>
           <div className="mt-10 flex flex-wrap gap-4 justify-center">
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
@@ -206,7 +171,6 @@ const Catalogues = () => {
         </div>
       </section>
 
-      {/* Main content – full width: search, filter, grid */}
       <div id="catalogue-grid" className="max-w-6xl mx-auto px-6 md:px-12 py-10 scroll-mt-4">
         {loading && <p className="text-center text-gray-400 text-sm py-8">Loading catalogues...</p>}
 
@@ -222,11 +186,11 @@ const Catalogues = () => {
                       setSearchQuery(e.target.value);
                       setCurrentPage(1);
                     }}
-                    placeholder="Search by title, summary, or description…"
+                    placeholder="Search by title, summary, or description..."
                     className="w-full pl-4 pr-10 py-2.5 rounded-lg border border-Primarycolor/25 bg-bgcolor/80 text-textcolor2 text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 focus:border-transparent"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none text-3xl" aria-hidden>
-                    ⌕
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" aria-hidden>
+                    <FaSearch className="w-4 h-4" />
                   </span>
                 </div>
                 <select
@@ -235,7 +199,7 @@ const Catalogues = () => {
                     setCategoryFilter(e.target.value);
                     setCurrentPage(1);
                   }}
-                  className="px-4 py-2.5 rounded-lg border border-Primarycolor/25 bg-bgcolor/80 text-textcolor2 text-sm focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 min-w-[180px]"
+                  className="px-4 py-2.5 rounded-lg border border-Primarycolor/25 bg-Primarycolor text-textcolor2 text-sm focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 min-w-[180px]"
                 >
                   {CATEGORY_OPTIONS.map((opt) => (
                     <option key={opt.value || "all"} value={opt.value}>
@@ -245,90 +209,90 @@ const Catalogues = () => {
                 </select>
               </div>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
-            {pagedItems.map((item, index) => (
-              <article
-                key={item.id}
-                onClick={() => openDetails(item)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    openDetails(item);
-                  }
-                }}
-                className={`rounded-xl overflow-hidden border bg-bgcolor/95 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer ${
-                  item.isPopular
-                    ? "border-Secondarycolor/50 shadow-Secondarycolor/10"
-                    : "border-Primarycolor/25 hover:border-Primarycolor/40 hover:shadow-Primarycolor/10"
-                }`}
-              >
-                <div className="relative h-36 overflow-hidden">
-                  <img
-                    src={cardImage(item, (currentPage - 1) * PAGE_SIZE + index)}
-                    alt={item.title}
-                    className="w-full h-full object-cover max-h-40 scale-[1.02] hover:scale-105 transition duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-bgcolor via-transparent to-transparent" />
-                  <span className="absolute top-4 left-4 text-xs px-3 py-1 rounded-full bg-bgcolor2/80 border border-Primarycolor/40 text-textcolor2">
-                    {item.packageTier || (index % 2 === 0 ? "Featured" : "Creative")}
-                  </span>
-                  {item.isPopular && (
-                    <span className="absolute top-4 right-4 text-xs px-3 py-1 rounded-full bg-Secondarycolor/15 border border-Secondarycolor/40 text-Secondarycolor">
-                      Most Popular
-                    </span>
-                  )}
-                </div>
 
-                <div className="p-4">
-                  <h2 className="text-[1rem] font-semibold mb-2 text-textcolor2">{item.title}</h2>
-                  <p className="text-gray-400 text-[0.875rem] leading-relaxed">
-                    {item.summary?.slice(0, 105)}
-                    {item.summary?.length > 105 ? "..." : ""}
-                  </p>
-                  <p className="text-gray-500 text-[0.8125rem] leading-relaxed mt-1.5">
-                    {item.description?.slice(0, 110)}
-                    {item.description?.length > 110 ? "..." : ""}
-                  </p>
-                  {!!item.features?.length && (
-                    <ul className="mt-2.5 space-y-0.5">
-                      {item.features.slice(0, 2).map((feature) => (
-                        <li key={feature} className="text-[0.8125rem] text-gray-400">
-                          • {feature}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-
-                  <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                    {item.isPaymentEnabled ? (
-                      <div className="p-2.5 rounded-lg ">
-                        <p className="text-[0.8125rem] text-gray-400">
-                          {item.paymentType === "deposit" ? "Deposit" : "Full payment"}:
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 md:grid-cols-3 md:gap-6">
+              {pagedItems.map((item, index) => (
+                <article
+                  key={item.id}
+                  className={`group brand-card rounded-[28px] overflow-hidden shadow-md hover:shadow-xl ${
+                    item.isPopular ? "ring-1 ring-Secondarycolor/40" : ""
+                  }`}
+                >
+                  <Link to={`/catalogues/${item.slug}`} className="block h-full">
+                    <div className="relative h-52 overflow-hidden">
+                      <img
+                        src={cardImage(item, (currentPage - 1) * PAGE_SIZE + index)}
+                        alt={item.title}
+                        className="w-full h-full object-cover scale-[1.02] group-hover:scale-105 transition duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#120b1f] via-[#120b1f]/20 to-transparent" />
+                      <div className="absolute inset-x-0 top-0 p-4 flex items-center justify-between gap-3">
+                        <span className="text-[0.7rem] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-bgcolor2/80 border border-white/10 text-textcolor2">
+                          {item.packageTier || "standard"}
+                        </span>
+                        {item.isPopular && (
+                          <span className="text-[0.7rem] uppercase tracking-[0.2em] px-3 py-1.5 rounded-full bg-Secondarycolor/15 border border-Secondarycolor/40 text-Secondarycolor">
+                            Most Popular
+                          </span>
+                        )}
+                      </div>
+                      <div className="absolute inset-x-0 bottom-0 p-4">
+                        <p className="text-xs uppercase tracking-[0.24em] text-white/65 mb-2">
+                          {item.isPaymentEnabled ? "Ready for checkout" : "Project consultation"}
                         </p>
-                        <p className="text-[1rem] md:text-lg font-semibold text-Secondarycolor">{formatNaira(item.price)}</p>
+                        <h2 className="text-xl font-semibold text-white leading-tight">{item.title}</h2>
                       </div>
-                    ) : (
-                      <div className="p-2.5 rounded-lg border border-Primarycolor/25 bg-bgcolor2/50">
-                        <p className="text-[0.875rem] text-gray-400">Quote-based. Consultation required.</p>
+                    </div>
+
+                    <div className="p-5 flex flex-col gap-4">
+                      <div>
+                        <p className="text-[0.95rem] text-textcolor2 leading-relaxed">
+                          {item.summary?.slice(0, 95)}
+                          {item.summary?.length > 95 ? "..." : ""}
+                        </p>
+                        <p className="text-[0.84rem] text-gray-400 leading-relaxed mt-2">
+                          {item.description?.slice(0, 120)}
+                          {item.description?.length > 120 ? "..." : ""}
+                        </p>
                       </div>
-                    )}
-                    <button
-                      type="button"
-                      className="flex-shrink-0 px-3.5 py-2 rounded-full border border-Primarycolor/50 text-Primarycolor hover:bg-Primarycolor hover:text-white transition text-[0.875rem] font-medium"
-                    >
-                      View Options
-                    </button>
-                  </div>
-                </div>
-              </article>
-            ))}
-            {!filteredItems.length && (
-              <p className="text-gray-400 text-center col-span-full py-12 text-sm">
-                {items.length ? "No items match your search or filter." : "No catalogue items yet."}
-              </p>
-            )}
+
+                      <div className="mt-auto flex items-end justify-between gap-4 pt-2">
+                        <div>
+                          {item.isPaymentEnabled ? (
+                            <>
+                              <p className="text-[0.78rem] uppercase tracking-[0.18em] text-gray-500">
+                                {item.paymentType === "deposit" ? "Deposit" : "Full payment"}
+                              </p>
+                              <p className="text-xl font-semibold text-Secondarycolor mt-1">{formatNaira(item.price)}</p>
+                            </>
+                          ) : (
+                            <>
+                              <p className="text-[0.78rem] uppercase tracking-[0.18em] text-gray-500">Pricing</p>
+                              <p className="text-sm font-medium text-textcolor2 mt-1">Quote on request</p>
+                            </>
+                          )}
+                        </div>
+
+                        <div className="text-right">
+                          <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-Primarycolor/40 text-sm font-medium text-Primarycolor group-hover:bg-Primarycolor group-hover:text-white transition-colors">
+                            View details
+                            <FaArrowRight className="w-3.5 h-3.5" />
+                          </span>
+                          {cartSlugSet.has(item.slug) && (
+                            <p className="text-[0.75rem] text-Secondarycolor mt-2">Already in cart</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </article>
+              ))}
+
+              {!filteredItems.length && (
+                <p className="text-gray-400 text-center col-span-full py-12 text-sm">
+                  {items.length ? "No items match your search or filter." : "No catalogue items yet."}
+                </p>
+              )}
             </div>
 
             {filteredItems.length > PAGE_SIZE && (
@@ -372,90 +336,8 @@ const Catalogues = () => {
           </>
         )}
       </div>
-
-      {selectedItem && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70"
-          onClick={closeDetails}
-          role="presentation"
-        >
-          <div
-            className="w-full max-w-lg rounded-xl border border-Primarycolor/40 bg-bgcolor2 p-5"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${selectedItem.title} options`}
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="text-[1rem] md:text-lg font-semibold text-textcolor2">{selectedItem.title}</h2>
-                <p className="text-[0.875rem] text-gray-400 mt-2">{selectedItem.summary || "No summary available."}</p>
-              </div>
-              <button
-                type="button"
-                onClick={closeDetails}
-                className="text-gray-400 hover:text-white p-1"
-                aria-label="Close"
-              >
-                <FaTimes className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="mt-4 border border-Primarycolor/25 rounded-lg p-4">
-              <p className="text-[0.875rem] text-gray-400">Price</p>
-              <p className="text-lg font-semibold text-Secondarycolor mt-0.5">{formatNaira(selectedItem.price)}</p>
-              <p className="text-[0.875rem] text-gray-400 mt-1">Payment: {selectedItem.paymentType || "full"}</p>
-            </div>
-
-            <div className="mt-5 flex flex-wrap gap-2">
-              {selectedItem.isPaymentEnabled ? (
-                <Link
-                  to={`/checkout/${selectedItem.slug}`}
-                  className="px-4 py-2 rounded-full bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor text-white transition text-[0.875rem] font-medium"
-                  onClick={closeDetails}
-                >
-                  Buy Now
-                </Link>
-              ) : (
-                <Link
-                  to={`/contact?service=${selectedItem.slug}`}
-                  className="px-4 py-2 rounded-full bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor text-white transition text-[0.875rem] font-medium"
-                  onClick={closeDetails}
-                >
-                  Ask for Quote
-                </Link>
-              )}
-
-              {cartSlugSet.has(selectedItem.slug) ? (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveFromCart(selectedItem.slug)}
-                  className="px-4 py-2 rounded-full border border-red-400 text-red-300 hover:bg-red-500/10 transition text-[0.875rem]"
-                >
-                  Remove from Cart
-                </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleAddToCart(selectedItem, items.findIndex((item) => item.slug === selectedItem.slug))
-                  }
-                  className="px-4 py-2 rounded-full border border-Primarycolor text-Primarycolor hover:bg-Primarycolor hover:text-white transition text-[0.875rem] font-medium"
-                >
-                  Add to Cart
-                </button>
-              )}
-            </div>
-
-            <p className="text-[0.8125rem] text-gray-500 mt-4">
-              If you are not signed in, checkout will first redirect you to login or register before payment.
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
 
 export default Catalogues;
-
