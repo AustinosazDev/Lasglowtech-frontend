@@ -169,6 +169,51 @@
   @keyframes floatY { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
 }
 
+/* ── Light shell: admin + client + learner dashboards (readable cards & tokens) ── */
+.admin-dashboard-light,
+.user-dashboard-light {
+  --color-text: #334155;
+  --color-text2: #0f172a;
+  --color-muted: #64748b;
+  --color-bg: #f1f5f9;
+  --color-bg2: #ffffff;
+}
+.admin-dashboard-light .brand-card,
+.user-dashboard-light .brand-card {
+  background: #ffffff;
+  border: 1px solid rgba(135, 0, 255, 0.12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+.admin-dashboard-light .brand-card:hover,
+.user-dashboard-light .brand-card:hover {
+  background: #faf5ff;
+  border-color: rgba(135, 0, 255, 0.22);
+  box-shadow: 0 10px 28px rgba(135, 0, 255, 0.08);
+  transform: translateY(-2px);
+}
+.admin-dashboard-light .brand-card::before,
+.careers-academy-light .brand-card::before {
+  opacity: 0.35;
+}
+.admin-dashboard-light .text-red-300,
+.user-dashboard-light .text-red-300 {
+  color: #b91c1c;
+}
+.admin-dashboard-light .text-green-300,
+.user-dashboard-light .text-green-300 {
+  color: #15803d;
+}
+.admin-dashboard-light .text-yellow-300,
+.user-dashboard-light .text-yellow-300 {
+  color: #a16207;
+}
+.admin-dashboard-light .text-orange-300,
+.user-dashboard-light .text-orange-300 {
+  color: #c2410c;
+}
+
 /* ── Swiper overrides ── */
 .swiper-pagination-bullet { background: var(--muted) !important; opacity:.4; }
 .swiper-pagination-bullet-active { background: var(--orange) !important; opacity:1; }

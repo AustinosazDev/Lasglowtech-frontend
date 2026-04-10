@@ -72,7 +72,7 @@ const ClientDashboard = () => {
 
       <section className="max-w-6xl mx-auto">
         <div className="brand-card p-5 md:py-16">
-          <h1 className="text-2xl md:text-3xl font-semibold">Welcome, {firstName}</h1>
+          <h1 className="text-2xl md:text-3xl font-semibold text-textcolor2">Welcome, {firstName}</h1>
           <p className="text-sm text-gray-400 mt-1">Manage your service orders and payment status.</p>
           {!loading && (
             <div className="brand-card mt-4 p-3 text-sm">
@@ -93,22 +93,22 @@ const ClientDashboard = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
             <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Total Orders</p>
-              <p className="text-2xl font-semibold mt-1">{orders.length}</p>
+              <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{orders.length}</p>
             </article>
             <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Paid Orders</p>
-              <p className="text-2xl font-semibold mt-1">{paidOrders.length}</p>
+              <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{paidOrders.length}</p>
             </article>
             <article className="brand-card p-4">
               <p className="text-xs uppercase text-gray-400">Total Spend</p>
-              <p className="text-2xl font-semibold mt-1">NGN {totalSpend.toLocaleString()}</p>
+              <p className="text-2xl font-semibold mt-1 text-Secondarycolor tabular-nums">NGN {totalSpend.toLocaleString()}</p>
             </article>
           </div>
 
           <div className="mt-4">
             <Link
               to="/catalogues"
-              className="inline-block px-4 py-2 rounded-md border border-Primarycolor/40 hover:bg-Primarycolor transition-all text-sm"
+              className="inline-block px-4 py-2 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor hover:text-white hover:border-Primarycolor transition-all text-sm font-medium"
             >
               Browse Catalogues
             </Link>
@@ -116,7 +116,7 @@ const ClientDashboard = () => {
         </div>
 
         <div className="brand-card p-5 md:p-6 mt-6">
-          <h2 className="text-lg font-semibold mb-3">My Orders</h2>
+          <h2 className="text-lg font-semibold mb-3 text-textcolor2">My Orders</h2>
           {loading && <p className="text-gray-400">Loading orders...</p>}
           {!loading && error && <p className="text-red-300">{error}</p>}
 
@@ -128,7 +128,7 @@ const ClientDashboard = () => {
                   {orders.map((item) => (
                     <article key={item.id} className="brand-card p-4">
                       <div className="flex flex-wrap items-center justify-between gap-2">
-                        <p className="font-semibold">{item.service_name}</p>
+                        <p className="font-semibold text-textcolor2">{item.service_name}</p>
                         <span
                           className={`px-3 py-1 rounded-full border text-xs uppercase ${
                             statusClass[item.status] || "text-gray-300 border-gray-300/40"
@@ -147,7 +147,7 @@ const ClientDashboard = () => {
                         <button
                           type="button"
                           onClick={() => downloadInvoice(item.id, item.tx_ref)}
-                          className="mt-3 px-3 py-1.5 rounded-md border border-Primarycolor/40 hover:bg-Primarycolor/20 text-xs"
+                          className="mt-3 px-3 py-1.5 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/25 text-xs font-medium transition-colors"
                         >
                           Download Invoice
                         </button>

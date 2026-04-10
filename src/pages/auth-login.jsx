@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope } from "react-icons/fa";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { getRoleHomePath, saveSession } from "../utils/auth";
 import { Land1, Land2, Land3 } from "../components/images";
+import AuthSplitShell from "../components/AuthSplitShell";
 
 const slides = [
   { image: Land1, title: "Crafted Digital Experiences", text: "Partner with a team focused on clean design, robust engineering, and measurable business impact." },
@@ -12,7 +13,8 @@ const slides = [
   { image: Land2, title: "Creative Services Marketplace", text: "Login to access premium catalogues, personalized checkout, and faster project onboarding." },
 ];
 
-const inputCls = "w-full px-4 py-3.5 rounded-xl bg-[#120b1f] border border-[#8700ff]/25 text-white placeholder-[#9b8cb5] text-sm font-semibold focus:outline-none focus:border-[#8700ff] focus:ring-1 focus:ring-[#8700ff]/40 transition-all";
+const inputCls =
+  "w-full rounded-xl bg-bgcolor border border-Primarycolor/25 text-textcolor2 placeholder-muted text-sm font-semibold focus:outline-none focus:border-Primarycolor focus:ring-1 focus:ring-Primarycolor/40 transition-all";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -25,13 +27,13 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   useEffect(() => {
-    const t = setInterval(() => setSlideIdx(p => (p + 1) % slides.length), 4000);
+    const t = setInterval(() => setSlideIdx((p) => (p + 1) % slides.length), 4000);
     return () => clearInterval(t);
   }, []);
 
-  const handleChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
+  const handleChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -41,64 +43,97 @@ export default function LoginPage() {
       navigate(from || getRoleHomePath(res.data?.user?.role), { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || "Unable to login.");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#120b1f] grid grid-cols-1 lg:grid-cols-2">
-      {/* Left image panel */}
-      <div className="hidden lg:block relative overflow-hidden">
-        {slides.map((s, i) => (
-          <div key={i} className={`absolute inset-0 transition-opacity duration-700 ${i === slideIdx ? "opacity-100" : "opacity-0"}`}>
-            <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#120b1f] via-[#120b1f]/50 to-transparent" />
-            <div className="absolute bottom-12 left-10 right-10">
-              <h2 className="font-extrabold text-2xl text-white mb-2">{s.title}</h2>
-              <p className="text-[#9b8cb5] text-sm leading-relaxed">{s.text}</p>
-            </div>
-          </div>
-        ))}
-        <div className="absolute bottom-6 left-10 flex gap-2">
-          {slides.map((_, i) => <div key={i} className={`h-1 rounded-full transition-all ${i === slideIdx ? "w-6 bg-orange-500" : "w-2 bg-[#8700ff]/20"}`} />)}
-        </div>
-      </div>
+    <AuthSplitShell slides={slides} slideIdx={slideIdx}>
+      <div className="max-w-md mx-auto w-full shrink-0">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-muted hover:text-Secondarycolor text-sm font-semibold mb-4 transition-colors"
+        >
+          ← Back to site
+        </Link>
 
-      {/* Right form panel */}
-      <div className="flex flex-col justify-center px-8 md:px-16 py-16">
-        <div className="max-w-md mx-auto w-full">
-          <Link to="/" className="inline-flex items-center gap-2 text-[#9b8cb5] hover:text-orange-500 text-sm font-semibold mb-10 transition-colors">
-            ← Back to site
-          </Link>
-
-          <span className="section-tag"><span className="dot-live"/>Welcome back</span>
-          <h1 className="font-extrabold text-3xl text-white tracking-tight mb-2">Sign in to Lasglowtech</h1>
-          <p className="text-[#9b8cb5] text-sm mb-8">Don't have an account? <Link to="/auth/register" className="text-orange-500 hover:underline font-bold">Sign up free</Link></p>
+        <div className="brand-card p-8 md:p-9">
+          <span className="section-tag !mb-2 block">
+            <span className="dot-live" />
+            Welcome back
+          </span>
+          <h1 className="font-extrabold text-2xl sm:text-3xl text-textcolor2 tracking-tight mb-6">Sign in to Lasglowtech</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="email" className="text-xs font-bold text-[#9b8cb5] uppercase tracking-wider mb-2 block">Email address</label>
-              <input id="email" name="email" type="email" placeholder="you@email.com" value={formData.email} onChange={handleChange} className={inputCls} required />
+              <label htmlFor="email" className="block text-sm font-medium text-textcolor2 mb-2">
+                Email address
+              </label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`${inputCls} pl-10 pr-3 py-3`}
+                  required
+                />
+              </div>
             </div>
             <div>
-              <label htmlFor="password" className="text-xs font-bold text-[#9b8cb5] uppercase tracking-wider mb-2 block">Password</label>
+              <label htmlFor="password" className="block text-sm font-medium text-textcolor2 mb-2">
+                Password
+              </label>
               <div className="relative">
-                <input id="password" name="password" type={showPwd ? "text" : "password"} placeholder="••••••••" value={formData.password} onChange={handleChange} className={`${inputCls} pr-12`} required />
-                <button type="button" onClick={() => setShowPwd(p => !p)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9b8cb5] hover:text-orange-500 transition-colors" aria-label={showPwd ? "Hide password" : "Show password"}>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPwd ? "text" : "password"}
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`${inputCls} px-3 py-3 pr-12`}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-Secondarycolor transition-colors p-1"
+                  aria-label={showPwd ? "Hide password" : "Show password"}
+                >
                   {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <div className="flex justify-end">
-              <Link to="/auth/forgot-password" className="text-xs text-[#9b8cb5] hover:text-orange-500 transition-colors font-semibold">Forgot password?</Link>
+            <div className="flex justify-end pt-0.5">
+              <Link
+                to="/auth/forgot-password"
+                className="text-xs text-muted hover:text-Secondarycolor transition-colors font-semibold"
+              >
+                Forgot password?
+              </Link>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+            >
               {loading ? "Signing in…" : "Sign in →"}
             </button>
           </form>
+
+          <p className="text-muted text-sm text-center mt-6">
+            Don&apos;t have an account?{" "}
+            <Link to="/auth/register" className="text-Secondarycolor hover:underline font-semibold">
+              Sign up free
+            </Link>
+          </p>
         </div>
       </div>
-    </div>
+    </AuthSplitShell>
   );
 }
-
-

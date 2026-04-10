@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaEye, FaEyeSlash, FaArrowLeft } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaEnvelope, FaShieldAlt } from "react-icons/fa";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { saveAdminSession } from "../utils/adminAuth";
-import { LOGO } from "../components/images";
+
+const inputCls =
+  "w-full rounded-xl bg-bgcolor border border-Primarycolor/25 text-textcolor2 placeholder-muted text-sm font-semibold focus:outline-none focus:border-Primarycolor focus:ring-1 focus:ring-Primarycolor/40 transition-all";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -38,62 +40,102 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen px-6 py-12 md:py-16 bg-gradient-to-br from-bgcolor2 via-bgcolor to-bgcolor2 text-textcolor2">
-      <div className="max-w-md mx-auto bg-bgcolor2 border border-Primarycolor/30 rounded-2xl p-7 shadow-2xl">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-gray-400 hover:text-Secondarycolor transition-colors mb-6 text-sm"
-        >
-          <FaArrowLeft className="w-4 h-4" />
-          Back to Home
-        </Link>
-        <div className="flex flex-col items-center text-center mb-6">
-          <img src={LOGO} alt="Lasglowtech" className="h-14 w-auto object-contain" />
-          <h1 className="text-xl font-semibold mt-4">Admin Control Center</h1>
-          <p className="text-gray-400 mt-1 text-sm">Sign in to manage blogs and service catalogues.</p>
+    <div className="relative min-h-[100dvh] flex items-center justify-center px-4 py-12 overflow-hidden text-textcolor2 bg-gradient-to-br from-bgcolor2 via-bgcolor to-bgcolor">
+      <div
+        className="absolute top-[-100px] right-[-60px] w-[min(520px,90vw)] h-[min(520px,90vw)] rounded-full bg-Primarycolor1 opacity-[0.14] blur-[100px] pointer-events-none"
+        aria-hidden
+      />
+      <div
+        className="absolute bottom-[-80px] left-[-40px] w-[min(400px,75vw)] h-[min(400px,75vw)] rounded-full bg-Primarycolor opacity-[0.1] blur-[95px] pointer-events-none"
+        aria-hidden
+      />
+      <div
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(640px,120vw)] h-[min(640px,120vw)] rounded-full bg-Secondarycolor opacity-[0.05] blur-[110px] pointer-events-none"
+        aria-hidden
+      />
+
+      <div className="brand-card w-full max-w-md p-8 md:p-9 relative z-10">
+        <div className="flex flex-col items-center text-center">
+          <div
+            className="w-12 h-12 rounded-xl bg-Primarycolor/25 border border-Primarycolor/35 flex items-center justify-center mb-5"
+            aria-hidden
+          >
+            <FaShieldAlt className="w-6 h-6 text-Secondarycolor" />
+          </div>
+          <h1 className="text-xl font-bold text-textcolor2 tracking-tight">Admin Login</h1>
+          <p className="text-sm text-muted mt-1.5">Lasglowtech — Admin Panel</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Admin email"
-            className="w-full p-3 rounded-md bg-[#f6f6f8] text-black focus:outline-none"
-            required
-          />
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="Password"
-              className="w-full p-3 pr-12 rounded-md bg-[#f6f6f8] text-black focus:outline-none"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-Primarycolor"
-              aria-label={showPassword ? "Hide password" : "Show password"}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <div>
+            <label htmlFor="admin-email" className="block text-sm font-medium text-textcolor2 mb-2">
+              Email
+            </label>
+            <div className="relative">
+              <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+              <input
+                id="admin-email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="admin@lasglowtech.com.ng"
+                autoComplete="email"
+                className={`${inputCls} pl-10 pr-3 py-3`}
+                required
+              />
+            </div>
+          </div>
+          <div>
+            <label htmlFor="admin-password" className="block text-sm font-medium text-textcolor2 mb-2">
+              Password
+            </label>
+            <div className="relative">
+              <input
+                id="admin-password"
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                autoComplete="current-password"
+                className={`${inputCls} px-3 py-3 pr-12`}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-Secondarycolor transition-colors p-1"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+              </button>
+            </div>
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 rounded-md bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor font-semibold text-white"
+            className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-1"
           >
-            {loading ? "Signing in..." : "Login"}
+            {loading ? "Signing in…" : "Sign In as Admin"}
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-muted">
+          Not an admin?{" "}
+          <Link to="/auth/login" className="text-Secondarycolor hover:underline font-semibold transition-colors">
+            Back to user login
+          </Link>
+        </p>
+        <Link
+          to="/"
+          className="block text-center text-xs text-muted hover:text-Secondarycolor mt-4 transition-colors"
+        >
+          Back to main site
+        </Link>
       </div>
     </div>
   );
 };
 
 export default AdminLogin;
-

@@ -47,6 +47,8 @@ import MyOrders from "./pages/my-orders";
 import ClientDashboard from "./pages/client-dashboard";
 import LmsAdmin from "./pages/dashboard/lms";
 import BulkEmailAdmin from "./pages/dashboard/bulk-email";
+import TermsOfServicePage from "./pages/terms-of-service";
+import PrivacyPolicyPage from "./pages/privacy-policy";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -67,7 +69,8 @@ function App() {
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/careers") ||
     location.pathname === "/admin/login" ||
-    location.pathname.startsWith("/auth/");
+    location.pathname.startsWith("/auth/") ||
+    location.pathname.startsWith("/legal/");
 
   return (
     <>
@@ -95,6 +98,8 @@ function App() {
         <Route path="/auth/register" element={<RegisterPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password/:token" element={<ResetPasswordPage />} />
+        <Route path="/legal/terms" element={<TermsOfServicePage />} />
+        <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
           <Route index element={<DashboardHome />} />

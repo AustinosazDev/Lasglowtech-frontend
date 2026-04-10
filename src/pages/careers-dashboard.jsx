@@ -70,17 +70,17 @@ const downloadModuleNotesPdf = (module) => {
 };
 
 const statusClass = {
-  new: "text-amber-400 border-amber-400/40 bg-amber-400/10",
-  reviewing: "text-blue-400 border-blue-400/40 bg-blue-400/10",
-  accepted: "text-emerald-400 border-emerald-400/40 bg-emerald-400/10",
-  waitlist: "text-orange-400 border-orange-400/40 bg-orange-400/10",
-  rejected: "text-red-400 border-red-400/40 bg-red-400/10",
+  new: "text-amber-800 border-amber-300 bg-amber-50",
+  reviewing: "text-blue-800 border-blue-300 bg-blue-50",
+  accepted: "text-emerald-800 border-emerald-300 bg-emerald-50",
+  waitlist: "text-orange-800 border-orange-300 bg-orange-50",
+  rejected: "text-red-800 border-red-300 bg-red-50",
 };
 
 const levelClass = {
-  beginner: "text-emerald-400 border-emerald-400/30 bg-emerald-400/10",
-  intermediate: "text-amber-400 border-amber-400/30 bg-amber-400/10",
-  advanced: "text-rose-400 border-rose-400/30 bg-rose-400/10",
+  beginner: "text-emerald-800 border-emerald-300 bg-emerald-50",
+  intermediate: "text-amber-800 border-amber-300 bg-amber-50",
+  advanced: "text-rose-800 border-rose-300 bg-rose-50",
 };
 
 const courseFallbacks = [
@@ -404,7 +404,7 @@ const CareersDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bgcolor text-textcolor2 flex">
+    <div className="user-dashboard-light min-h-screen bg-white text-textcolor2 flex">
       <SEO
         title="Learner Dashboard | Lasglowtech"
         description="Track your career application and learning progress."
@@ -415,16 +415,16 @@ const CareersDashboard = () => {
       <aside
         className={`${
           sidebarOpen ? "w-56" : "w-16"
-        } hidden md:flex flex-shrink-0 border-r border-Primarycolor/30 bg-bgcolor2/80 transition-all duration-300 ease-in-out flex-col`}
+        } hidden md:flex flex-shrink-0 border-r border-[#8700ff]/30 bg-gradient-to-b from-[#120b1f] via-[#150d24] to-[#1a1030] transition-all duration-300 ease-in-out flex-col shadow-[4px_0_32px_rgba(135,0,255,0.12)]`}
       >
-        <div className="p-4 border-b border-Primarycolor/20 flex items-center justify-between">
+        <div className="p-4 border-b border-[#8700ff]/25 flex items-center justify-between">
           {sidebarOpen && (
-            <span className="text-sm font-semibold text-Secondarycolor truncate">Dashboard</span>
+            <span className="text-sm font-semibold text-Secondarycolor truncate tracking-wide">Dashboard</span>
           )}
           <button
             type="button"
             onClick={() => setSidebarOpen((o) => !o)}
-            className="p-2 rounded-lg hover:bg-Primarycolor/20 text-gray-400 hover:text-Secondarycolor transition-colors"
+            className="p-2 rounded-lg text-[#9b8cb5] hover:text-white hover:bg-[#8700ff]/30 border border-transparent hover:border-[#8700ff]/40 transition-colors"
             aria-label={sidebarOpen ? "Collapse sidebar" : "Expand sidebar"}
           >
             {sidebarOpen ? <FaChevronLeft className="w-4 h-4" /> : <FaChevronRight className="w-4 h-4" />}
@@ -436,10 +436,10 @@ const CareersDashboard = () => {
               key={id}
               type="button"
               onClick={() => setActiveSection(id)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
                 activeSection === id
-                  ? "bg-Primarycolor/30 text-Secondarycolor border border-Primarycolor/40"
-                  : "text-gray-400 hover:bg-Primarycolor/10 hover:text-textcolor2"
+                  ? "bg-[#8700ff]/45 text-white border-[#8700ff]/60 shadow-[0_0_20px_rgba(135,0,255,0.25)]"
+                  : "text-[#c4b5dc] border-transparent hover:text-white hover:bg-[#8700ff]/15 hover:border-[#8700ff]/25"
               }`}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
@@ -448,11 +448,11 @@ const CareersDashboard = () => {
           ))}
         </nav>
         {sidebarOpen && (
-          <div className="p-3 border-t border-Primarycolor/20 space-y-2">
-            <Link to="/careers" className="block text-center text-xs text-Secondarycolor hover:underline">
+          <div className="p-3 border-t border-[#8700ff]/25 space-y-2">
+            <Link to="/careers" className="block text-center text-xs text-Secondarycolor font-semibold hover:underline">
               Explore courses
             </Link>
-            <Link to="/" className="block text-center text-xs text-muted hover:text-Secondarycolor">
+            <Link to="/" className="block text-center text-xs text-[#9b8cb5] hover:text-white transition-colors">
               Main site
             </Link>
           </div>
@@ -460,11 +460,11 @@ const CareersDashboard = () => {
       </aside>
 
       {/* Main content – extra bottom padding on mobile for tab bar */}
-      <main className="flex-1 overflow-auto pb-20 md:pb-0">
-        <header className="sticky top-0 z-10 border-b border-Primarycolor/20 bg-bgcolor/95 backdrop-blur-sm px-4 md:px-8 py-4">
+      <main className="flex-1 overflow-auto pb-20 md:pb-0 bg-white">
+        <header className="sticky top-0 z-10 border-b-2 border-[#8700ff]/25 bg-white/95 backdrop-blur-sm px-4 md:px-8 py-4 shadow-sm shadow-slate-200/25">
           <div className="flex items-center justify-between max-w-6xl mx-auto">
             <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-Primarycolor/40 bg-Primarycolor/20 flex items-center justify-center text-lg font-semibold text-Secondarycolor">
+              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-Primarycolor/35 bg-violet-100 flex items-center justify-center text-lg font-semibold text-Primarycolor">
                 {latest?.picture_url ? (
                   <img src={latest.picture_url} alt={firstName} className="w-full h-full object-cover" />
                 ) : (
@@ -472,17 +472,17 @@ const CareersDashboard = () => {
                 )}
               </div>
               <div>
-                <h1 className="text-lg font-semibold text-textcolor2">Welcome, {firstName}</h1>
-                <p className="text-xs text-gray-500">Your learning journey and progress</p>
+                <h1 className="text-lg font-semibold text-slate-900">Welcome, {firstName}</h1>
+                <p className="text-xs text-slate-600">Your learning journey and progress</p>
               </div>
             </div>
             <div className="hidden sm:flex items-center gap-3">
-              <Link to="/" className="text-sm text-muted hover:text-Secondarycolor transition-colors">
+              <Link to="/" className="text-sm text-slate-600 hover:text-Primarycolor transition-colors">
                 Main site
               </Link>
               <Link
                 to="/careers"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 hover:bg-Primarycolor/20 text-sm transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/35 bg-violet-50 hover:bg-violet-100 text-sm text-Primarycolor transition-colors"
               >
                 Explore courses
               </Link>
@@ -493,11 +493,11 @@ const CareersDashboard = () => {
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
           {loading && (
             <div className="flex items-center justify-center py-20">
-              <p className="text-gray-400">Loading dashboard...</p>
+              <p className="text-slate-600">Loading dashboard...</p>
             </div>
           )}
           {!loading && error && (
-            <div className="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300 text-sm">
+            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800 text-sm">
               {error}
             </div>
           )}
@@ -509,20 +509,20 @@ const CareersDashboard = () => {
                 <section className="space-y-8">
                   <div>
                     <h2 className="text-xl font-semibold text-textcolor2 mb-1">Overview</h2>
-                    <p className="text-sm text-gray-500 mb-5">Your activity at a glance</p>
+                    <p className="text-sm text-slate-500 mb-5">Your activity at a glance</p>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                       <article className="brand-card p-6">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Applications</p>
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Applications</p>
                         <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{applications.length}</p>
-                        <p className="text-sm text-gray-400 mt-1">Career applications submitted</p>
+                        <p className="text-sm text-slate-600 mt-1">Career applications submitted</p>
                       </article>
                       <article className="brand-card p-6">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Enrolled</p>
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Enrolled</p>
                         <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{enrollments.length}</p>
-                        <p className="text-sm text-gray-400 mt-1">Active courses</p>
+                        <p className="text-sm text-slate-600 mt-1">Active courses</p>
                       </article>
                       <article className="brand-card p-6">
-                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Latest status</p>
+                        <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Latest status</p>
                         <p className="mt-2">
                           <span
                             className={`inline-flex px-3 py-1.5 rounded-full border text-xs font-semibold uppercase tracking-wider ${
@@ -532,13 +532,13 @@ const CareersDashboard = () => {
                             {latest?.status || "—"}
                           </span>
                         </p>
-                        <p className="text-sm text-gray-400 mt-2">Application status</p>
+                        <p className="text-sm text-slate-600 mt-2">Application status</p>
                       </article>
                     </div>
                   </div>
                   <div className="brand-card p-6">
                     <h2 className="text-lg font-semibold text-textcolor2 mb-1">Quick actions</h2>
-                    <p className="text-sm text-gray-400 mb-5">Jump to a section from the sidebar or use the buttons below.</p>
+                    <p className="text-sm text-slate-600 mb-5">Jump to a section from the sidebar or use the buttons below.</p>
                     <div className="flex flex-wrap gap-3">
                       <button
                         type="button"
@@ -572,17 +572,17 @@ const CareersDashboard = () => {
                   <div className="flex items-center justify-between gap-4 px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <div>
                       <h2 className="text-xl font-semibold text-textcolor2">Career application</h2>
-                      <p className="text-sm text-gray-500 mt-0.5">Admission and review status</p>
+                      <p className="text-sm text-slate-500 mt-0.5">Admission and review status</p>
                     </div>
                     <Link
-                      to="/careers"
+                      to="/careers/apply"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 hover:bg-Primarycolor/20 text-sm transition-colors"
                     >
                       New Application
                     </Link>
                   </div>
                   <div className="p-6">
-                  {!latest && <p className="text-gray-400">No application yet.</p>}
+                  {!latest && <p className="text-slate-600">No application yet.</p>}
                   {!!latest && (
                     <div className="space-y-5">
                       <span
@@ -592,35 +592,35 @@ const CareersDashboard = () => {
                       >
                         {latest.status}
                       </span>
-                      <p className="text-sm text-gray-300">
-                        <span className="text-gray-500">Skill:</span> {latest.skill_interest} —{" "}
-                        <span className="text-gray-500">Experience:</span> {latest.experience_level || "N/A"}
+                      <p className="text-sm text-slate-600">
+                        <span className="text-slate-500">Skill:</span> {latest.skill_interest} —{" "}
+                        <span className="text-slate-500">Experience:</span> {latest.experience_level || "N/A"}
                       </p>
-                      <p className="text-sm text-gray-300">
-                        <span className="text-gray-500">Learning goal:</span> {latest.learning_goal}
+                      <p className="text-sm text-slate-600">
+                        <span className="text-slate-500">Learning goal:</span> {latest.learning_goal}
                       </p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                        <p><span className="text-gray-500">Full name:</span> {latest.full_name}</p>
-                        <p><span className="text-gray-500">Email:</span> {latest.email}</p>
-                        <p><span className="text-gray-500">Phone:</span> {latest.phone}</p>
-                        <p><span className="text-gray-500">Availability:</span> {latest.availability || "N/A"}</p>
-                        <p><span className="text-gray-500">Country:</span> {latest.country || "N/A"}</p>
-                        <p><span className="text-gray-500">City:</span> {latest.city || "N/A"}</p>
-                        <p><span className="text-gray-500">Cohort:</span> {latest.cohort || "Not assigned"}</p>
-                        <p><span className="text-gray-500">Fee:</span> NGN {Number(latest.fee_amount || 0).toLocaleString()}</p>
-                        <p><span className="text-gray-500">Payment:</span> {latest.payment_status || "unpaid"}</p>
+                        <p><span className="text-slate-500">Full name:</span> {latest.full_name}</p>
+                        <p><span className="text-slate-500">Email:</span> {latest.email}</p>
+                        <p><span className="text-slate-500">Phone:</span> {latest.phone}</p>
+                        <p><span className="text-slate-500">Availability:</span> {latest.availability || "N/A"}</p>
+                        <p><span className="text-slate-500">Country:</span> {latest.country || "N/A"}</p>
+                        <p><span className="text-slate-500">City:</span> {latest.city || "N/A"}</p>
+                        <p><span className="text-slate-500">Cohort:</span> {latest.cohort || "Not assigned"}</p>
+                        <p><span className="text-slate-500">Fee:</span> NGN {Number(latest.fee_amount || 0).toLocaleString()}</p>
+                        <p><span className="text-slate-500">Payment:</span> {latest.payment_status || "unpaid"}</p>
                         {latest.portfolio_url && (
                           <p className="md:col-span-2">
-                            <span className="text-gray-500">Portfolio:</span>{" "}
+                            <span className="text-slate-500">Portfolio:</span>{" "}
                             <a href={latest.portfolio_url} target="_blank" rel="noreferrer" className="text-Secondarycolor hover:underline break-all">
                               {latest.portfolio_url}
                             </a>
                           </p>
                         )}
                         {!!latest.admin_notes && (
-                          <p className="md:col-span-2"><span className="text-gray-500">Admin notes:</span> {latest.admin_notes}</p>
+                          <p className="md:col-span-2"><span className="text-slate-500">Admin notes:</span> {latest.admin_notes}</p>
                         )}
-                        <p className="md:col-span-2 text-xs text-gray-500">
+                        <p className="md:col-span-2 text-xs text-slate-500">
                           Submitted: {new Date(latest.created_at).toLocaleString()}
                         </p>
                       </div>
@@ -635,11 +635,11 @@ const CareersDashboard = () => {
                 <section className="brand-card overflow-hidden">
                   <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <h2 className="text-xl font-semibold text-textcolor2">My learning progress</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Progress across enrolled courses</p>
+                    <p className="text-sm text-slate-500 mt-0.5">Progress across enrolled courses</p>
                   </div>
                   <div className="p-6">
                   {enrollments.length === 0 && (
-                    <p className="text-gray-400">No enrolled courses yet. Browse courses and enroll to get started.</p>
+                    <p className="text-slate-600">No enrolled courses yet. Browse courses and enroll to get started.</p>
                   )}
                   <div className="space-y-5">
                     {enrollments.map((en) => (
@@ -657,7 +657,7 @@ const CareersDashboard = () => {
                             {en.course.level}
                           </span>
                         </div>
-                        <p className="text-sm text-gray-400 mt-2">
+                        <p className="text-sm text-slate-600 mt-2">
                           {en.completedModules} / {en.totalModules} modules — {en.progressPercent}%
                         </p>
                         <div className="w-full h-2.5 bg-bgcolor2 rounded-full mt-3 overflow-hidden">
@@ -674,7 +674,7 @@ const CareersDashboard = () => {
                               </p>
                             ) : (
                               <>
-                                <p className="text-xs text-gray-500 w-full mb-1">
+                                <p className="text-xs text-slate-500 w-full mb-1">
                                   Download is available after Lasglowtech verifies programme completion and issues your certificate.
                                 </p>
                                 <button
@@ -697,7 +697,7 @@ const CareersDashboard = () => {
                             )}
                           </div>
                         ) : (
-                          <p className="text-xs text-gray-500 mt-3">
+                          <p className="text-xs text-slate-500 mt-3">
                             Complete all {en.totalModules} modules to unlock your certificate.
                           </p>
                         )}
@@ -714,7 +714,7 @@ const CareersDashboard = () => {
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <div>
                       <h2 className="text-xl font-semibold text-textcolor2">Course modules</h2>
-                      <p className="text-sm text-gray-500 mt-0.5">Lessons, notes, and resources</p>
+                      <p className="text-sm text-slate-500 mt-0.5">Lessons, notes, and resources</p>
                     </div>
                     <div className="flex items-center gap-2 flex-wrap">
                       <select
@@ -743,9 +743,9 @@ const CareersDashboard = () => {
                     </div>
                   </div>
 
-                  {modulesLoading && <p className="px-6 text-gray-400 text-sm">Loading modules...</p>}
+                  {modulesLoading && <p className="px-6 text-slate-600 text-sm">Loading modules...</p>}
                   {!modulesLoading && !modules.length && (
-                    <p className="px-6 text-gray-400 text-sm">No modules for this course yet, or select an enrolled course.</p>
+                    <p className="px-6 text-slate-600 text-sm">No modules for this course yet, or select an enrolled course.</p>
                   )}
 
                   {!modulesLoading && modules.length > 0 && (
@@ -827,7 +827,7 @@ const CareersDashboard = () => {
                                       ) : someDone ? (
                                         <FaCircle className="w-5 h-5 text-blue-500/80 flex-shrink-0" />
                                       ) : (
-                                        <FaCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+                                        <FaCircle className="w-5 h-5 text-slate-600 flex-shrink-0" />
                                       )}
                                       <span className="font-medium text-textcolor2 flex-1">Week {week}</span>
                                       <span className="text-xs text-muted tabular-nums">{completed}/{total}</span>
@@ -856,7 +856,7 @@ const CareersDashboard = () => {
                                               {module.isCompleted ? (
                                                 <FaCheckCircle className="w-4 h-4 text-blue-500 flex-shrink-0" />
                                               ) : (
-                                                <FaCircle className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                                <FaCircle className="w-4 h-4 text-slate-600 flex-shrink-0" />
                                               )}
                                               <div className="min-w-0 flex-1">
                                                 <p className="text-sm font-medium truncate">{module.title}</p>
@@ -901,7 +901,7 @@ const CareersDashboard = () => {
                                       onClick={() => toggleWeek(week)}
                                       className="w-full flex items-center gap-3 px-4 py-3 text-left hover:bg-Primarycolor/5"
                                     >
-                                      {allDone ? <FaCheckCircle className="w-5 h-5 text-blue-500" /> : someDone ? <FaCircle className="w-5 h-5 text-blue-500/80" /> : <FaCircle className="w-5 h-5 text-gray-400" />}
+                                      {allDone ? <FaCheckCircle className="w-5 h-5 text-blue-500" /> : someDone ? <FaCircle className="w-5 h-5 text-blue-500/80" /> : <FaCircle className="w-5 h-5 text-slate-600" />}
                                       <span className="font-medium flex-1">Week {week}</span>
                                       <span className="text-xs text-muted">{completed}/{total}</span>
                                       {isExpanded ? <FaChevronUp className="w-4 h-4" /> : <FaChevronDown className="w-4 h-4" />}
@@ -920,7 +920,7 @@ const CareersDashboard = () => {
                                               }}
                                               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left ${active ? "bg-gray-500/20" : "hover:bg-Primarycolor/5"}`}
                                             >
-                                              {module.isCompleted ? <FaCheckCircle className="w-4 h-4 text-blue-500" /> : <FaCircle className="w-4 h-4 text-gray-400" />}
+                                              {module.isCompleted ? <FaCheckCircle className="w-4 h-4 text-blue-500" /> : <FaCircle className="w-4 h-4 text-slate-600" />}
                                               <span className="text-sm truncate flex-1">{module.title}</span>
                                             </button>
                                           );
@@ -937,13 +937,13 @@ const CareersDashboard = () => {
                         {/* Module content – hidden on mobile when Modules tab is active */}
                         <article className={`flex-1 min-w-0 brand-card p-6 ${mobileModulesTab === "modules" ? "hidden md:block" : ""}`}>
                         {!selectedModule && (
-                          <p className="text-gray-400 text-sm">Select a module from the list to view content.</p>
+                          <p className="text-slate-600 text-sm">Select a module from the list to view content.</p>
                         )}
                         {!!selectedModule && (
                           <div className="space-y-6">
                             <div className="flex flex-wrap items-start justify-between gap-4">
                               <div>
-                                <p className="text-xs text-gray-500 uppercase tracking-wider">Module {selectedModule.moduleOrder}</p>
+                                <p className="text-xs text-slate-500 uppercase tracking-wider">Module {selectedModule.moduleOrder}</p>
                                 <h3 className="text-xl font-semibold text-textcolor2 mt-1">{selectedModule.title}</h3>
                               </div>
                               <button
@@ -960,7 +960,7 @@ const CareersDashboard = () => {
                               </button>
                             </div>
 
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-slate-500">
                               Estimated duration: {selectedModule.durationMinutes} mins
                             </p>
 
@@ -1035,7 +1035,7 @@ const CareersDashboard = () => {
                               const ytId = getYouTubeVideoId(videoUrl);
                               return (
                                 <div className="brand-card p-4">
-                                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Video – watch without leaving the site</p>
+                                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Video – watch without leaving the site</p>
                                   {ytId ? (
                                     <div className="w-full rounded-lg overflow-hidden bg-black aspect-video">
                                       <iframe
@@ -1066,7 +1066,7 @@ const CareersDashboard = () => {
                                 <FaStickyNote className="w-4 h-4 text-Secondarycolor" />
                                 <span className="text-sm font-semibold text-textcolor2">My notes</span>
                               </div>
-                              <div className="min-h-[180px] [&_.ql-container]:border-0 [&_.ql-editor]:min-h-[160px] [&_.ql-editor]:text-sm [&_.ql-toolbar]:border-Primarycolor/20 [&_.ql-toolbar]:bg-bgcolor/30 [&_.ql-toolbar_.ql-stroke]:stroke-gray-500 [&_.ql-toolbar_.ql-fill]:fill-gray-500 [&_.ql-toolbar_button]:text-gray-400 [&_.ql-editor]:text-gray-200">
+                              <div className="min-h-[180px] [&_.ql-container]:border-0 [&_.ql-editor]:min-h-[160px] [&_.ql-editor]:text-sm [&_.ql-toolbar]:border-slate-200 [&_.ql-toolbar]:bg-slate-50 [&_.ql-toolbar_.ql-stroke]:stroke-slate-600 [&_.ql-toolbar_.ql-fill]:fill-slate-600 [&_.ql-toolbar_button]:text-slate-600 [&_.ql-editor]:text-slate-800 bg-white">
                                 <ReactQuill
                                   theme="snow"
                                   value={personalNotes}
@@ -1095,7 +1095,7 @@ const CareersDashboard = () => {
                             {/* References */}
                             {!!selectedModule.referenceLinks?.length && (
                               <div className="brand-card p-4">
-                                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">References</p>
+                                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">References</p>
                                 <ul className="space-y-2">
                                   {selectedModule.referenceLinks.map((link) => (
                                     <li key={link}>
@@ -1120,8 +1120,8 @@ const CareersDashboard = () => {
                                 onClick={() => toggleModuleComplete(selectedModule)}
                                 className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-lg border text-sm font-medium transition-colors ${
                                   selectedModule.isCompleted
-                                    ? "border-Primarycolor/40 text-muted hover:bg-Primarycolor/10"
-                                    : "border-emerald-400/50 text-emerald-400 bg-emerald-400/10"
+                                    ? "border-slate-300 text-slate-600 hover:bg-slate-50"
+                                    : "border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100"
                                 }`}
                               >
                                 <FaCheckCircle className="w-4" />
@@ -1156,7 +1156,7 @@ const CareersDashboard = () => {
                 <section className="brand-card overflow-hidden">
                   <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
                     <h2 className="text-xl font-semibold text-textcolor2">Available courses</h2>
-                    <p className="text-sm text-gray-500 mt-0.5">Enroll to start your learning path</p>
+                    <p className="text-sm text-slate-500 mt-0.5">Enroll to start your learning path</p>
                   </div>
                   <div className="p-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -1172,8 +1172,8 @@ const CareersDashboard = () => {
                         />
                         <div className="p-6">
                           <p className="font-semibold text-textcolor2 text-lg">{course.title}</p>
-                          <p className="text-sm text-gray-400 mt-2 line-clamp-2 leading-relaxed">{course.summary}</p>
-                          <p className="text-xs font-medium text-gray-500 mt-3 uppercase tracking-wider">
+                          <p className="text-sm text-slate-600 mt-2 line-clamp-2 leading-relaxed">{course.summary}</p>
+                          <p className="text-xs font-medium text-slate-500 mt-3 uppercase tracking-wider">
                             {course.level} · {course.durationWeeks} weeks
                           </p>
                           <button
@@ -1188,7 +1188,7 @@ const CareersDashboard = () => {
                       </article>
                     ))}
                   </div>
-                  {!courses.length && <p className="text-gray-400 text-sm">No courses published yet.</p>}
+                  {!courses.length && <p className="text-slate-600 text-sm">No courses published yet.</p>}
                   </div>
                 </section>
               )}
@@ -1218,13 +1218,13 @@ const CareersDashboard = () => {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
                 <h3 className="text-xl font-semibold text-textcolor2">Certificate Preview</h3>
-                <p className="text-sm text-gray-400">Your issued Lasglowtech certificate is ready for PDF download.</p>
+                <p className="text-sm text-slate-600">Your issued Lasglowtech certificate is ready for PDF download.</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   type="button"
                   onClick={() => downloadCertificatePdf(certificatePreviewData, certificatePreviewData.courseName)}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-500/40 text-emerald-400 hover:bg-emerald-500/10 text-sm transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 text-sm transition-colors"
                 >
                   <FaDownload /> Download PDF
                 </button>
@@ -1251,7 +1251,7 @@ const CareersDashboard = () => {
       )}
 
       {/* Mobile bottom nav – icon tabs for more viewBox (reference style) */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm py-2 safe-area-pb">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t border-[#8700ff]/35 bg-gradient-to-t from-[#120b1f] to-[#1a1030] backdrop-blur-sm py-2 shadow-[0_-8px_32px_rgba(135,0,255,0.15)] safe-area-pb">
         {SIDEBAR_SECTIONS.map(({ id, label, icon: Icon }) => {
           const isActive = activeSection === id;
           return (
@@ -1261,8 +1261,8 @@ const CareersDashboard = () => {
               onClick={() => setActiveSection(id)}
               className={`flex flex-col items-center justify-center gap-1 px-3 py-2.5 rounded-xl min-w-0 flex-1 transition-colors ${
                 isActive
-                  ? "text-Secondarycolor bg-Secondarycolor/10 border border-Secondarycolor/40"
-                  : "text-muted border border-transparent hover:text-textcolor2"
+                  ? "text-white bg-[#8700ff]/50 border border-[#8700ff]/70 shadow-[0_0_16px_rgba(135,0,255,0.35)]"
+                  : "text-[#9b8cb5] border border-transparent hover:text-white hover:bg-[#8700ff]/15"
               }`}
               aria-label={label}
               title={label}

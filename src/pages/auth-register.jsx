@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import { FaEye, FaEyeSlash, FaBriefcase, FaBookOpen } from "react-icons/fa";
+import { FaEye, FaEyeSlash, FaBriefcase, FaBookOpen, FaEnvelope, FaUser } from "react-icons/fa";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { getRoleHomePath, saveSession } from "../utils/auth";
 import { Land1, Land2, Land3 } from "../components/images";
+import AuthSplitShell from "../components/AuthSplitShell";
 
 const slides = [
   { image: Land1, title: "Join the Network", text: "Create your profile and start connecting with opportunities in minutes." },
@@ -12,7 +13,8 @@ const slides = [
   { image: Land3, title: "Simple Onboarding", text: "Register once, compare services, and pay securely when you're ready to start." },
 ];
 
-const inputCls = "w-full px-4 py-3.5 rounded-xl bg-[#120b1f] border border-[#8700ff]/25 text-white placeholder-[#9b8cb5] text-sm font-semibold focus:outline-none focus:border-[#8700ff] focus:ring-1 focus:ring-[#8700ff]/40 transition-all";
+const inputCls =
+  "w-full rounded-xl bg-bgcolor border border-Primarycolor/25 text-textcolor2 placeholder-muted text-sm font-semibold focus:outline-none focus:border-Primarycolor focus:ring-1 focus:ring-Primarycolor/40 transition-all";
 
 const roles = [
   { value: "client", label: "Client", desc: "I want to hire / buy services", Icon: FaBriefcase },
@@ -30,13 +32,13 @@ export default function RegisterPage() {
   const [formData, setFormData] = useState({ username: "", email: "", password: "", role: "client" });
 
   useEffect(() => {
-    const t = setInterval(() => setSlideIdx(p => (p + 1) % slides.length), 4000);
+    const t = setInterval(() => setSlideIdx((p) => (p + 1) % slides.length), 4000);
     return () => clearInterval(t);
   }, []);
 
-  const handleChange = e => setFormData(p => ({ ...p, [e.target.name]: e.target.value }));
+  const handleChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -46,76 +48,138 @@ export default function RegisterPage() {
       navigate(from || getRoleHomePath(res.data?.user?.role), { replace: true });
     } catch (err) {
       toast.error(err.response?.data?.message || "Registration failed. Please try again.");
-    } finally { setLoading(false); }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-[#120b1f] grid grid-cols-1 lg:grid-cols-2">
-      {/* Left image panel */}
-      <div className="hidden lg:block relative overflow-hidden">
-        {slides.map((s, i) => (
-          <div key={i} className={`absolute inset-0 transition-opacity duration-700 ${i === slideIdx ? "opacity-100" : "opacity-0"}`}>
-            <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#120b1f] via-[#120b1f]/50 to-transparent" />
-            <div className="absolute bottom-12 left-10 right-10">
-              <h2 className="font-extrabold text-2xl text-white mb-2">{s.title}</h2>
-              <p className="text-[#9b8cb5] text-sm leading-relaxed">{s.text}</p>
-            </div>
-          </div>
-        ))}
-        <div className="absolute bottom-6 left-10 flex gap-2">
-          {slides.map((_, i) => <div key={i} className={`h-1 rounded-full transition-all ${i === slideIdx ? "w-6 bg-orange-500" : "w-2 bg-[#8700ff]/20"}`} />)}
-        </div>
-      </div>
+    <AuthSplitShell slides={slides} slideIdx={slideIdx}>
+      <div className="max-w-md mx-auto w-full shrink-0">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-muted hover:text-Secondarycolor text-sm font-semibold mb-4 transition-colors"
+        >
+          ← Back to site
+        </Link>
 
-      {/* Right form */}
-      <div className="flex flex-col justify-center px-8 md:px-16 py-16 overflow-y-auto">
-        <div className="max-w-md mx-auto w-full">
-          <Link to="/" className="inline-flex items-center gap-2 text-[#9b8cb5] hover:text-orange-500 text-sm font-semibold mb-10 transition-colors">← Back to site</Link>
+        <div className="brand-card p-8 md:p-9">
+          <span className="section-tag !mb-2 block">
+            <span className="dot-live" />
+            Create account
+          </span>
+          <h1 className="font-extrabold text-2xl sm:text-3xl text-textcolor2 tracking-tight mb-5">Join Lasglowtech</h1>
 
-          <span className="section-tag"><span className="dot-live"/>Create account</span>
-          <h1 className="font-extrabold text-3xl text-white tracking-tight mb-2">Join Lasglowtech</h1>
-          <p className="text-[#9b8cb5] text-sm mb-8">Already have an account? <Link to="/auth/login" className="text-orange-500 hover:underline font-bold">Sign in</Link></p>
-
-          {/* Role selector */}
-          <div className="grid grid-cols-2 gap-3 mb-6">
+          <div className="grid grid-cols-2 gap-2 mb-5">
             {roles.map(({ value, label, desc, Icon }) => (
-              <button key={value} type="button" onClick={() => setFormData(p => ({ ...p, role: value }))}
-                className={`p-4 rounded-xl border text-left transition-all ${formData.role === value ? "border-[#8700ff] bg-[#8700ff]/12" : "border-[#8700ff]/20 hover:border-[#8700ff]/40"}`}>
-                <Icon className={`w-5 h-5 mb-2 ${formData.role === value ? "text-orange-500" : "text-[#9b8cb5]"}`} />
-                <p className={`font-extrabold text-sm ${formData.role === value ? "text-white" : "text-[#9b8cb5]"}`}>{label}</p>
-                <p className="text-xs text-[#9b8cb5] mt-0.5 leading-tight">{desc}</p>
+              <button
+                key={value}
+                type="button"
+                onClick={() => setFormData((p) => ({ ...p, role: value }))}
+                className={`p-3 rounded-xl border text-left transition-all ${
+                  formData.role === value
+                    ? "border-Primarycolor/50 bg-Primarycolor/20 ring-1 ring-Primarycolor/30"
+                    : "border-Primarycolor/20 hover:border-Primarycolor/40 bg-bgcolor/40"
+                }`}
+              >
+                <Icon className={`w-5 h-5 mb-2 ${formData.role === value ? "text-Secondarycolor" : "text-muted"}`} />
+                <p className={`font-extrabold text-sm ${formData.role === value ? "text-textcolor2" : "text-muted"}`}>{label}</p>
+                <p className="text-xs text-muted mt-0.5 leading-tight">{desc}</p>
               </button>
             ))}
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="username" className="text-xs font-bold text-[#9b8cb5] uppercase tracking-wider mb-2 block">Username</label>
-              <input id="username" name="username" type="text" placeholder="johndoe" value={formData.username} onChange={handleChange} className={inputCls} required />
-            </div>
-            <div>
-              <label htmlFor="email" className="text-xs font-bold text-[#9b8cb5] uppercase tracking-wider mb-2 block">Email address</label>
-              <input id="email" name="email" type="email" placeholder="you@email.com" value={formData.email} onChange={handleChange} className={inputCls} required />
-            </div>
-            <div>
-              <label htmlFor="password" className="text-xs font-bold text-[#9b8cb5] uppercase tracking-wider mb-2 block">Password</label>
+              <label htmlFor="username" className="block text-sm font-medium text-textcolor2 mb-2">
+                Username
+              </label>
               <div className="relative">
-                <input id="password" name="password" type={showPwd ? "text" : "password"} placeholder="Min. 8 characters" value={formData.password} onChange={handleChange} className={`${inputCls} pr-12`} required minLength={8} />
-                <button type="button" onClick={() => setShowPwd(p => !p)} className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9b8cb5] hover:text-orange-500 transition-colors" aria-label={showPwd ? "Hide password" : "Show password"}>
+                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  placeholder="johndoe"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className={`${inputCls} pl-10 pr-3 py-3`}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-textcolor2 mb-2">
+                Email address
+              </label>
+              <div className="relative">
+                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="you@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`${inputCls} pl-10 pr-3 py-3`}
+                  required
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium text-textcolor2 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPwd ? "text" : "password"}
+                  placeholder="Min. 8 characters"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`${inputCls} px-3 py-3 pr-12`}
+                  required
+                  minLength={8}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd((p) => !p)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-Secondarycolor transition-colors p-1"
+                  aria-label={showPwd ? "Hide password" : "Show password"}
+                >
                   {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed">
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+            >
               {loading ? "Creating account…" : "Create account →"}
             </button>
           </form>
-          <p className="text-xs text-[#9b8cb5] text-center mt-4">By creating an account, you agree to our <span className="text-[#8700ff]">Terms of Service</span> and <span className="text-[#8700ff]">Privacy Policy</span>.</p>
+
+          <p className="text-muted text-sm text-center mt-6">
+            Already have an account?{" "}
+            <Link to="/auth/login" className="text-Secondarycolor hover:underline font-semibold">
+              Sign in
+            </Link>
+          </p>
+          <p className="text-xs text-muted text-center mt-3 leading-snug">
+            By creating an account, you agree to our{" "}
+            <Link to="/legal/terms" className="text-Primarycolor hover:text-Secondarycolor hover:underline font-medium">
+              Terms of Service
+            </Link>{" "}
+            and{" "}
+            <Link to="/legal/privacy" className="text-Primarycolor hover:text-Secondarycolor hover:underline font-medium">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </div>
       </div>
-    </div>
+    </AuthSplitShell>
   );
 }
-
-
