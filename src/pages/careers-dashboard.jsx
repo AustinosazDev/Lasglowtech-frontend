@@ -994,7 +994,14 @@ const CareersDashboard = () => {
                                   <span className="text-sm font-semibold text-textcolor2 truncate pr-2">
                                     {selectedModule.title}
                                   </span>
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex flex-wrap items-center gap-2">
+                                    <button
+                                      type="button"
+                                      onClick={() => window.open(resolveAssetUrl(selectedModule.resourceUrl), "_blank", "noopener,noreferrer")}
+                                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-Primarycolor/30 hover:bg-Primarycolor/20 text-xs font-medium transition-colors"
+                                    >
+                                      <FaExternalLinkAlt className="w-3.5 h-3.5" /> View PDF
+                                    </button>
                                     <a
                                       href={resolveAssetUrl(selectedModule.resourceUrl)}
                                       download
@@ -1006,7 +1013,7 @@ const CareersDashboard = () => {
                                     </a>
                                     <button
                                       type="button"
-                                      onClick={() => window.open(resolveAssetUrl(selectedModule.resourceUrl), "_blank")}
+                                      onClick={() => window.open(resolveAssetUrl(selectedModule.resourceUrl), "_blank", "noopener,noreferrer")}
                                       className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-Primarycolor/30 hover:bg-Primarycolor/20 text-xs font-medium transition-colors"
                                       title="Open in new tab to print"
                                     >
@@ -1014,12 +1021,10 @@ const CareersDashboard = () => {
                                     </button>
                                   </div>
                                 </div>
-                                <div className="bg-bgcolor/30 min-h-[420px] flex flex-col">
-                                  <iframe
-                                    src={`${resolveAssetUrl(selectedModule.resourceUrl)}#toolbar=1`}
-                                    title={selectedModule.title}
-                                    className="w-full flex-1 min-h-[420px] rounded-b-xl"
-                                  />
+                                <div className="bg-bgcolor/30 px-4 py-4 rounded-b-xl border-t border-Primarycolor/15">
+                                  <p className="text-xs text-slate-500 leading-relaxed">
+                                    Use <strong className="text-slate-600">View PDF</strong> for the browser’s PDF viewer (new tab).
+                                  </p>
                                 </div>
                               </div>
                             )}
