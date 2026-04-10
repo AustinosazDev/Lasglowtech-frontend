@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Portfolio from "./pages/portfolio";
@@ -82,8 +82,14 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/careers" element={<CareersAcademy />} />
+        <Route path="/careers/browse" element={<Navigate to="/careers" replace />} />
+        <Route path="/careers/courses" element={<Navigate to="/careers" replace />} />
         <Route path="/careers/courses/:slug" element={<CareerCourseDetail />} />
         <Route path="/careers/apply" element={<ProtectedRoute allowedRoles={["learner","student","talent"]}><Careers /></ProtectedRoute>} />
+        <Route
+          path="/careers/dashboard/browse"
+          element={<Navigate to="/careers/dashboard?section=browse" replace />}
+        />
         <Route path="/careers/dashboard" element={<ProtectedRoute allowedRoles={["learner","student","talent"]}><CareersDashboard /></ProtectedRoute>} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/services/:slug" element={<SingleService />} />
@@ -100,7 +106,6 @@ function App() {
         <Route path="/auth/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/legal/terms" element={<TermsOfServicePage />} />
         <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/dashboard" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
           <Route index element={<DashboardHome />} />
           <Route path="catalogues" element={<CataloguesAdmin />} />
@@ -118,6 +123,7 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/blog/:slug" element={<BlogDetails />} />
         <Route path="/bio" element={<Links />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {!hideLayout && <Footer />}

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -129,9 +129,21 @@ const SIDEBAR_SECTIONS = [
   { id: "browse", label: "Browse Courses", icon: FaGraduationCap },
 ];
 
+const SECTION_IDS = new Set(SIDEBAR_SECTIONS.map((s) => s.id));
+
+const readInitialSection = () => {
+  try {
+    const s = new URLSearchParams(window.location.search).get("section");
+    return s && SECTION_IDS.has(s) ? s : "overview";
+  } catch {
+    return "overview";
+  }
+};
+
 const CareersDashboard = () => {
   const token = useMemo(() => getToken(), []);
   const user = useMemo(() => getUser(), []);
+  const [searchParams, setSearchParams] = useSearchParams();
   const [applications, setApplications] = useState([]);
   const [latest, setLatest] = useState(null);
   const [courses, setCourses] = useState([]);
@@ -144,7 +156,18 @@ const CareersDashboard = () => {
   const [expandedWeeks, setExpandedWeeks] = useState(() => new Set([1]));
   const [moduleSearch, setModuleSearch] = useState("");
   const [mobileModulesTab, setMobileModulesTab] = useState("content"); // "content" | "modules"
-  const [activeSection, setActiveSection] = useState("overview");
+  const [activeSection, setActiveSection] = useState(readInitialSection);
+
+  useEffect(() => {
+    const s = searchParams.get("section");
+    if (s && SECTION_IDS.has(s)) setActiveSection(s);
+    else setActiveSection("overview");
+  }, [searchParams]);
+
+  const goSection = (id) => {
+    setActiveSection(id);
+    setSearchParams(id === "overview" ? {} : { section: id }, { replace: true });
+  };
   const [modulesLoading, setModulesLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -435,7 +458,7 @@ const CareersDashboard = () => {
             <button
               key={id}
               type="button"
-              onClick={() => setActiveSection(id)}
+              onClick={() => goSection(id)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium border transition-colors ${
                 activeSection === id
                   ? "bg-[#8700ff]/45 text-white border-[#8700ff]/60 shadow-[0_0_20px_rgba(135,0,255,0.25)]"
@@ -542,21 +565,21 @@ const CareersDashboard = () => {
                     <div className="flex flex-wrap gap-3">
                       <button
                         type="button"
-                        onClick={() => setActiveSection("applications")}
+                        onClick={() => goSection("applications")}
                         className="px-4 py-2 rounded-lg border border-Primarycolor/40 hover:bg-Primarycolor/20 text-sm"
                       >
                         View Applications
                       </button>
                       <button
                         type="button"
-                        onClick={() => setActiveSection("modules")}
+                        onClick={() => goSection("modules")}
                         className="px-4 py-2 rounded-lg border border-Primarycolor/40 hover:bg-Primarycolor/20 text-sm"
                       >
                         Open Course Modules
                       </button>
                       <button
                         type="button"
-                        onClick={() => setActiveSection("browse")}
+                        onClick={() => goSection("browse")}
                         className="px-4 py-2 rounded-lg border border-Secondarycolor/50 text-Secondarycolor hover:bg-Secondarycolor/10 text-sm"
                       >
                         Browse Courses
@@ -1258,7 +1281,7 @@ const CareersDashboard = () => {
             <button
               key={id}
               type="button"
-              onClick={() => setActiveSection(id)}
+              onClick={() => goSection(id)}
               className={`flex flex-col items-center justify-center gap-1 px-3 py-2.5 rounded-xl min-w-0 flex-1 transition-colors ${
                 isActive
                   ? "text-white bg-[#8700ff]/50 border border-[#8700ff]/70 shadow-[0_0_16px_rgba(135,0,255,0.35)]"
