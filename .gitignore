@@ -11,6 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
 package-lock-json
 
 # Editor directories and files
