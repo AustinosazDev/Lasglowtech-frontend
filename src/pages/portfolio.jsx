@@ -23,33 +23,46 @@ export default function Portfolio() {
         url="https://www.lasglowtech.com.ng/portfolio"
       />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-28 sm:pt-32 pb-16 sm:pb-20 px-6 md:px-12 border-b border-[#8700ff]/15">
+      {/* Hero — short copy + gradient accent + framed panel */}
+      <section className="relative overflow-hidden pt-28 sm:pt-32 pb-14 sm:pb-18 px-6 md:px-12 border-b border-[#8700ff]/15">
         <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-[#8700ff] opacity-[0.08] blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500 opacity-[0.05] blur-[80px] pointer-events-none" />
-        <div className="relative max-w-4xl mx-auto text-center">
-          <span className="section-tag justify-center"><span className="dot-live"/>Portfolio</span>
-          <h1 className="font-extrabold text-4xl md:text-5xl text-white tracking-tight mb-5">Work we're proud of</h1>
-          <p className="text-[#9b8cb5] text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-            Websites, branding, and creative projects delivered with style, precision, and a focus on results.
-          </p>
-          <nav className="flex items-center justify-center gap-2 text-sm text-[#9b8cb5]" aria-label="Breadcrumb">
-            <Link to="/" className="hover:text-orange-500 transition-colors">Home</Link>
-            <span>/</span>
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="relative max-w-2xl mx-auto text-center"
+        >
+          <nav
+            className="flex items-center justify-center gap-2 text-sm text-[#9b8cb5] mb-8"
+            aria-label="Breadcrumb"
+          >
+            <Link to="/" className="hover:text-orange-500 transition-colors">
+              Home
+            </Link>
+            <span aria-hidden>/</span>
             <span className="text-orange-500">Portfolio</span>
           </nav>
-        </div>
-      </section>
 
-      {/* Intro */}
-      <section className="max-w-7xl mx-auto px-6 md:px-12 py-16">
-        <motion.div initial={{ opacity:0, y:24 }} animate={{ opacity:1, y:0 }} transition={{ duration:0.5 }} className="max-w-3xl mx-auto text-center">
-          <h2 className="font-extrabold text-2xl md:text-3xl text-white tracking-tight mb-4">
-            Discover who we've rendered creative services to
-          </h2>
-          <p className="text-[#9b8cb5] leading-relaxed">
-            We've delivered results with style, precision, and a touch of sleek innovation. Filter by category below to explore our work.
-          </p>
+          <div className="relative rounded-[1.75rem] border border-[#8700ff]/25 bg-gradient-to-b from-[#1a1030]/95 to-[#120b1f]/60 px-6 py-10 sm:px-10 sm:py-12 shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset,0_24px_80px_rgba(135,0,255,0.15)] backdrop-blur-md">
+            <div
+              className="pointer-events-none absolute -top-px left-1/2 h-px w-32 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#8700ff]/80 to-transparent"
+              aria-hidden
+            />
+            <span className="section-tag justify-center">
+            PROJECTS
+            </span>
+            <h1 className="mt-5 font-extrabold text-[clamp(1.65rem,4.5vw,2.75rem)] leading-[1.12] tracking-tight text-white">
+              Sites & brands{" "}
+              <span className="bg-gradient-to-r from-[#8700ff] via-[#c084fc] to-orange-500 bg-clip-text text-transparent">
+                built to perform
+              </span>
+            </h1>
+            <p className="mt-4 text-sm sm:text-base text-[#b8a9d4] max-w-sm mx-auto leading-snug">
+            Websites we have built, branding, and creative projects,
+            Filter by category  check below to explore our work.
+            </p>
+          </div>
         </motion.div>
       </section>
 

@@ -17,14 +17,14 @@ const PortfolioCard = ({ image, alt, title, description, price, link, delay = 0,
           : "",
       ].join(" ")}
     >
-      {/* Thumbnail */}
-      <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] overflow-hidden bg-[#1a1030]">
+      {/* Thumbnail — square frame, full image visible (no crop on square assets) */}
+      <div className="relative w-full aspect-square overflow-hidden bg-[#1a1030]">
         <img
-          width={800}
-          height={500}
+          width={600}
+          height={600}
           src={image}
           alt={alt || description || "Portfolio work"}
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.02]"
           loading="lazy"
         />
         {featured && (
