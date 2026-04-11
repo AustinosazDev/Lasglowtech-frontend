@@ -24,7 +24,7 @@ export default function Portfolio() {
       />
 
       {/* Hero */}
-      <section className="relative overflow-hidden pt-32 pb-20 px-6 md:px-12 border-b border-[#8700ff]/15">
+      <section className="relative overflow-hidden pt-28 sm:pt-32 pb-16 sm:pb-20 px-6 md:px-12 border-b border-[#8700ff]/15">
         <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-[#8700ff] opacity-[0.08] blur-[100px] pointer-events-none" />
         <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-orange-500 opacity-[0.05] blur-[80px] pointer-events-none" />
         <div className="relative max-w-4xl mx-auto text-center">

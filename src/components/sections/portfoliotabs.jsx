@@ -164,39 +164,55 @@ const PortfolioTabs = () => {
       : portfolioData[activeTab] || [];
 
   return (
-    <div className="text-textcolor2 px-6 md:px-20 mx-auto mt-6 py-20">
-      {/* Tabs */}
-      <div className="flex flex-wrap justify-center mb-10 gap-4">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-8 py-3 border text-sm md:text-lg rounded-2xl shadow-md transition-all duration-300 ${
-              activeTab === tab
-                ? 'bg-gradient-to-r from-Primarycolor to-Primarycolor2 text-white border-Primarycolor1 hover:bg-Secondarycolor'
-                : 'text-textcolor border-Primarycolor/40 hover:bg-Secondarycolor hover:text-white'
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+    <div className="text-[#e8ddf8] w-full max-w-7xl mx-auto mt-2 py-8 md:py-16">
+      {/* Category filters — rounded rectangles, not full pills */}
+      <div
+        className="flex flex-wrap justify-center gap-2 sm:gap-2.5 mb-6 md:mb-10 px-1"
+        role="tablist"
+        aria-label="Portfolio categories"
+      >
+        {tabs.map((tab) => {
+          const isActive = activeTab === tab;
+          return (
+            <button
+              key={tab}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActiveTab(tab)}
+              className={[
+                "relative min-h-[44px] rounded-xl font-semibold tracking-wide transition-all duration-300",
+                "text-xs sm:text-sm md:text-base px-4 py-2.5 sm:px-6 sm:py-3",
+                "border active:scale-[0.97]",
+                isActive
+                  ? "border-transparent bg-gradient-to-r from-[#8700ff] via-[#7c3aed] to-[#c026d3] text-white shadow-[0_0_28px_rgba(135,0,255,0.42),0_4px_20px_rgba(249,115,22,0.15)] ring-2 ring-white/25 ring-offset-2 ring-offset-[#120b1f] sm:scale-[1.02]"
+                  : "border-white/20 bg-white/[0.07] text-[#e8ddf8] backdrop-blur-md hover:border-[#8700ff]/55 hover:bg-[#8700ff]/20 hover:text-white hover:shadow-[0_8px_24px_rgba(135,0,255,0.2)]",
+              ].join(" ")}
+            >
+              {isActive && (
+                <span
+                  className="pointer-events-none absolute inset-0 rounded-xl bg-gradient-to-t from-black/10 to-white/10"
+                  aria-hidden
+                />
+              )}
+              <span className="relative z-10">{tab}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Grid layout */}
-<div className='mx-auto grid grid-cols-1 md:grid-cols-3 gap-5 py-16 items-center'>
-
-
-
-
+      <div className="mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-7 pt-2 pb-4 md:pt-4 md:pb-8 items-stretch">
         {projects.length > 0 ? (
           projects.map((item, index) => (
             <PortfolioCard
-              key={index}
+              key={`${item.link}-${index}`}
               image={item.image}
               alt={`${activeTab} ${index + 1}`}
               description={item.description}
               link={item.link}
               delay={index * 0.1}
+              featured={index === 0}
             />
           ))
         ) : (
@@ -204,10 +220,7 @@ const PortfolioTabs = () => {
             No projects in this category.
           </p>
         )}
-      
-</div>
-
-      
+      </div>
     </div>
   );
 };

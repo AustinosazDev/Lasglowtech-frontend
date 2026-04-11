@@ -50,13 +50,13 @@ export default function Blogs() {
           <div className="text-center py-20">
             <FaBookOpen className="w-12 h-12 text-[#8700ff]/30 mx-auto mb-4" />
             <h3 className="font-extrabold text-xl text-white mb-2">No posts yet</h3>
-            <p className="text-[#9b8cb5]">Check back soon — we're working on something great.</p>
+            <p className="text-[#9b8cb5]">Check back soon we're working on something great.</p>
           </div>
         ) : (
           <>
              {/* Featured post */}
       {featured && (
-        <section className="max-w-6xl mx-auto px-6 md:px-12 -mt-6 relative z-10">
+        <section className="max-w-6xl mx-auto  md:px-12 -mt-6 relative z-10">
           <motion.article
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
