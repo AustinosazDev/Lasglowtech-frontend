@@ -214,6 +214,30 @@
   color: #c2410c;
 }
 
+/* Light admin / user dashboards: gray-* + white headings were tuned for dark UI; on white brand-cards use slate */
+.admin-dashboard-light .brand-card .text-gray-200,
+.admin-dashboard-light .brand-card .text-gray-300,
+.admin-dashboard-light main .text-gray-200,
+.admin-dashboard-light main .text-gray-300,
+.user-dashboard-light .brand-card .text-gray-200,
+.user-dashboard-light .brand-card .text-gray-300,
+.user-dashboard-light main .text-gray-200,
+.user-dashboard-light main .text-gray-300 {
+  color: #475569 !important;
+}
+.admin-dashboard-light .brand-card .text-gray-400,
+.admin-dashboard-light main .text-gray-400,
+.user-dashboard-light .brand-card .text-gray-400,
+.user-dashboard-light main .text-gray-400 {
+  color: #64748b !important;
+}
+.admin-dashboard-light .brand-card h1.text-white,
+.admin-dashboard-light .brand-card p.text-white,
+.user-dashboard-light .brand-card h1.text-white,
+.user-dashboard-light .brand-card p.text-white {
+  color: var(--color-text2) !important;
+}
+
 /* ── Swiper overrides ── */
 .swiper-pagination-bullet { background: var(--muted) !important; opacity:.4; }
 .swiper-pagination-bullet-active { background: var(--orange) !important; opacity:1; }

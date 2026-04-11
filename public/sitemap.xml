@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.lasglowtech.com.ng/</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/about</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/services</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/portfolio</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/blogs</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/contact</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/careers</loc>
-  </url>
-  <url>
-    <loc>https://www.lasglowtech.com.ng/catalogues</loc>
-  </url>
+  <!-- Core -->
+  <url><loc>https://www.lasglowtech.com.ng/</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/about</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/contact</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/portfolio</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/bio</loc></url>
+
+  <!-- Services (listing + detail slugs from serviceslist) -->
+  <url><loc>https://www.lasglowtech.com.ng/services</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/services/web-development</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/services/mobile-apps</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/services/ui-ux-design</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/services/graphic-design</loc></url>
+
+  <!-- Blog listing (individual posts: /blog/:slug — add via CMS-generated sitemap or Search Console) -->
+  <url><loc>https://www.lasglowtech.com.ng/blogs</loc></url>
+
+  <!-- Careers & catalogue (browse; course & catalogue item URLs are dynamic) -->
+  <url><loc>https://www.lasglowtech.com.ng/careers</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/catalogues</loc></url>
+
+  <!-- Cart (public storefront) -->
+  <url><loc>https://www.lasglowtech.com.ng/cart</loc></url>
+
+  <!-- Auth entry points (indexable sign-in / sign-up) -->
+  <url><loc>https://www.lasglowtech.com.ng/auth/login</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/auth/register</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/auth/forgot-password</loc></url>
+
+  <!-- Legal -->
+  <url><loc>https://www.lasglowtech.com.ng/legal/terms</loc></url>
+  <url><loc>https://www.lasglowtech.com.ng/legal/privacy</loc></url>
 </urlset>

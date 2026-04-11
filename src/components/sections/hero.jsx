@@ -9,10 +9,12 @@ import { Typewriter } from "react-simple-typewriter";
 function FloatingShape({ color, position, scale = 1 }) {
   const ref = useRef();
   useFrame(({ clock, mouse }) => {
-    ref.current.rotation.x = clock.getElapsedTime() / 2.5;
-    ref.current.rotation.y = clock.getElapsedTime() / 2;
-    ref.current.position.x = position[0] + mouse.x * 0.4;
-    ref.current.position.y = position[1] - mouse.y * 0.4;
+    const mesh = ref.current;
+    if (!mesh) return;
+    mesh.rotation.x = clock.getElapsedTime() / 2.5;
+    mesh.rotation.y = clock.getElapsedTime() / 2;
+    mesh.position.x = position[0] + mouse.x * 0.4;
+    mesh.position.y = position[1] - mouse.y * 0.4;
   });
   return (
     <mesh ref={ref} position={position} scale={scale}>

@@ -738,7 +738,7 @@ const LmsAdmin = () => {
                 <article key={module.id} className="brand-card rounded-lg p-3">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <div>
-                      <p className="font-semibold text-white">
+                      <p className="font-semibold text-textcolor2">
                         {module.module_order}. {module.title}
                       </p>
                       <p className="text-xs text-gray-400 mt-1">
@@ -983,7 +983,7 @@ const LmsAdmin = () => {
               <div key={course.id} className="brand-card p-5 rounded-xl">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                   <div>
-                    <p className="text-white font-semibold">{course.title}</p>
+                    <p className="text-textcolor2 font-semibold">{course.title}</p>
                     <p className="text-sm text-gray-400">{course.summary}</p>
                     <p className="text-xs text-gray-500 mt-1">
                       {course.level} • {course.durationWeeks} weeks • Modules: {course.modulesCount} • Enrollments:{" "}

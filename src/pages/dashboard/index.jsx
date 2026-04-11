@@ -28,7 +28,7 @@ const AdminLayout = () => {
   const closeMobileNav = () => setMobileNavOpen(false);
 
   return (
-    <div className="admin-dashboard-light min-h-screen bg-white text-textcolor2 overflow-x-hidden">
+    <div className="admin-dashboard-light min-h-screen bg-bgcolor text-textcolor2 overflow-x-hidden">
       {/* Mobile menu button - fixed top-left when sidebar is closed */}
       <div className="md:hidden fixed top-4 left-4 z-30">
         <button
@@ -144,7 +144,7 @@ const AdminLayout = () => {
           )}
         </aside>
 
-        <main className="flex-1 p-4 md:p-8 min-w-0 overflow-x-hidden pt-16 md:pt-4 bg-white">
+        <main className="flex-1 p-4 md:p-8 min-w-0 overflow-x-hidden pt-16 md:pt-4 bg-bgcolor">
           <Outlet />
         </main>
       </div>

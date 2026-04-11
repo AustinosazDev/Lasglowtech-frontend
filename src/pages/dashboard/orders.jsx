@@ -98,7 +98,7 @@ const OrdersAdmin = () => {
                     <button
                       type="button"
                       onClick={() => reverifyOrder(item.id)}
-                      className="px-3 py-2 rounded-lg border border-Primarycolor/40 hover:bg-Primarycolor/20 text-xs font-medium transition-colors"
+                      className="px-3 py-2 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/20 text-xs font-medium transition-colors"
                     >
                       Re-verify
                     </button>

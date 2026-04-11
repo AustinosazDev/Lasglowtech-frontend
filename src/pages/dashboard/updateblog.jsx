@@ -69,7 +69,7 @@ const Update = () => {
   return (
     <div className="brand-card p-6">
       <div className="">
-        <h1 className="text-2xl font-bold text-white mb-4">
+        <h1 className="text-2xl font-bold text-textcolor2 mb-4">
           {postid ? "Update Blog" : "Create New Blog"}
         </h1>
 
@@ -106,7 +106,7 @@ const Update = () => {
             />
             <label
               htmlFor="file"
-              className="text-gray-200 py-4 flex items-center font-medium cursor-pointer"
+              className="text-textcolor2 py-4 flex items-center font-medium cursor-pointer"
             >
               <FaCirclePlus className="text-4xl fill-Primarycolor" />
               <p className="ml-3 hidden md:block">Upload Cover</p>

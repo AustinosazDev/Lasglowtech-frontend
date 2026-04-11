@@ -72,7 +72,7 @@ const Create = () => {
   return (
     <div className="brand-card p-6">
       <div>
-        <h1 className="text-2xl px-2 font-bold text-white mb-4">Create New Blog</h1>
+        <h1 className="text-2xl px-2 font-bold text-textcolor2 mb-4">Create New Blog</h1>
 
         <input
           type="text"
@@ -100,7 +100,7 @@ const Create = () => {
               onChange={(e) => setFile(e.target.files[0])}
             />
 
-            <label htmlFor='file' className='text-gray-200 py-4 flex items-center font-medium cursor-pointer'>
+            <label htmlFor='file' className='text-textcolor2 py-4 flex items-center font-medium cursor-pointer'>
               <span className="flex items-center">
                 <FaCirclePlus className="text-4xl fill-Primarycolor" />
                 <p className="ml-3 hidden md:block">Upload Cover</p>

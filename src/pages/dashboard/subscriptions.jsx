@@ -26,7 +26,7 @@ const Subscriptions = () => {
             {data.map((sub) => (
               <li
                 key={sub.id}
-                className="brand-card px-4 py-3 text-gray-300 text-sm"
+                className="brand-card px-4 py-3 text-textcolor2 text-sm"
               >
                 {sub.email}
               </li>

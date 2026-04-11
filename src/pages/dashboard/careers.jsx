@@ -20,16 +20,16 @@ const paymentOptions = [
 ];
 
 const statusBadgeClass = {
-  new: "bg-amber-500/20 text-amber-300 border-amber-500/40",
-  reviewing: "bg-blue-500/20 text-blue-300 border-blue-500/40",
-  accepted: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
-  waitlist: "bg-orange-500/20 text-orange-300 border-orange-500/40",
-  rejected: "bg-red-500/20 text-red-300 border-red-500/40",
+  new: "bg-amber-100 text-amber-900 border-amber-300",
+  reviewing: "bg-blue-100 text-blue-900 border-blue-300",
+  accepted: "bg-emerald-100 text-emerald-900 border-emerald-300",
+  waitlist: "bg-orange-100 text-orange-900 border-orange-300",
+  rejected: "bg-red-100 text-red-800 border-red-300",
 };
 
 const inputClass =
   "w-full px-4 py-2.5 rounded-xl border border-Primarycolor/30 bg-bgcolor2 text-textcolor2 placeholder-muted focus:outline-none focus:ring-2 focus:ring-Primarycolor/50 focus:border-transparent text-sm";
-const labelClass = "block text-sm font-medium text-gray-400 mb-1.5";
+const labelClass = "block text-sm font-medium text-muted mb-1.5";
 
 const CareersAdmin = () => {
   const [applications, setApplications] = useState([]);
@@ -348,7 +348,9 @@ const CareersAdmin = () => {
               </article>
             ))}
             {!applications.length && (
-              <p className="text-gray-400 text-center py-12">No career applications yet.</p>
+              <div className="brand-card p-8 text-center">
+                <p className="text-muted text-sm">No career applications yet.</p>
+              </div>
             )}
           </div>
         )}
