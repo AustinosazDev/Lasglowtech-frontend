@@ -49,6 +49,7 @@ import SureSwitch from '../assets/images/SSW01.jpg';
 
 import Panth from '../assets/images/panth.jpg';
 import Portweb from '../assets/images/portweb.jpg';
+import Portweb2 from '../assets/images/portweb2.jpg';
 import Osaz2 from '../assets/images/osaz.jpg';
 import Chimex from '../assets/images/Chimex.jpg';
 import James from '../assets/images/James.jpg';
@@ -93,7 +94,7 @@ Ur9, Phoenixs, Qlogo, Fgroup, Dtech, Pelifts, Smiggle, NMI,
 BriteA,
 // team
 
-Osaz, Osaz2, Chimex, James, Precious,Izu, Panth, Portweb
+Osaz, Osaz2, Chimex, James, Precious,Izu, Panth, Portweb, Portweb2
 
 
 

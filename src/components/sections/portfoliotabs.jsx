@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PortfolioCard from '../portfoliocards';
 import {pelifts,heroimage,fiftyreign,Fhemfelhomes, Fhemfelhomes2, BriteB, BriteA,
-Phoenixcover,ur9group,Smiggle2,Smiggle3,Smiggle4,RWA,DECOT,ur9graph,Austinport,Panth, Portweb,Osaz,
+Phoenixcover,ur9group,Smiggle2,Smiggle3,Smiggle4,RWA,DECOT,ur9graph,Austinport,Panth, Portweb,Portweb2,Osaz,
 Fhemfeltravels1,
 GreatN,
 Lasglow1,
@@ -30,6 +30,11 @@ const portfolioData = {
       link: 'https://lasglowtech.com.ng',
     },
 
+    {
+      image: Portweb2,
+      description: 'Jobs Website, to connect job seekers and employers and CV creation, portfolio building, and job search.',
+      link: 'https://techbros.lasglowtech.com.ng',
+    },
     
      {
       image: GreatN,
