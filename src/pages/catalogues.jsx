@@ -7,6 +7,7 @@ import instance from "../config/axios.config";
 import { readCart } from "../utils/cart";
 import SEO from "../utils/seo";
 import { LOGO } from "../components/images";
+import { CatalogueCardSkeletonGrid } from "../components/skeletons/CardSkeletons";
 
 const formatNaira = (amount) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(Number(amount || 0));
@@ -172,7 +173,7 @@ const Catalogues = () => {
       </section>
 
       <div id="catalogue-grid" className="max-w-6xl mx-auto px-6 md:px-12 py-10 scroll-mt-4">
-        {loading && <p className="text-center text-gray-400 text-sm py-8">Loading catalogues...</p>}
+        {loading && <CatalogueCardSkeletonGrid count={9} className="py-4" />}
 
         {!loading && (
           <>

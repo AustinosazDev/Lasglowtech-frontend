@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import { OrdersTableSkeleton } from "../../components/skeletons/CardSkeletons";
 
 const OrdersAdmin = () => {
   const headers = useMemo(() => ({ Authorization: `Bearer ${getAdminToken()}` }), []);
@@ -47,7 +48,7 @@ const OrdersAdmin = () => {
         </div>
         <div className="overflow-x-auto">
           {loading ? (
-            <p className="py-12 text-center text-gray-400">Loading orders…</p>
+            <OrdersTableSkeleton rows={8} />
           ) : (
           <table className="w-full min-w-[1200px] text-sm">
             <thead>

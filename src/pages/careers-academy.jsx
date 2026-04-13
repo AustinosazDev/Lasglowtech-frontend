@@ -425,6 +425,7 @@ import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { logoImg as LOGO } from "../components/images";
 import academyHeroPng from "../assets/images/academy-hero.png";
+import { CourseCardSkeletonGrid } from "../components/skeletons/CardSkeletons";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop";
@@ -782,11 +783,7 @@ const CareersAcademy = () => {
           </p>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="brand-card h-64 animate-pulse" />
-              ))}
-            </div>
+            <CourseCardSkeletonGrid count={6} />
           ) : displayCourses.length === 0 ? (
             <div className="brand-card p-12 text-center">
               <p className="text-muted">No courses published yet. Check back later.</p>

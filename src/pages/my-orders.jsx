@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import instance from "../config/axios.config";
 import { getToken } from "../utils/auth";
 import SEO from "../utils/seo";
+import { ClientOrdersTableSkeleton, OrderListSkeleton } from "../components/skeletons/CardSkeletons";
 
 const statusClass = {
   initiated: "text-gray-300 border-gray-300/40",
@@ -59,7 +60,16 @@ const MyOrders = () => {
 
         <div className="brand-card shadow-sm overflow-hidden">
           <div className="p-4 md:p-5">
-            {loading && <p className="text-gray-400 text-[0.875rem]">Loading orders...</p>}
+            {loading && (
+              <>
+                <div className="hidden md:block overflow-x-auto -mx-1">
+                  <ClientOrdersTableSkeleton rows={6} />
+                </div>
+                <div className="md:hidden">
+                  <OrderListSkeleton rows={4} />
+                </div>
+              </>
+            )}
             {!loading && error && <p className="text-red-300 text-[0.875rem]">{error}</p>}
 
             {!loading && !error && (

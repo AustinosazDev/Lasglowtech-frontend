@@ -6,6 +6,7 @@ import instance from "../../config/axios.config";
 import { exportCertificateToA4Pdf } from "../../utils/certificatePdfExport";
 import { getAdminToken } from "../../utils/adminAuth";
 import CertificatePreview from "../../components/certificate-preview";
+import { LmsCourseListSkeleton } from "../../components/skeletons/CardSkeletons";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -1080,7 +1081,7 @@ const LmsAdmin = () => {
           <p className="text-sm text-gray-500 mt-0.5">All LMS courses and their modules.</p>
         </div>
         <div className="p-6">
-        {loading && <p className="text-gray-400">Loading…</p>}
+        {loading && <LmsCourseListSkeleton count={4} />}
         {!loading && (
           <div className="space-y-4">
             {courses.map((course) => (

@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { FaUser, FaSave, FaTrash } from "react-icons/fa";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import { CareerApplicationCardSkeletonList } from "../../components/skeletons/CardSkeletons";
 
 const statusOptions = [
   { value: "new", label: "New" },
@@ -136,9 +137,7 @@ const CareersAdmin = () => {
       </div>
 
       <div className="p-6">
-        {loading && (
-          <p className="text-gray-400 py-8 text-center">Loading applications…</p>
-        )}
+        {loading && <CareerApplicationCardSkeletonList count={3} />}
 
         {!loading && (
           <div className="space-y-6">

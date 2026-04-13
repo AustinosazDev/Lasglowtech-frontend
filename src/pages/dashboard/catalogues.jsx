@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import { AdminCatalogueCardSkeletonGrid } from "../../components/skeletons/CardSkeletons";
 
 const defaultForm = {
   id: null,
@@ -479,7 +480,7 @@ const CataloguesAdmin = () => {
               </select>
             </div>
           )}
-          {loading && <p className="text-gray-400 py-8 text-center">Loading…</p>}
+          {loading && <AdminCatalogueCardSkeletonGrid count={6} className="py-2" />}
           {!loading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
               {filteredItems.map((item) => (

@@ -4,6 +4,7 @@ import { IoShareSocialSharp } from "react-icons/io5";
 import { PiArrowCircleUpRightFill } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import instance, { API_BASE_URL } from "../config/axios.config";
+import { BlogGridTileSkeletonGrid } from "./skeletons/CardSkeletons";
 
 const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim();
 
@@ -11,6 +12,7 @@ const Blogcard = () => {
   const blogsPerPage = 6;
   const [currentPage, setCurrentPage] = useState(1);
   const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -19,6 +21,8 @@ const Blogcard = () => {
         setPosts(res.data || []);
       } catch (error) {
         setPosts([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -55,7 +59,9 @@ const Blogcard = () => {
   return (
     <div className="space-y-10">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 shadow-lg  shadow-primary2 md:gap-5">
-        {currentBlogs.map((blog, index) => (
+        {loading && <BlogGridTileSkeletonGrid count={6} className="contents" />}
+        {!loading &&
+          currentBlogs.map((blog, index) => (
           <article
             key={blog.id}
             className="group rounded-xl brand-card  overflow-hidden
@@ -117,7 +123,7 @@ const Blogcard = () => {
         ))}
       </div>
 
-      {totalPages > 1 && (
+      {!loading && totalPages > 1 && (
         <nav
           className="flex justify-center items-center gap-4 pt-4"
           aria-label="Blog pagination"

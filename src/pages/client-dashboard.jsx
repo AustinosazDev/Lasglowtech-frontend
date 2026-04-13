@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
+import { OrderListSkeleton, StatCardSkeletonRow } from "../components/skeletons/CardSkeletons";
 
 const statusClass = {
   initiated: "text-gray-300 border-gray-300/40",
@@ -90,19 +91,25 @@ const ClientDashboard = () => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5">
-            <article className="brand-card p-4">
-              <p className="text-xs uppercase text-gray-400">Total Orders</p>
-              <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{orders.length}</p>
-            </article>
-            <article className="brand-card p-4">
-              <p className="text-xs uppercase text-gray-400">Paid Orders</p>
-              <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{paidOrders.length}</p>
-            </article>
-            <article className="brand-card p-4">
-              <p className="text-xs uppercase text-gray-400">Total Spend</p>
-              <p className="text-2xl font-semibold mt-1 text-Secondarycolor tabular-nums">NGN {totalSpend.toLocaleString()}</p>
-            </article>
+          <div className="mt-5">
+            {loading ? (
+              <StatCardSkeletonRow count={3} />
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <article className="brand-card p-4">
+                  <p className="text-xs uppercase text-gray-400">Total Orders</p>
+                  <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{orders.length}</p>
+                </article>
+                <article className="brand-card p-4">
+                  <p className="text-xs uppercase text-gray-400">Paid Orders</p>
+                  <p className="text-2xl font-semibold mt-1 text-textcolor2 tabular-nums">{paidOrders.length}</p>
+                </article>
+                <article className="brand-card p-4">
+                  <p className="text-xs uppercase text-gray-400">Total Spend</p>
+                  <p className="text-2xl font-semibold mt-1 text-Secondarycolor tabular-nums">NGN {totalSpend.toLocaleString()}</p>
+                </article>
+              </div>
+            )}
           </div>
 
           <div className="mt-4">
@@ -117,7 +124,7 @@ const ClientDashboard = () => {
 
         <div className="brand-card p-5 md:p-6 mt-6">
           <h2 className="text-lg font-semibold mb-3 text-textcolor2">My Orders</h2>
-          {loading && <p className="text-gray-400">Loading orders...</p>}
+          {loading && <OrderListSkeleton rows={4} />}
           {!loading && error && <p className="text-red-300">{error}</p>}
 
           {!loading && !error && (

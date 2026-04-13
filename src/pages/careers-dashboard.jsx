@@ -29,6 +29,7 @@ import { exportCertificateToA4Pdf } from "../utils/certificatePdfExport";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
 import CertificatePreview from "../components/certificate-preview";
+import { CareersDashboardSkeleton } from "../components/skeletons/CardSkeletons";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -522,8 +523,8 @@ const CareersDashboard = () => {
 
         <div className="p-4 md:p-8 max-w-6xl mx-auto">
           {loading && (
-            <div className="flex items-center justify-center py-20">
-              <p className="text-slate-600">Loading dashboard...</p>
+            <div className="py-6">
+              <CareersDashboardSkeleton />
             </div>
           )}
           {!loading && error && (
