@@ -1,8 +1,13 @@
 /**
  * Shared layout for /auth/login and /auth/register: left image carousel (lg+), right column with
  * brand gradient atmosphere (matches admin login) and scrollable content slot.
+ * @param {"center"|"start"} [contentAlign="center"] — `start` top-aligns the form (better for tall register flows).
  */
-export default function AuthSplitShell({ slides, slideIdx, children }) {
+export default function AuthSplitShell({ slides, slideIdx, children, contentAlign = "center" }) {
+  const scrollAlign =
+    contentAlign === "start"
+      ? "justify-start py-3 sm:py-4"
+      : "justify-center py-5 sm:py-6";
   return (
     <div className="h-[100dvh] min-h-[100dvh] max-h-[100dvh] grid grid-cols-1 lg:grid-cols-2 overflow-hidden bg-gradient-to-br from-bgcolor2 via-bgcolor to-bgcolor">
       {/* Left image panel */}
@@ -37,7 +42,9 @@ export default function AuthSplitShell({ slides, slideIdx, children }) {
           <div className="absolute bottom-[-50px] left-[-30px] w-[min(340px,70vw)] h-[min(340px,70vw)] rounded-full bg-Primarycolor opacity-[0.09] blur-[85px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(520px,100%)] h-[min(520px,90vw)] max-h-[600px] rounded-full bg-Secondarycolor opacity-[0.045] blur-[100px]" />
         </div>
-        <div className="relative z-10 w-full px-6 sm:px-10 md:px-14 py-5 sm:py-6 overflow-y-auto overscroll-contain flex flex-col justify-center min-h-0 flex-1">
+        <div
+          className={`relative z-10 w-full px-4 sm:px-8 md:px-10 overflow-y-auto overscroll-contain flex flex-col min-h-0 flex-1 ${scrollAlign}`}
+        >
           {children}
         </div>
       </div>

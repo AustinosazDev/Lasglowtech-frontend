@@ -8,17 +8,17 @@ import { Land1, Land2, Land3 } from "../components/images";
 import AuthSplitShell from "../components/AuthSplitShell";
 
 const slides = [
-  { image: Land1, title: "Join the Network", text: "Create your profile and start connecting with opportunities in minutes." },
-  { image: Land2, title: "Built for Business Growth", text: "From design to development, we offer modern solutions tailored to your business goals." },
-  { image: Land3, title: "Simple Onboarding", text: "Register once, compare services, and pay securely when you're ready to start." },
+  { image: Land1, title: "Join the network", text: "One account for hiring and learning." },
+  { image: Land2, title: "Built for growth", text: "Design, dev, and delivery in one place." },
+  { image: Land3, title: "Quick setup", text: "Compare services and pay when you’re ready." },
 ];
 
 const inputCls =
   "w-full rounded-xl bg-bgcolor border border-Primarycolor/25 text-textcolor2 placeholder-muted text-sm font-semibold focus:outline-none focus:border-Primarycolor focus:ring-1 focus:ring-Primarycolor/40 transition-all";
 
 const roles = [
-  { value: "client", label: "Client", desc: "I want to hire / buy services", Icon: FaBriefcase },
-  { value: "learner", label: "Learner", desc: "I want to learn tech skills", Icon: FaBookOpen },
+  { value: "client", label: "Client", Icon: FaBriefcase },
+  { value: "learner", label: "Learner", Icon: FaBookOpen },
 ];
 
 export default function RegisterPage() {
@@ -54,44 +54,41 @@ export default function RegisterPage() {
   };
 
   return (
-    <AuthSplitShell slides={slides} slideIdx={slideIdx}>
-      <div className="max-w-md mx-auto w-full shrink-0">
+    <AuthSplitShell slides={slides} slideIdx={slideIdx} contentAlign="start">
+      <div className="max-w-md mx-auto w-full shrink-0 pb-4">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-muted hover:text-Secondarycolor text-sm font-semibold mb-4 transition-colors"
+          className="inline-flex items-center gap-2 text-muted hover:text-Secondarycolor text-xs sm:text-sm font-semibold mb-2 sm:mb-3 transition-colors"
         >
-          ← Back to site
+          ← Back
         </Link>
 
-        <div className="brand-card p-8 md:p-9">
-          <span className="section-tag !mb-2 block">
-            <span className="dot-live" />
-            Create account
-          </span>
-          <h1 className="font-extrabold text-2xl sm:text-3xl text-textcolor2 tracking-tight mb-5">Join Lasglowtech</h1>
+        <div className="brand-card p-5 sm:p-6 md:p-7">
+          <h1 className="font-extrabold text-xl sm:text-2xl md:text-3xl text-textcolor2 tracking-tight mb-3 sm:mb-4">
+            Join Lasglowtech
+          </h1>
 
-          <div className="grid grid-cols-2 gap-2 mb-5">
-            {roles.map(({ value, label, desc, Icon }) => (
+          <div className="grid grid-cols-2 gap-2 mb-4" role="group" aria-label="Account type">
+            {roles.map(({ value, label, Icon }) => (
               <button
                 key={value}
                 type="button"
                 onClick={() => setFormData((p) => ({ ...p, role: value }))}
-                className={`p-3 rounded-xl border text-left transition-all ${
+                className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all ${
                   formData.role === value
                     ? "border-Primarycolor/50 bg-Primarycolor/20 ring-1 ring-Primarycolor/30"
                     : "border-Primarycolor/20 hover:border-Primarycolor/40 bg-bgcolor/40"
                 }`}
               >
-                <Icon className={`w-5 h-5 mb-2 ${formData.role === value ? "text-Secondarycolor" : "text-muted"}`} />
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 ${formData.role === value ? "text-Secondarycolor" : "text-muted"}`} />
                 <p className={`font-extrabold text-sm ${formData.role === value ? "text-textcolor2" : "text-muted"}`}>{label}</p>
-                <p className="text-xs text-muted mt-0.5 leading-tight">{desc}</p>
               </button>
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3">
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-textcolor2 mb-2">
+              <label htmlFor="username" className="block text-xs font-medium text-textcolor2 mb-1">
                 Username
               </label>
               <div className="relative">
@@ -103,14 +100,14 @@ export default function RegisterPage() {
                   placeholder="johndoe"
                   value={formData.username}
                   onChange={handleChange}
-                  className={`${inputCls} pl-10 pr-3 py-3`}
+                  className={`${inputCls} pl-10 pr-3 py-2.5 text-sm`}
                   required
                 />
               </div>
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-textcolor2 mb-2">
-                Email address
+              <label htmlFor="email" className="block text-xs font-medium text-textcolor2 mb-1">
+                Email
               </label>
               <div className="relative">
                 <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
@@ -121,13 +118,13 @@ export default function RegisterPage() {
                   placeholder="you@email.com"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`${inputCls} pl-10 pr-3 py-3`}
+                  className={`${inputCls} pl-10 pr-3 py-2.5 text-sm`}
                   required
                 />
               </div>
             </div>
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-textcolor2 mb-2">
+              <label htmlFor="password" className="block text-xs font-medium text-textcolor2 mb-1">
                 Password
               </label>
               <div className="relative">
@@ -138,7 +135,7 @@ export default function RegisterPage() {
                   placeholder="Min. 8 characters"
                   value={formData.password}
                   onChange={handleChange}
-                  className={`${inputCls} px-3 py-3 pr-12`}
+                  className={`${inputCls} px-3 py-2.5 pr-12 text-sm`}
                   required
                   minLength={8}
                 />
@@ -155,28 +152,26 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-0.5 py-2.5 text-sm"
             >
               {loading ? "Creating account…" : "Create account →"}
             </button>
           </form>
 
-          <p className="text-muted text-sm text-center mt-6">
-            Already have an account?{" "}
+          <p className="text-muted text-xs sm:text-sm text-center mt-4">
+            Have an account?{" "}
             <Link to="/auth/login" className="text-Secondarycolor hover:underline font-semibold">
               Sign in
             </Link>
           </p>
-          <p className="text-xs text-muted text-center mt-3 leading-snug">
-            By creating an account, you agree to our{" "}
-            <Link to="/legal/terms" className="text-Primarycolor hover:text-Secondarycolor hover:underline font-medium">
-              Terms of Service
-            </Link>{" "}
-            and{" "}
-            <Link to="/legal/privacy" className="text-Primarycolor hover:text-Secondarycolor hover:underline font-medium">
-              Privacy Policy
+          <p className="text-[11px] text-muted/90 text-center mt-2 leading-tight">
+            <Link to="/legal/terms" className="text-Primarycolor hover:underline font-medium">
+              Terms
             </Link>
-            .
+            {" · "}
+            <Link to="/legal/privacy" className="text-Primarycolor hover:underline font-medium">
+              Privacy
+            </Link>
           </p>
         </div>
       </div>
