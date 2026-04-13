@@ -6,7 +6,7 @@ import instance from "../../config/axios.config";
 import { exportCertificateToA4Pdf } from "../../utils/certificatePdfExport";
 import { getAdminToken } from "../../utils/adminAuth";
 import CertificatePreview from "../../components/certificate-preview";
-import { LmsCourseListSkeleton } from "../../components/skeletons/CardSkeletons";
+import { LmsCourseListSkeleton, OrderListSkeleton } from "../../components/skeletons/CardSkeletons";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -987,7 +987,7 @@ const LmsAdmin = () => {
               {issuingId === "batch" ? "Generating batch..." : `Batch generate (${selectedEnrollmentIds.length})`}
             </button>
           </div>
-          {enrollmentsLoading && <p className="text-gray-400 text-sm">Loading enrollments…</p>}
+          {enrollmentsLoading && <OrderListSkeleton rows={5} />}
           {!enrollmentsLoading && enrollments.length === 0 && (
             <p className="text-gray-400 text-sm">No enrollments found.</p>
           )}

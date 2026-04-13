@@ -61,7 +61,7 @@ const Blogcard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 shadow-lg  shadow-primary2 md:gap-5">
         {loading && <BlogGridTileSkeletonGrid count={6} className="contents" />}
         {!loading &&
-          currentBlogs.map((blog, index) => (
+          currentBlogs.map((blog) => (
           <article
             key={blog.id}
             className="group rounded-xl brand-card  overflow-hidden

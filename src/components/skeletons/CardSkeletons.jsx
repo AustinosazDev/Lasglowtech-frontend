@@ -141,7 +141,7 @@ export function OrdersTableSkeleton({ rows = 8 }) {
             {Array.from({ length: cols }, (_, c) => (
               <td key={c} className="py-3 px-4 align-middle">
                 <div
-                  className={`h-3.5 w-full max-w-[120px] ${bar} animate-pulse ${c === 3 ? "max-w-[200px]" : ""}`}
+                  className={`h-3.5 w-full ${c === 3 ? "max-w-[200px]" : "max-w-[120px]"} ${bar} animate-pulse`}
                 />
               </td>
             ))}
@@ -153,8 +153,6 @@ export function OrdersTableSkeleton({ rows = 8 }) {
 }
 
 /** Client “My orders” table (6 columns) */
-const tableBar = "rounded-md bg-Primarycolor/[0.12]";
-
 export function ClientOrdersTableSkeleton({ rows = 6, className = "" }) {
   const colMax = ["max-w-[90px]", "max-w-[200px]", "max-w-[120px]", "max-w-[80px]", "max-w-[100px]", "max-w-[140px]"];
   return (
@@ -163,7 +161,7 @@ export function ClientOrdersTableSkeleton({ rows = 6, className = "" }) {
         <tr className="text-left text-gray-400 border-b border-Primarycolor/20">
           {Array.from({ length: 6 }, (_, i) => (
             <th key={i} className="py-3 pr-4 font-semibold">
-              <div className={`h-3 w-16 ${tableBar} animate-pulse`} />
+              <div className={`h-3 w-16 ${bar} animate-pulse`} />
             </th>
           ))}
         </tr>
@@ -173,7 +171,7 @@ export function ClientOrdersTableSkeleton({ rows = 6, className = "" }) {
           <tr key={r} className="border-b border-Primarycolor/10">
             {Array.from({ length: 6 }, (_, c) => (
               <td key={c} className="py-3 pr-4">
-                <div className={`h-3.5 w-full ${colMax[c]} ${tableBar} animate-pulse`} />
+                <div className={`h-3.5 w-full ${colMax[c]} ${bar} animate-pulse`} />
               </td>
             ))}
           </tr>

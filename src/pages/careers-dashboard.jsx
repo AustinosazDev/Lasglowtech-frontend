@@ -29,7 +29,7 @@ import { exportCertificateToA4Pdf } from "../utils/certificatePdfExport";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
 import CertificatePreview from "../components/certificate-preview";
-import { CareersDashboardSkeleton } from "../components/skeletons/CardSkeletons";
+import { CareersDashboardSkeleton, OrderListSkeleton } from "../components/skeletons/CardSkeletons";
 
 const QUILL_MODULES = {
   toolbar: [
@@ -774,7 +774,11 @@ const CareersDashboard = () => {
                     </div>
                   </div>
 
-                  {modulesLoading && <p className="px-6 text-slate-600 text-sm">Loading modules...</p>}
+                  {modulesLoading && (
+                    <div className="px-4 md:px-6 pb-4">
+                      <OrderListSkeleton rows={4} />
+                    </div>
+                  )}
                   {!modulesLoading && !modules.length && (
                     <p className="px-6 text-slate-600 text-sm">No modules for this course yet, or select an enrolled course.</p>
                   )}
