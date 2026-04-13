@@ -1,9 +1,11 @@
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useMemo } from "react";
+import { QRCodeSVG } from "qrcode.react";
+import { logoImg, sealImg } from "../components/images";
 
 const formatCertificateDate = (input) => {
   if (!input) return "";
   const date = new Date(input);
-  if (Number.isNaN(date.getTime())) return input;
+  if (Number.isNaN(date.getTime())) return String(input);
 
   const day = date.getDate();
   const suffix =
@@ -21,28 +23,21 @@ const formatCertificateDate = (input) => {
   })}`;
 };
 
-const Seal = () => (
-  <div className="absolute right-[6.5%] bottom-[8.8%] z-[3] flex items-end gap-2">
-    <div className="w-14 md:w-24 border-b border-[#1a244f]" />
-    <div className="relative w-16 h-16 md:w-24 md:h-24">
-      <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full">
-        <circle cx="50" cy="50" r="31" fill="#1f2752" />
-        {Array.from({ length: 28 }).map((_, i) => {
-          const angle = (i * 12.857 * Math.PI) / 180;
-          const innerRadius = 32;
-          const outerRadius = 46;
-          const x1 = 50 + innerRadius * Math.cos(angle);
-          const y1 = 50 + innerRadius * Math.sin(angle);
-          const x2 = 50 + outerRadius * Math.cos(angle);
-          const y2 = 50 + outerRadius * Math.sin(angle);
-          return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke="#f8fafc" strokeWidth="3" />;
-        })}
-        <circle cx="50" cy="50" r="20" fill="#ff6b35" />
-        <circle cx="50" cy="50" r="11" fill="#1f2752" />
-      </svg>
+const Seal = ({ sealUrl }) => {
+  const src = sealUrl || sealImg;
+  return (
+    <div className="absolute right-[3%] bottom-[7%] z-[3] pointer-events-none">
+      <div className="relative rounded-full bg-white p-2 shadow-[0_12px_28px_rgba(0,0,0,0.35)] w-[clamp(4.5rem,11vw,8.75rem)] h-[clamp(4.5rem,11vw,8.75rem)] flex items-center justify-center rotate-[-8deg]">
+        <img
+          src={src}
+          alt=""
+          className="w-full h-full object-contain opacity-[0.97]"
+          crossOrigin="anonymous"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const CertificatePreview = forwardRef(function CertificatePreview(
   {
@@ -53,122 +48,154 @@ const CertificatePreview = forwardRef(function CertificatePreview(
     signatureLabel = "Authorized Signatory",
     bodyMessage = "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career.",
     logoUrl = "",
+    sealUrl = "",
+    signatureImageUrl = "",
+    verifyUrl = "",
   },
   ref
 ) {
   const displayDate = formatCertificateDate(date);
-  const [logoFailed, setLogoFailed] = useState(false);
-  const showLogo = Boolean(logoUrl) && !logoFailed;
+  const logoSrc = logoUrl || logoImg;
 
-  useEffect(() => {
-    setLogoFailed(false);
-  }, [logoUrl]);
+  const resolvedVerifyUrl = useMemo(() => {
+    if (verifyUrl) return verifyUrl;
+    if (typeof window !== "undefined" && certificateCode) {
+      return `${window.location.origin}/verify-certificate?code=${encodeURIComponent(certificateCode)}`;
+    }
+    return "";
+  }, [verifyUrl, certificateCode]);
 
   return (
-    <div ref={ref} className="w-full overflow-hidden bg-[#1d2348]" style={{ aspectRatio: "1.414 / 1" }}>
-      <div className="relative h-full w-full overflow-hidden bg-[#1d2348]">
-        <div className="absolute inset-0">
-          <div className="absolute left-0 top-0 h-[8.5%] w-[16%] border-l-[18px] border-t-[18px] border-[#ff6b35]" />
-          <div className="absolute right-0 top-0 h-[8.5%] w-[16%] border-r-[18px] border-t-[18px] border-[#ff6b35]" />
-          <div className="absolute bottom-0 left-0 h-[8.5%] w-[16%] border-b-[18px] border-l-[18px] border-[#ff6b35]" />
-          <div className="absolute bottom-0 right-0 h-[8.5%] w-[16%] border-b-[18px] border-r-[18px] border-[#ff6b35]" />
+    <div
+      ref={ref}
+      data-certificate-preview="true"
+      className="w-full overflow-hidden rounded-sm certificate-print-root bg-gradient-to-b from-[#120b1f] to-[#1d2348]"
+      style={{ aspectRatio: "1.414 / 1" }}
+    >
+      <div className="relative h-full w-full overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-0 top-0 h-[8.5%] w-[16%] border-l-[16px] border-t-[16px] border-[#f27b02]" />
+          <div className="absolute right-0 top-0 h-[8.5%] w-[16%] border-r-[16px] border-t-[16px] border-[#f27b02]" />
+          <div className="absolute bottom-0 left-0 h-[8.5%] w-[16%] border-b-[16px] border-l-[16px] border-[#f27b02]" />
+          <div className="absolute bottom-0 right-0 h-[8.5%] w-[16%] border-b-[16px] border-r-[16px] border-[#f27b02]" />
         </div>
 
-        <div className="absolute inset-[4.2%] rounded-[18px] border border-[#f27b48] bg-[#f8f6f2] shadow-[0_18px_60px_rgba(0,0,0,0.25)]">
-          <div className="absolute inset-[2px] rounded-[16px] border border-[#cfd4df]" />
-          <div className="absolute right-0 top-0 h-full w-[15.5%] border-l-2 border-[#ff7a3d] bg-[#1d2348]" />
+        <div className="absolute inset-[4.2%] rounded-2xl border border-[#e8894a] bg-[#f8f6f2] shadow-[inset_0_0_12px_rgba(0,0,0,0.06),0_20px_64px_rgba(0,0,0,0.28)]">
+          <div className="absolute inset-[2px] rounded-[14px] border border-[#cfd4df] pointer-events-none z-[1]" />
 
-          <div className="relative z-[2] flex h-full flex-col px-[4.8%] pb-[5.3%] pt-[5.2%]">
-            <div className="mb-[4.6%] flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                {showLogo ? (
-                  <img
-                    src={logoUrl}
-                    alt="Lasglowtech"
-                    className="h-10 w-auto object-contain md:h-14"
-                    crossOrigin="anonymous"
-                    onError={() => setLogoFailed(true)}
-                  />
-                ) : (
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#1d2348] bg-[#ff6b35] text-sm font-bold text-white md:h-12 md:w-12 md:text-lg">
-                      L
-                    </div>
-                    <div>
-                      <div
-                        className="text-sm font-bold uppercase tracking-[0.08em] text-[#13224a] md:text-xl"
-                        style={{ fontFamily: "'Cinzel', Georgia, serif" }}
-                      >
-                        LASGLOWTECH
-                      </div>
-                      <div className="text-[8px] uppercase tracking-[0.38em] text-[#a06b53] md:text-[10px]">
-                        DIGITAL SERVICES
-                      </div>
-                    </div>
-                  </div>
-                )}
+          <div className="absolute right-0 top-0 h-full w-[15.5%] bg-gradient-to-b from-[#120b1f] to-[#1d2348] border-l-[6px] border-[#f27b02] z-0" />
+
+          <div className="relative z-[2] flex h-full flex-col pt-[5.2%] pb-[6%] pl-[5%] pr-[17%]">
+            <div className="mb-[4%] flex flex-wrap items-center gap-3">
+              <img
+                src={logoSrc}
+                alt="Lasglowtech"
+                className="h-11 w-auto max-w-[200px] object-contain md:h-[52px] md:max-w-[220px]"
+                crossOrigin="anonymous"
+              />
+              <div>
+                <h1
+                  className="text-[clamp(1.15rem,2.4vw,1.65rem)] font-semibold leading-tight text-[#13224a]"
+                  style={{ fontFamily: "'Cinzel', Georgia, serif" }}
+                >
+                  LASGLOWTECH
+                </h1>
+                <p
+                  className="text-[clamp(0.65rem,1.1vw,0.875rem)] text-[#5c5f72] -mt-0.5"
+                  style={{ fontFamily: "Georgia, serif" }}
+                >
+                  DIGITAL SERVICES
+                </p>
               </div>
             </div>
 
-            <div className="mb-[3.4%]">
-              <div
-                className="mb-1 text-[9px] uppercase tracking-[0.42em] text-[#8f7966] md:text-sm"
+            <div className="mb-[3.2%] space-y-1">
+              <p
+                className="text-[clamp(0.65rem,1.15vw,0.9rem)] uppercase tracking-[0.38em] text-[#555555]"
+                style={{ fontFamily: "Georgia, serif" }}
+              >
+                Certificate of
+              </p>
+              <p
+                className="text-[clamp(2rem,6.5vw,4.5rem)] font-extrabold uppercase leading-[1] text-[#13224a]"
                 style={{ fontFamily: "'Cinzel', Georgia, serif" }}
               >
-                CERTIFICATE OF
-              </div>
-              <div
-                className="text-[2.25rem] font-bold uppercase leading-[0.95] text-[#13224a] md:text-[4.4rem]"
-                style={{ fontFamily: "'Cinzel', Georgia, serif" }}
-              >
-                COMPLETION
-              </div>
+                Completion
+              </p>
             </div>
 
-            <div className="mb-[4.2%] border-b border-[#b8bfcb] pb-[2%] pr-[16%]">
-              <div
-                className="text-[2.1rem] leading-none text-[#10214b] md:text-[3.9rem]"
-                style={{ fontFamily: "'Brush Script MT', 'Segoe Script', cursive", fontWeight: 400 }}
+            <div className="mb-[3%] max-w-[min(100%,76%)]">
+              <p
+                className="text-[clamp(1.75rem,5.5vw,4rem)] leading-[1.05] text-[#10214b] pb-3"
+                style={{
+                  fontFamily: "'Brush Script MT', 'Segoe Script', cursive",
+                }}
               >
                 {recipientName}
-              </div>
+              </p>
+              <div className="mt-1 h-0 max-w-[min(100%,78%)] border-b-2 border-[#132d4c]" />
             </div>
 
-            <div className="pr-[18%]">
-              <p className="mb-[1.8%] text-[0.72rem] text-[#1b1f2f] md:text-[1.25rem]">
+            <div className="max-w-[min(100%,76%)] space-y-2">
+              <p
+                className="text-[clamp(0.7rem,1.25vw,1.05rem)] leading-relaxed text-[#1b1f2f]"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
+              >
                 has successfully completed the online course
               </p>
-              <div
-                className="text-[1.25rem] font-semibold uppercase leading-tight text-[#13224a] md:text-[2.05rem]"
-                style={{ fontFamily: "'Cinzel', Georgia, serif" }}
+              <p
+                className="text-[clamp(1rem,2.4vw,1.65rem)] font-semibold leading-snug text-[#13224a]"
+                style={{ fontFamily: "'Poppins', sans-serif" }}
               >
                 {courseName}
-              </div>
+              </p>
             </div>
 
-            <div className="mt-[3%] max-w-[66%] text-[0.62rem] leading-relaxed text-[#263252] md:text-[0.98rem]">
+            <div className="mt-5 max-w-[min(100%,72%)] text-[clamp(0.65rem,1.15vw,0.95rem)] leading-[1.68] text-[#263252]">
               {bodyMessage}
             </div>
 
-            <div className="mt-auto flex items-end justify-between gap-6 pr-[18%]">
-              <div>
-                <div
-                  className="text-[0.8rem] font-semibold text-[#13224a] md:text-[1.5rem]"
+            <div className="mt-auto flex flex-wrap items-end justify-between gap-x-5 gap-y-4 border-t border-[#13224a]/10 pt-5 pb-1">
+              {resolvedVerifyUrl && (
+                <div className="flex shrink-0 flex-col items-start gap-1.5 pl-0.5">
+                  <div className="rounded-md bg-white p-1.5 shadow-md shadow-black/10 ring-1 ring-[#13224a]/10">
+                    <QRCodeSVG value={resolvedVerifyUrl} size={64} level="M" fgColor="#13224a" bgColor="#ffffff" />
+                  </div>
+                  <span className="text-[8px] font-semibold uppercase tracking-[0.12em] text-[#596073]">
+                    Scan to verify
+                  </span>
+                </div>
+              )}
+
+              <div className="min-w-0 flex-1 self-end pb-0.5 pl-1">
+                <p
+                  className="text-[clamp(0.8rem,1.4vw,1.05rem)] font-semibold leading-tight text-[#13224a]"
                   style={{ fontFamily: "'Cinzel', Georgia, serif" }}
                 >
                   {displayDate}
-                </div>
-                <div className="text-[0.45rem] text-[#6c7285] md:text-[0.72rem]">Certificate code: {certificateCode}</div>
+                </p>
+                <p className="mt-1.5 text-[clamp(0.55rem,0.85vw,0.72rem)] leading-snug text-[#6c7285] break-words">
+                  Certificate code: {certificateCode}
+                </p>
               </div>
 
-              <div className="pb-1 text-right">
-                <div className="mb-1 w-20 border-b border-[#1a244f] md:w-32" />
-                <div className="text-[0.42rem] text-[#596073] md:text-[0.65rem]">{signatureLabel}</div>
+              <div className="shrink-0 self-end pb-1 pr-1 text-right min-w-[6.5rem] max-w-[34%]">
+                {signatureImageUrl ? (
+                  <img
+                    src={signatureImageUrl}
+                    alt=""
+                    className="ml-auto block max-h-[56px] max-w-[180px] object-contain object-bottom mb-2"
+                    crossOrigin="anonymous"
+                  />
+                ) : (
+                  <div className="mb-2 ml-auto w-20 border-b border-[#1a244f] md:w-32" />
+                )}
+                <p className="text-[clamp(0.5rem,0.8vw,0.68rem)] leading-tight text-[#596073]">{signatureLabel}</p>
               </div>
             </div>
           </div>
 
-          <Seal />
+          <Seal sealUrl={sealUrl} />
         </div>
       </div>
     </div>

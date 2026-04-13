@@ -3,7 +3,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import html2canvas from "html2canvas";
 import {
   FaChartLine,
   FaFileAlt,
@@ -26,6 +25,7 @@ import {
 } from "react-icons/fa";
 import { jsPDF } from "jspdf";
 import instance from "../config/axios.config";
+import { exportCertificateToA4Pdf } from "../utils/certificatePdfExport";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
 import CertificatePreview from "../components/certificate-preview";
@@ -89,9 +89,6 @@ const courseFallbacks = [
   "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1200",
   "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200",
 ];
-const certificateAssetBaseUrl = (instance.defaults.baseURL || "").replace(/\/$/, "");
-const certificateLogoUrl = certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png` : "";
-
 const resolveAssetUrl = (url = "") => {
   if (!url) return "";
   if (/^https?:\/\//i.test(url)) return url;
@@ -175,7 +172,27 @@ const CareersDashboard = () => {
   const [certificatePreviewData, setCertificatePreviewData] = useState(null);
   const [certificatePreviewOpen, setCertificatePreviewOpen] = useState(false);
   const [certificateActionKey, setCertificateActionKey] = useState("");
+  const [certificateAssetBust, setCertificateAssetBust] = useState(() => Date.now());
   const certificatePreviewRef = useRef(null);
+
+  const certificateAssetBaseUrl = useMemo(() => (instance.defaults.baseURL || "").replace(/\/$/, ""), []);
+  const certificateLogoUrl = useMemo(
+    () =>
+      certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png?t=${certificateAssetBust}` : "",
+    [certificateAssetBaseUrl, certificateAssetBust]
+  );
+  const certificateSealUrl = useMemo(
+    () =>
+      certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-seal.png?t=${certificateAssetBust}` : "",
+    [certificateAssetBaseUrl, certificateAssetBust]
+  );
+  const certificateSignatureUrl = useMemo(
+    () =>
+      certificateAssetBaseUrl
+        ? `${certificateAssetBaseUrl}/uploads/certificate-signature.png?t=${certificateAssetBust}`
+        : "",
+    [certificateAssetBaseUrl, certificateAssetBust]
+  );
 
   const firstName = String(latest?.full_name || user?.username || "Learner").split(" ")[0];
 
@@ -368,7 +385,7 @@ const CareersDashboard = () => {
       .replace(/[^a-z0-9-]+/g, "-")
       .replace(/^-+|-+$/g, "");
 
-    return `${slug || "certificate"}${code ? `-${code}` : ""}.pdf`;
+    return `${slug || "certificate"}${code ? `-${code}` : ""}-a4.pdf`;
   };
 
   const fetchCertificateData = async (enrollmentId) => {
@@ -386,25 +403,14 @@ const CareersDashboard = () => {
       throw new Error("Certificate preview could not be prepared.");
     }
 
-    const canvas = await html2canvas(element, {
-      backgroundColor: "#ffffff",
-      scale: 2,
-      useCORS: true,
-    });
-    const imageData = canvas.toDataURL("image/png");
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "px",
-      format: [canvas.width, canvas.height],
-    });
-    pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
-    pdf.save(buildCertificateFilename(certificateData, fallbackTitle));
+    await exportCertificateToA4Pdf(element, buildCertificateFilename(certificateData, fallbackTitle));
   };
 
   const downloadCertificate = async (enrollmentId, courseTitle) => {
     try {
       setCertificateActionKey(`download-${enrollmentId}`);
       const certificateData = await fetchCertificateData(enrollmentId);
+      setCertificateAssetBust(Date.now());
       await downloadCertificatePdf(certificateData, courseTitle);
     } catch (err) {
       toast.error(err.response?.data?.error || "Certificate not available yet.");
@@ -417,6 +423,7 @@ const CareersDashboard = () => {
     try {
       setCertificateActionKey(`preview-${enrollmentId}`);
       const certificateData = await fetchCertificateData(enrollmentId);
+      setCertificateAssetBust(Date.now());
       setCertificatePreviewData(certificateData);
       setCertificatePreviewOpen(true);
     } catch (err) {
@@ -1230,6 +1237,9 @@ const CareersDashboard = () => {
           <CertificatePreview
             ref={certificatePreviewRef}
             logoUrl={certificateLogoUrl}
+            sealUrl={certificateSealUrl}
+            signatureImageUrl={certificateSignatureUrl}
+            verifyUrl={certificatePreviewData.verifyUrl || ""}
             recipientName={certificatePreviewData.recipientName}
             courseName={certificatePreviewData.courseName}
             date={certificatePreviewData.date}
@@ -1246,7 +1256,7 @@ const CareersDashboard = () => {
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
                 <h3 className="text-xl font-semibold text-textcolor2">Certificate Preview</h3>
-                <p className="text-sm text-slate-600">Your issued Lasglowtech certificate is ready for PDF download.</p>
+                <p className="text-sm text-slate-600">Print-ready A4 PDF (~300 DPI) and QR verification when your site URL is set on the server.</p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <button
@@ -1254,7 +1264,7 @@ const CareersDashboard = () => {
                   onClick={() => downloadCertificatePdf(certificatePreviewData, certificatePreviewData.courseName)}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-emerald-300 text-emerald-800 bg-emerald-50 hover:bg-emerald-100 text-sm transition-colors"
                 >
-                  <FaDownload /> Download PDF
+                  <FaDownload /> Download A4 PDF
                 </button>
                 <button
                   type="button"
@@ -1267,6 +1277,9 @@ const CareersDashboard = () => {
             </div>
             <CertificatePreview
               logoUrl={certificateLogoUrl}
+              sealUrl={certificateSealUrl}
+              signatureImageUrl={certificateSignatureUrl}
+              verifyUrl={certificatePreviewData.verifyUrl || ""}
               recipientName={certificatePreviewData.recipientName}
               courseName={certificatePreviewData.courseName}
               date={certificatePreviewData.date}

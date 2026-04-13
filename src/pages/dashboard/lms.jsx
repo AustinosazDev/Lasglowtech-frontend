@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
 import instance from "../../config/axios.config";
+import { exportCertificateToA4Pdf } from "../../utils/certificatePdfExport";
 import { getAdminToken } from "../../utils/adminAuth";
 import CertificatePreview from "../../components/certificate-preview";
 
@@ -19,8 +18,8 @@ const QUILL_MODULES = {
 };
 const QUILL_FORMATS = ["header", "bold", "italic", "underline", "strike", "list", "bullet", "link"];
 const certificateAssetBaseUrl = (instance.defaults.baseURL || "").replace(/\/$/, "");
-const buildCertificateLogoUrl = (version = Date.now()) =>
-  certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png?t=${version}` : "";
+const buildCertificateAssetUrl = (filename, version = Date.now()) =>
+  certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/${filename}?t=${version}` : "";
 
 const defaultCourse = {
   id: null,
@@ -62,6 +61,8 @@ const LmsAdmin = () => {
   const [enrollmentCourseFilter, setEnrollmentCourseFilter] = useState("");
   const [selectedEnrollmentIds, setSelectedEnrollmentIds] = useState([]);
   const [issuingId, setIssuingId] = useState(null);
+  const [deletingEnrollmentId, setDeletingEnrollmentId] = useState(null);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [issueCertEnrollment, setIssueCertEnrollment] = useState(null);
   const [issueCertBatchMode, setIssueCertBatchMode] = useState(false);
   const [issueCertForm, setIssueCertForm] = useState({
@@ -72,7 +73,11 @@ const LmsAdmin = () => {
   });
   const [resourcePdfUploading, setResourcePdfUploading] = useState(false);
   const [certificateLogoUploading, setCertificateLogoUploading] = useState(false);
+  const [certificateSealUploading, setCertificateSealUploading] = useState(false);
+  const [certificateSignatureUploading, setCertificateSignatureUploading] = useState(false);
   const [certificateLogoVersion, setCertificateLogoVersion] = useState(Date.now());
+  const [certificateSealVersion, setCertificateSealVersion] = useState(Date.now());
+  const [certificateSignatureVersion, setCertificateSignatureVersion] = useState(Date.now());
   const [certificateSettings, setCertificateSettings] = useState({
     defaultMessage: "",
     defaultSignatureLabel: "Authorized Signatory",
@@ -80,7 +85,12 @@ const LmsAdmin = () => {
   const [certSettingsSaving, setCertSettingsSaving] = useState(false);
   const selectedModuleCourseId = moduleForm.courseId || "";
   const certificatePreviewRef = useRef(null);
-  const certificateLogoUrl = useMemo(() => buildCertificateLogoUrl(certificateLogoVersion), [certificateLogoVersion]);
+  const certificateLogoUrl = useMemo(() => buildCertificateAssetUrl("certificate-logo.png", certificateLogoVersion), [certificateLogoVersion]);
+  const certificateSealUrl = useMemo(() => buildCertificateAssetUrl("certificate-seal.png", certificateSealVersion), [certificateSealVersion]);
+  const certificateSignatureUrl = useMemo(
+    () => buildCertificateAssetUrl("certificate-signature.png", certificateSignatureVersion),
+    [certificateSignatureVersion]
+  );
 
   const loadCourses = async () => {
     setLoading(true);
@@ -262,6 +272,32 @@ const LmsAdmin = () => {
     }
   };
 
+  const requestDeleteEnrollment = (en) => {
+    setDeleteConfirm({
+      enrollmentId: en.enrollmentId,
+      learnerName: en.learnerName,
+      courseTitle: en.courseTitle,
+    });
+  };
+
+  const confirmDeleteEnrollment = async () => {
+    if (!deleteConfirm) return;
+    const { enrollmentId } = deleteConfirm;
+    setDeletingEnrollmentId(enrollmentId);
+    try {
+      await instance.delete(`/lms/admin/enrollments/${enrollmentId}`, { headers });
+      toast.success("Enrollment removed.");
+      setDeleteConfirm(null);
+      setSelectedEnrollmentIds((prev) => prev.filter((id) => id !== enrollmentId));
+      loadEnrollments();
+      loadCourses();
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Could not remove enrollment.");
+    } finally {
+      setDeletingEnrollmentId(null);
+    }
+  };
+
   const uploadModuleResourcePdf = async (e) => {
     const file = e?.target?.files?.[0];
     if (!file) return;
@@ -287,6 +323,54 @@ const LmsAdmin = () => {
       toast.error(err.response?.data?.error || "PDF upload failed.");
     } finally {
       setResourcePdfUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const uploadCertificateSeal = async (e) => {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type) && !/\.(png|jpe?g|webp)$/i.test(file.name)) {
+      toast.error("Please select a PNG, JPG, or WEBP image.");
+      return;
+    }
+    setCertificateSealUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await instance.post("/admin/upload/certificate-seal", formData, {
+        headers: { ...headers, "Content-Type": undefined },
+      });
+      setCertificateSealVersion(Date.now());
+      toast.success("Certificate seal updated.");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Seal upload failed.");
+    } finally {
+      setCertificateSealUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const uploadCertificateSignature = async (e) => {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    if (!/^image\/(png|jpe?g|webp)$/i.test(file.type) && !/\.(png|jpe?g|webp)$/i.test(file.name)) {
+      toast.error("Please select a PNG, JPG, or WEBP signature image.");
+      return;
+    }
+    setCertificateSignatureUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      await instance.post("/admin/upload/certificate-signature", formData, {
+        headers: { ...headers, "Content-Type": undefined },
+      });
+      setCertificateSignatureVersion(Date.now());
+      toast.success("Signature image updated.");
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Signature upload failed.");
+    } finally {
+      setCertificateSignatureUploading(false);
       e.target.value = "";
     }
   };
@@ -369,23 +453,10 @@ const LmsAdmin = () => {
     if (!element) return;
 
     try {
-      const canvas = await html2canvas(element, {
-        backgroundColor: "#ffffff",
-        scale: 2,
-        useCORS: true,
-      });
-      const imageData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "px",
-        format: [canvas.width, canvas.height],
-      });
-      pdf.addImage(imageData, "PNG", 0, 0, canvas.width, canvas.height);
-      pdf.save(
-        `${issueCertBatchMode ? "batch" : (issueCertForm.recipientFullName || issueCertEnrollment?.learnerName || "certificate")
-          .replace(/\s+/g, "-")
-          .toLowerCase()}-certificate.pdf`
-      );
+      const name = `${issueCertBatchMode ? "batch" : (issueCertForm.recipientFullName || issueCertEnrollment?.learnerName || "certificate")
+        .replace(/\s+/g, "-")
+        .toLowerCase()}-certificate-a4.pdf`;
+      await exportCertificateToA4Pdf(element, name);
     } catch (error) {
       toast.error("Could not generate PDF preview.");
     }
@@ -457,16 +528,16 @@ const LmsAdmin = () => {
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
       <aside className="lg:w-52 flex-shrink-0">
         <nav className="sticky top-24 brand-card p-3 space-y-1">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1.5">LMS</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider px-2 py-1.5">LMS</p>
           {lmsNav.map((item) => (
             <button
               key={item.id}
               type="button"
               onClick={() => setActiveLmsView(item.id)}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                 activeLmsView === item.id
-                  ? "bg-Primarycolor/30 text-Secondarycolor font-medium"
-                  : "text-gray-300 hover:bg-Primarycolor/20 hover:text-textcolor2"
+                  ? "bg-violet-100 text-violet-900"
+                  : "text-slate-600 hover:bg-violet-50 hover:text-slate-900"
               }`}
             >
               {item.label}
@@ -782,7 +853,7 @@ const LmsAdmin = () => {
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">Certificate design & defaults</h3>
           <p className="text-sm text-gray-500 mt-0.5">
-            The previous certificate background/logo system has been removed. All certificates now use the new standardized Lasglowtech design below.
+            Certificates use the layout below on screen, in issued HTML, and in emails. Upload your logo, optional seal, and optional PNG signature; learners see a QR code that opens the public verify page when your site URL is configured on the API.
           </p>
         </div>
         <div className="p-6 space-y-6">
@@ -799,19 +870,31 @@ const LmsAdmin = () => {
                   "This professional has demonstrated initiative and a commitment to deepening their skills and advancing their career."
                 }
                 logoUrl={certificateLogoUrl}
+                sealUrl={certificateSealUrl}
+                signatureImageUrl={certificateSignatureUrl}
               />
             </div>
             <div className="brand-card p-5">
               <p className="text-sm font-medium text-textcolor2 mb-2">Certificate assets</p>
               <p className="text-sm text-gray-400 mb-4">
-                Upload the Lasglowtech certificate logo here. It will be reused across admin preview, issued certificates, learner downloads, and email attachments.
+                Logo, seal, and signature files are served from the API <code className="text-xs text-gray-300">/uploads/</code> and appear on every issued certificate and HTML download.
               </p>
-              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors cursor-pointer">
-                <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={uploadCertificateLogo} />
-                {certificateLogoUploading ? "Uploading..." : "Upload Certificate Logo"}
-              </label>
+              <div className="flex flex-col gap-2">
+                <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors cursor-pointer w-fit">
+                  <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={uploadCertificateLogo} />
+                  {certificateLogoUploading ? "Uploading..." : "Upload certificate logo"}
+                </label>
+                <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors cursor-pointer w-fit">
+                  <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={uploadCertificateSeal} />
+                  {certificateSealUploading ? "Uploading..." : "Upload seal image"}
+                </label>
+                <label className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor/10 text-sm transition-colors cursor-pointer w-fit">
+                  <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={uploadCertificateSignature} />
+                  {certificateSignatureUploading ? "Uploading..." : "Upload signature (PNG)"}
+                </label>
+              </div>
               <p className="text-xs text-gray-500 mt-3">
-                Best fit: upload a transparent wordmark logo like the PDF sample so the top-left header stays aligned.
+                Use a transparent PNG for the signature. Batch issuing is under Enrollments — select rows then &quot;Batch generate&quot;.
               </p>
             </div>
           </div>
@@ -857,44 +940,48 @@ const LmsAdmin = () => {
       <section id="lms-enrollments" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">Enrollments & certificates</h3>
-          <p className="text-sm text-gray-500 mt-0.5">View enrollments, preview the new certificate design, issue one certificate, or issue many at once.</p>
+          <p className="text-sm text-gray-500 mt-0.5">
+            View enrollments, issue certificates (emailed as PDF), preview issued HTML, or remove an enrollment to wipe its progress and certificate for that course.
+          </p>
         </div>
         <div className="p-6">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <label className="text-sm text-gray-300">Filter by course:</label>
-            <select
-              value={enrollmentCourseFilter}
-              onChange={(e) => setEnrollmentCourseFilter(e.target.value)}
-              className="p-2 rounded-md bg-[#f6f5fa] text-black text-sm min-w-[200px]"
-            >
-              <option value="">All courses</option>
-              {courses.map((c) => (
-                <option key={c.id} value={c.id}>{c.title}</option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={loadEnrollments}
-              className="px-3 py-2 rounded-md border border-Primarycolor/50 text-textcolor2 text-sm"
-            >
-              Refresh
-            </button>
-            <button
-              type="button"
-              onClick={toggleSelectAllEnrollments}
-              className="px-3 py-2 rounded-md border border-Primarycolor/50 text-textcolor2 text-sm"
-              disabled={!enrollments.filter((item) => !item.certificateSentAt).length}
-            >
-              {enrollments.filter((item) => !item.certificateSentAt).every((item) => selectedEnrollmentIds.includes(item.enrollmentId)) &&
-              selectedEnrollmentIds.length
-                ? "Clear selection"
-                : "Select all eligible"}
-            </button>
+          <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:flex-wrap sm:items-center">
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="text-sm font-medium text-slate-700">Filter by course:</label>
+              <select
+                value={enrollmentCourseFilter}
+                onChange={(e) => setEnrollmentCourseFilter(e.target.value)}
+                className="p-2 rounded-md border border-slate-200 bg-white text-slate-900 text-sm min-w-[200px] shadow-sm"
+              >
+                <option value="">All courses</option>
+                {courses.map((c) => (
+                  <option key={c.id} value={c.id}>{c.title}</option>
+                ))}
+              </select>
+              <button
+                type="button"
+                onClick={loadEnrollments}
+                className="px-3 py-2 rounded-md border border-slate-300 bg-white text-slate-800 text-sm font-medium shadow-sm hover:bg-slate-50"
+              >
+                Refresh
+              </button>
+              <button
+                type="button"
+                onClick={toggleSelectAllEnrollments}
+                className="px-3 py-2 rounded-md border border-slate-300 bg-white text-slate-800 text-sm font-medium shadow-sm hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
+                disabled={!enrollments.filter((item) => !item.certificateSentAt).length}
+              >
+                {enrollments.filter((item) => !item.certificateSentAt).every((item) => selectedEnrollmentIds.includes(item.enrollmentId)) &&
+                selectedEnrollmentIds.length
+                  ? "Clear selection"
+                  : "Select all eligible"}
+              </button>
+            </div>
             <button
               type="button"
               onClick={openBatchIssueModal}
               disabled={!selectedEnrollmentIds.length || !!issuingId}
-              className="px-4 py-2 rounded-md bg-Secondarycolor/85 text-white text-sm font-medium disabled:opacity-50"
+              className="w-full px-4 py-2.5 rounded-lg bg-violet-600 text-white text-sm font-semibold shadow-md hover:bg-violet-700 sm:w-auto sm:ml-auto disabled:bg-slate-300 disabled:text-slate-600 disabled:shadow-none disabled:cursor-not-allowed"
             >
               {issuingId === "batch" ? "Generating batch..." : `Batch generate (${selectedEnrollmentIds.length})`}
             </button>
@@ -907,19 +994,19 @@ const LmsAdmin = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
                 <thead>
-                  <tr className="border-b border-Primarycolor/20 text-gray-300">
-                    <th className="py-2 pr-4 font-semibold">Select</th>
-                    <th className="py-2 pr-4 font-semibold">Learner</th>
-                    <th className="py-2 pr-4 font-semibold">Course</th>
-                    <th className="py-2 pr-4 font-semibold">Progress</th>
-                    <th className="py-2 pr-4 font-semibold">Status</th>
-                    <th className="py-2 pr-4 font-semibold">Certificate</th>
-                    <th className="py-2 font-semibold">Actions</th>
+                  <tr className="border-b border-slate-200 bg-slate-100 text-slate-700">
+                    <th className="py-3 pr-4 font-semibold">Select</th>
+                    <th className="py-3 pr-4 font-semibold">Learner</th>
+                    <th className="py-3 pr-4 font-semibold">Course</th>
+                    <th className="py-3 pr-4 font-semibold">Progress</th>
+                    <th className="py-3 pr-4 font-semibold">Status</th>
+                    <th className="py-3 pr-4 font-semibold">Certificate</th>
+                    <th className="py-3 font-semibold">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {enrollments.map((en) => (
-                    <tr key={en.enrollmentId} className="border-b border-Primarycolor/10 text-gray-200">
+                    <tr key={en.enrollmentId} className="border-b border-slate-100 text-slate-800 hover:bg-violet-50/40">
                       <td className="py-2 pr-4">
                         <input
                           type="checkbox"
@@ -937,27 +1024,44 @@ const LmsAdmin = () => {
                       <td className="py-2 pr-4 capitalize">{en.status}</td>
                       <td className="py-2 pr-4">
                         {en.certificateSentAt
-                          ? <span className="text-green-400 text-xs">Issued</span>
-                          : <span className="text-gray-500 text-xs">—</span>}
+                          ? <span className="text-xs font-semibold text-emerald-700">Issued</span>
+                          : <span className="text-slate-400 text-xs">—</span>}
                       </td>
-                      <td className="py-2 flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={() => previewCertificate(en.enrollmentId)}
-                          className="px-2 py-1 rounded border border-Primarycolor/50 text-textcolor2 text-xs hover:bg-Primarycolor/10"
-                        >
-                          Preview
-                        </button>
-                        {!en.certificateSentAt && (
+                      <td className="py-2">
+                        <div className="flex flex-wrap items-center gap-2">
                           <button
                             type="button"
-                            onClick={() => openIssueModal(en)}
-                            disabled={issuingId === en.enrollmentId}
-                            className="px-2 py-1 rounded bg-Secondarycolor/80 text-white text-xs hover:bg-Secondarycolor disabled:opacity-50"
+                            onClick={() => previewCertificate(en.enrollmentId)}
+                            disabled={!en.certificateSentAt}
+                            title={
+                              en.certificateSentAt
+                                ? "Open issued certificate in a new tab"
+                                : "Issue a certificate first; then preview becomes available here."
+                            }
+                            className="px-3 py-1.5 rounded-md border-2 border-violet-600 bg-violet-50 text-violet-800 text-xs font-semibold hover:bg-violet-100 disabled:cursor-not-allowed disabled:border-slate-300 disabled:bg-slate-100 disabled:text-slate-500"
                           >
-                            Issue certificate
+                            Preview
                           </button>
-                        )}
+                          {!en.certificateSentAt && (
+                            <button
+                              type="button"
+                              onClick={() => openIssueModal(en)}
+                              disabled={issuingId === en.enrollmentId}
+                              className="px-3 py-1.5 rounded-md bg-violet-600 text-white text-xs font-semibold shadow-sm hover:bg-violet-700 disabled:opacity-50"
+                            >
+                              Issue certificate
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => requestDeleteEnrollment(en)}
+                            disabled={deletingEnrollmentId === en.enrollmentId || !!issuingId}
+                            title="Delete this enrollment and all its progress / certificate data for this course"
+                            className="px-3 py-1.5 rounded-md border border-red-300 bg-red-50 text-red-800 text-xs font-semibold hover:bg-red-100 disabled:opacity-50"
+                          >
+                            Remove
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1028,6 +1132,48 @@ const LmsAdmin = () => {
         )}
         </div>
       </section>
+      )}
+
+      {deleteConfirm && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60"
+          onClick={() => {
+            if (!deletingEnrollmentId) setDeleteConfirm(null);
+          }}
+        >
+          <div
+            className="brand-card w-full max-w-md rounded-xl p-6 shadow-2xl border border-slate-200 bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h4 className="text-lg font-semibold text-slate-900 mb-2">Remove this enrollment?</h4>
+            <p className="text-sm font-medium text-slate-800 mb-3">
+              {deleteConfirm.learnerName || "Learner"} <span className="text-slate-400">—</span>{" "}
+              {deleteConfirm.courseTitle || "Course"}
+            </p>
+            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+              All module progress and any certificate data for this enrollment will be permanently deleted. The user
+              account is not deleted — they can enroll again later.
+            </p>
+            <div className="flex flex-wrap gap-3 justify-end">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirm(null)}
+                disabled={!!deletingEnrollmentId}
+                className="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-800 text-sm font-medium hover:bg-slate-50 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteEnrollment}
+                disabled={!!deletingEnrollmentId}
+                className="px-4 py-2.5 rounded-lg bg-red-600 text-white text-sm font-semibold hover:bg-red-700 disabled:opacity-60"
+              >
+                {deletingEnrollmentId ? "Removing…" : "Yes, remove enrollment"}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
 
       {issueCertEnrollment && (
@@ -1118,7 +1264,7 @@ const LmsAdmin = () => {
                     onClick={downloadCertificatePreviewPdf}
                     className="flex-1 py-2.5 rounded-md border border-Primarycolor/40 text-textcolor2 text-sm"
                   >
-                    Download PDF preview
+                    Print-ready A4 PDF
                   </button>
                   <button
                     type="button"
@@ -1135,6 +1281,8 @@ const LmsAdmin = () => {
                 <CertificatePreview
                   ref={certificatePreviewRef}
                   logoUrl={certificateLogoUrl}
+                  sealUrl={certificateSealUrl}
+                  signatureImageUrl={certificateSignatureUrl}
                   recipientName={
                     issueCertBatchMode
                       ? `${selectedEnrollmentIds.length} Learners`

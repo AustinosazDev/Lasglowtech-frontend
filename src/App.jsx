@@ -49,6 +49,7 @@ import LmsAdmin from "./pages/dashboard/lms";
 import BulkEmailAdmin from "./pages/dashboard/bulk-email";
 import TermsOfServicePage from "./pages/terms-of-service";
 import PrivacyPolicyPage from "./pages/privacy-policy";
+import VerifyCertificatePage from "./pages/verify-certificate";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -106,6 +107,7 @@ function App() {
         <Route path="/auth/reset-password/:token" element={<ResetPasswordPage />} />
         <Route path="/legal/terms" element={<TermsOfServicePage />} />
         <Route path="/legal/privacy" element={<PrivacyPolicyPage />} />
+        <Route path="/verify-certificate" element={<VerifyCertificatePage />} />
         <Route path="/dashboard" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
           <Route index element={<DashboardHome />} />
           <Route path="catalogues" element={<CataloguesAdmin />} />

@@ -12,6 +12,9 @@ import Slide1 from '../assets/images/slide1.jpg';
 import Slide2 from '../assets/images/slide2.jpg';
 import Slide3 from '../assets/images/slide3.jpg';
 import Line from '../assets/images/Line.png';
+
+
+
 // Company Logos
 import LOGO from '../assets/images/Logo.png';
 import CEO from '../assets/images/Ceo.jpg';
@@ -61,6 +64,10 @@ import Sures2 from '../assets/images/SSW02.jpg';
 import RWA from '../assets/images/Rwacover.jpg';
 import DECOT from '../assets/images/Decotechcover.png';
 import ur9graph from '../assets/images/ur9graph.jpg';
+// cert assets
+import sealImg from "../assets/images/seal2.png"; // adjust path
+import logoImg from "../assets/images/Logo2.png"; // adjust path
+
 export {
   // NAVS
   LOGO,
@@ -81,7 +88,9 @@ export {
   Slide3,
 Contactimg,
 Gradient,
+// CERT
 
+sealImg,logoImg,
 // section of works
 pelifts,heroimage,fiftyreign,Fhemfelhomes,Fhemfelhomes2,Fhemfeltravels1, BriteB,Lasglow1, GreatN,
 Phoenixcover,ur9group,Smiggle2,Smiggle3,Smiggle4,Sures1,Sures2,RWA,DECOT, CEO,
