@@ -590,12 +590,12 @@ const CareersAcademy = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] gap-5 max-lg:gap-6 lg:gap-8 xl:gap-12 items-center w-full min-w-0 py-10 max-lg:pt-6 lg:py-16 xl:py-20 flex-1 overflow-visible">
             {/* ── LEFT: copy (wider column) ───────────────────────────── */}
             <motion.div
-              className="text-white order-2 lg:order-1 max-w-2xl lg:max-w-none"
+              className="text-white order-1 lg:order-1 max-w-2xl lg:max-w-none"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <h1 className="font-extrabold leading-[1.1] sm:leading-[1.12] tracking-tight text-[2rem] sm:text-[2.65rem] md:text-[3.05rem] lg:text-[3.35rem] xl:text-[3.65rem] mb-5 [text-wrap:balance]">
+              <h1 className="font-extrabold leading-[1.1] sm:leading-[1.12] tracking-tight text-[2rem] sm:text-[2.65rem] md:text-[3.05rem] lg:text-[3.35rem] xl:text-[3.65rem] mb-5 mt-6 [text-wrap:balance]">
                 <span className="block text-white">Launch Your  Career </span>
                 <span className="block mt-1.5 sm:mt-2 text-white">
                   for{"\u00a0"}the{" "}
@@ -645,7 +645,7 @@ const CareersAcademy = () => {
 
             {/* ── RIGHT: hero image (larger); mobile: lower + soft bottom feather into stats bar ─ */}
             <motion.div
-              className="order-1 lg:order-2 relative flex min-w-0 justify-center lg:justify-center items-end select-none overflow-visible min-h-[280px] max-lg:min-h-[min(52vh,420px)] lg:min-h-[min(560px,70vh)] max-lg:pt-1"
+              className="order-2 lg:order-2 relative flex min-w-0 justify-center lg:justify-center items-end select-none overflow-visible min-h-[280px] max-lg:min-h-[min(52vh,420px)] lg:min-h-[min(560px,70vh)] max-lg:pt-1"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.7, ease: "easeOut", delay: 0.1 }}
