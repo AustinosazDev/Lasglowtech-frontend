@@ -74,7 +74,7 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-[#9b8cb5]">© {yr} Lasglowtech. All rights reserved.</p>
-          <span className="text-sm text-[#9b8cb5]">Built with ❤️ in Nigeria</span>
+          <span className="text-sm text-[#9b8cb5]">Powered by Lasglowtech</span>
         </div>
       </div>
     </footer>
