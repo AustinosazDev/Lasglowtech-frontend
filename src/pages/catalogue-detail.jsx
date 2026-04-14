@@ -12,7 +12,7 @@ import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { LOGO } from "../components/images";
 import { addToCart, readCart, removeFromCart } from "../utils/cart";
-import { getUser, isAuthenticated } from "../utils/auth";
+import { isAuthenticated } from "../utils/auth";
 
 const formatNaira = (amount) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(Number(amount || 0));
@@ -43,8 +43,6 @@ const CatalogueDetail = () => {
   const [cartItems, setCartItems] = useState(() => readCart());
 
   const authed = isAuthenticated();
-  const user = getUser();
-  const isClient = user?.role === "client";
   const isInCart = useMemo(() => cartItems.some((entry) => entry.slug === slug), [cartItems, slug]);
   const heroImage = item?.imageUrl || catalogueFallbacks[0];
   const paymentLabel = item?.paymentType === "deposit" ? "Deposit payment" : "Full payment";
@@ -345,7 +343,7 @@ const CatalogueDetail = () => {
 
             <div className="mt-6 flex flex-wrap gap-3">
               {item.isPaymentEnabled ? (
-                authed && isClient ? (
+                authed ? (
                   <Link
                     to={`/checkout/${item.slug}`}
                     className="px-5 py-3 rounded-2xl bg-gradient-to-r from-Primarycolor to-Primarycolor1 text-white font-medium hover:opacity-95 transition-opacity"
@@ -364,7 +362,7 @@ const CatalogueDetail = () => {
                       to={registerUrl}
                       className="px-5 py-3 rounded-2xl border border-Primarycolor/40 text-Primarycolor hover:bg-Primarycolor hover:text-white transition-colors"
                     >
-                      Register as client
+                      Create account
                     </Link>
                   </>
                 )
@@ -395,12 +393,6 @@ const CatalogueDetail = () => {
                 </button>
               )}
             </div>
-
-            {authed && !isClient && item.isPaymentEnabled && (
-              <p className="text-sm text-amber-300 mt-5">
-                You are signed in with a non-client account. Use a client account to continue to payment.
-              </p>
-            )}
           </div>
         </div>
       )}

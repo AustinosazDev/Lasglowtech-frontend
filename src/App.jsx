@@ -94,8 +94,8 @@ function App() {
         <Route path="/careers/dashboard" element={<ProtectedRoute allowedRoles={["learner","student","talent"]}><CareersDashboard /></ProtectedRoute>} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/services/:slug" element={<SingleService />} />
-        <Route path="/checkout/:slug" element={<ProtectedRoute allowedRoles={["client"]}><Checkout /></ProtectedRoute>} />
-        <Route path="/payment/success" element={<ProtectedRoute allowedRoles={["client"]}><PaymentSuccess /></ProtectedRoute>} />
+        <Route path="/checkout/:slug" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+        <Route path="/payment/success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
         <Route path="/catalogues" element={<Catalogues />} />
         <Route path="/catalogues/:slug" element={<CatalogueDetail />} />
         <Route path="/cart" element={<CartPage />} />
