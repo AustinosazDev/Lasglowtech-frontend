@@ -30,6 +30,7 @@ const defaultCourse = {
   level: "beginner",
   durationWeeks: 4,
   imageUrl: "",
+  brochureUrl: "",
   isFeatured: false,
   isPublished: true,
   issueCertificateOnCompletion: true,
@@ -73,6 +74,7 @@ const LmsAdmin = () => {
     signatureLabel: "Authorized Signatory",
   });
   const [resourcePdfUploading, setResourcePdfUploading] = useState(false);
+  const [brochurePdfUploading, setBrochurePdfUploading] = useState(false);
   const [certificateLogoUploading, setCertificateLogoUploading] = useState(false);
   const [certificateSealUploading, setCertificateSealUploading] = useState(false);
   const [certificateSignatureUploading, setCertificateSignatureUploading] = useState(false);
@@ -328,6 +330,35 @@ const LmsAdmin = () => {
     }
   };
 
+  const uploadCourseBrochurePdf = async (e) => {
+    const file = e?.target?.files?.[0];
+    if (!file) return;
+    if (!/\.pdf$/i.test(file.name) && file.type !== "application/pdf") {
+      toast.error("Please select a PDF file.");
+      return;
+    }
+    setBrochurePdfUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await instance.post("/admin/upload/module-resource", formData, {
+        headers: { ...headers, "Content-Type": undefined },
+      });
+      const url = res.data?.url;
+      if (url) {
+        setCourseForm((p) => ({ ...p, brochureUrl: url }));
+        toast.success("Course brochure uploaded. Save the course to keep it.");
+      } else {
+        toast.error("Upload succeeded but no URL returned.");
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.error || "Brochure upload failed.");
+    } finally {
+      setBrochurePdfUploading(false);
+      e.target.value = "";
+    }
+  };
+
   const uploadCertificateSeal = async (e) => {
     const file = e?.target?.files?.[0];
     if (!file) return;
@@ -524,6 +555,8 @@ const LmsAdmin = () => {
     { id: "lms-courses-list", label: "Courses list" },
   ];
   const [activeLmsView, setActiveLmsView] = useState("lms-create-course");
+  const isCourseEditing = Boolean(courseForm.id);
+  const showModulesPanel = activeLmsView === "lms-modules" || isCourseEditing;
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
@@ -593,6 +626,18 @@ const LmsAdmin = () => {
             placeholder="Image URL (optional)"
             className="md:col-span-2 p-3 rounded-md bg-[#f6f5fa] text-black"
           />
+          <div className="md:col-span-2 grid grid-cols-1 gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+            <input
+              value={courseForm.brochureUrl}
+              onChange={(e) => setCourseForm((p) => ({ ...p, brochureUrl: e.target.value }))}
+              placeholder="Brochure PDF URL (optional)"
+              className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            />
+            <label className="inline-flex cursor-pointer items-center justify-center rounded-md border border-Primarycolor/30 px-4 py-3 text-sm font-medium text-textcolor2">
+              <input type="file" accept="application/pdf,.pdf" className="hidden" onChange={uploadCourseBrochurePdf} />
+              {brochurePdfUploading ? "Uploading brochure..." : "Upload brochure PDF"}
+            </label>
+          </div>
           <textarea
             value={courseForm.description}
             onChange={(e) => setCourseForm((p) => ({ ...p, description: e.target.value }))}
@@ -635,7 +680,10 @@ const LmsAdmin = () => {
               <button
                 type="button"
                 className="px-6 py-3 rounded-md border border-Primarycolor/30 text-textcolor2"
-                onClick={() => setCourseForm(defaultCourse)}
+                onClick={() => {
+                  setCourseForm(defaultCourse);
+                  setModuleForm(defaultModule);
+                }}
               >
                 Cancel edit
               </button>
@@ -646,7 +694,7 @@ const LmsAdmin = () => {
       </section>
       )}
 
-      {activeLmsView === "lms-modules" && (
+      {showModulesPanel && (
       <section id="lms-modules" className="brand-card overflow-hidden">
         <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
           <h3 className="text-xl font-semibold text-textcolor2">
@@ -655,7 +703,9 @@ const LmsAdmin = () => {
           <p className="text-sm text-gray-500 mt-0.5">
             {moduleForm.id
               ? `Updating "${moduleForm.title}". Change fields and click Update Module, or Cancel to add a new one.`
-              : "Create or edit course modules with notes and resources. You can update or delete any module from the list below."}
+              : isCourseEditing
+                ? "This course is in edit mode. You can update the course details above and manage its modules here on the same screen."
+                : "Create or edit course modules with notes and resources. You can update or delete any module from the list below."}
           </p>
         </div>
         <div className="p-6">
@@ -1107,11 +1157,19 @@ const LmsAdmin = () => {
                           level: course.level || "beginner",
                           durationWeeks: course.durationWeeks || 4,
                           imageUrl: course.imageUrl || "",
+                          brochureUrl: course.brochureUrl || "",
                           isFeatured: Boolean(course.isFeatured),
                           isPublished: Boolean(course.isPublished),
                           issueCertificateOnCompletion: course.issueCertificateOnCompletion !== false,
                         });
+                        setModuleForm({
+                          ...defaultModule,
+                          courseId: String(course.id),
+                        });
                         setActiveLmsView("lms-create-course");
+                        setTimeout(() => {
+                          document.getElementById("lms-create-course")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                        }, 0);
                       }}
                       className="px-4 py-2 rounded-md border border-Primarycolor/60 text-textcolor2"
                     >
@@ -1309,4 +1367,3 @@ const LmsAdmin = () => {
 };
 
 export default LmsAdmin;
-

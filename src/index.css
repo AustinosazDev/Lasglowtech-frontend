@@ -171,7 +171,8 @@
 
 /* ── Light shell: admin + client + learner dashboards (readable cards & tokens) ── */
 .admin-dashboard-light,
-.user-dashboard-light {
+.user-dashboard-light,
+.careers-academy-light {
   --color-text: #334155;
   --color-text2: #0f172a;
   --color-muted: #64748b;
@@ -179,7 +180,8 @@
   --color-bg2: #ffffff;
 }
 .admin-dashboard-light .brand-card,
-.user-dashboard-light .brand-card {
+.user-dashboard-light .brand-card,
+.careers-academy-light .brand-card {
   background: #ffffff;
   border: 1px solid rgba(135, 0, 255, 0.12);
   backdrop-filter: none;
@@ -187,7 +189,8 @@
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
 }
 .admin-dashboard-light .brand-card:hover,
-.user-dashboard-light .brand-card:hover {
+.user-dashboard-light .brand-card:hover,
+.careers-academy-light .brand-card:hover {
   background: #faf5ff;
   border-color: rgba(135, 0, 255, 0.22);
   box-shadow: 0 10px 28px rgba(135, 0, 255, 0.08);
@@ -198,19 +201,23 @@
   opacity: 0.35;
 }
 .admin-dashboard-light .text-red-300,
-.user-dashboard-light .text-red-300 {
+.user-dashboard-light .text-red-300,
+.careers-academy-light .text-red-300 {
   color: #b91c1c;
 }
 .admin-dashboard-light .text-green-300,
-.user-dashboard-light .text-green-300 {
+.user-dashboard-light .text-green-300,
+.careers-academy-light .text-green-300 {
   color: #15803d;
 }
 .admin-dashboard-light .text-yellow-300,
-.user-dashboard-light .text-yellow-300 {
+.user-dashboard-light .text-yellow-300,
+.careers-academy-light .text-yellow-300 {
   color: #a16207;
 }
 .admin-dashboard-light .text-orange-300,
-.user-dashboard-light .text-orange-300 {
+.user-dashboard-light .text-orange-300,
+.careers-academy-light .text-orange-300 {
   color: #c2410c;
 }
 
@@ -222,19 +229,27 @@
 .user-dashboard-light .brand-card .text-gray-200,
 .user-dashboard-light .brand-card .text-gray-300,
 .user-dashboard-light main .text-gray-200,
-.user-dashboard-light main .text-gray-300 {
+.user-dashboard-light main .text-gray-300,
+.careers-academy-light .brand-card .text-gray-200,
+.careers-academy-light .brand-card .text-gray-300,
+.careers-academy-light main .text-gray-200,
+.careers-academy-light main .text-gray-300 {
   color: #475569 !important;
 }
 .admin-dashboard-light .brand-card .text-gray-400,
 .admin-dashboard-light main .text-gray-400,
 .user-dashboard-light .brand-card .text-gray-400,
-.user-dashboard-light main .text-gray-400 {
+.user-dashboard-light main .text-gray-400,
+.careers-academy-light .brand-card .text-gray-400,
+.careers-academy-light main .text-gray-400 {
   color: #64748b !important;
 }
 .admin-dashboard-light .brand-card h1.text-white,
 .admin-dashboard-light .brand-card p.text-white,
 .user-dashboard-light .brand-card h1.text-white,
-.user-dashboard-light .brand-card p.text-white {
+.user-dashboard-light .brand-card p.text-white,
+.careers-academy-light .brand-card h1.text-white,
+.careers-academy-light .brand-card p.text-white {
   color: var(--color-text2) !important;
 }
 
