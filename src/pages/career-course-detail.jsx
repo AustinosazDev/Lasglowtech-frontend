@@ -337,7 +337,7 @@ const CareerCourseDetail = () => {
                   Become a world-class {course.title}
                 </h1>
 
-                <p className="mt-5 max-w-2xl text-base  text-white/60leading-8 text-white/88 sm:text-lg">
+                <p className="mt-5 max-w-2xl text-base  text-white/60  leading-8 text-white/88 sm:text-lg">
                   {course.summary ||
                     "Build practical digital skills through guided lessons, applied projects, and a clear learning path designed for real career growth."}
                 </p>
