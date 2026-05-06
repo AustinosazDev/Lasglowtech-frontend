@@ -13,8 +13,8 @@ const capabilities = [
   "Web development for business platforms, e-commerce, and high-converting websites that are fast, secure, and scalable.",
   "Mobile app development for Android and iOS with native and cross-platform options, from MVP to full product launch.",
   "UI/UX design systems focused on clarity, usability, and conversion—wireframes, prototypes, and design handoff.",
-  "Brand and graphic design for campaigns, social content, and customer engagement that stays on-brand.",
-  "Professional tutoring and IT training programmes to upskill your team or start a career in tech.",
+  "Brand and graphic design for campaigns, social content, and customer engagement that stays on-brand.",  "Project and product management services that keep your digital initiatives on time, on budget, and aligned with business goals.",
+  "Digital marketing and social media management that grows visibility, engagement, and leads across platforms.",  "Professional tutoring and IT training programmes to upskill your team or start a career in tech.",
   "Service catalogue with fixed-price packages and instant online checkout so you can get started without lengthy quotes.",
 ];
 
