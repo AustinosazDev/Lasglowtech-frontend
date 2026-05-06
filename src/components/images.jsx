@@ -6,8 +6,14 @@ import Land3 from '../assets/images/Land3.jpg';
 import Land1 from '../assets/images/Land1.jpg';
 import Graphic1 from '../assets/images/Graphic1.jpeg';
 import Graphic2 from '../assets/images/Graphic2.jpeg';
-import Mobile1 from  '../assets/images/Mobile1.jpeg';
-import Web1 from '../assets/images/Web1.jpeg';
+import Mobile1 from  '../assets/images/mobile.png';
+import Web1 from '../assets/images/webdev.png';
+import UIUXImg from '../assets/images/uiux.png';
+import GraphicImg from '../assets/images/Graphic.png';
+import ProjectImg from '../assets/images/Project.png';
+import ProductManagementImg from '../assets/images/product.png';
+import DigitalImg from '../assets/images/Digital.png';
+import SocialImg from '../assets/images/Social.png';
 import Slide1 from '../assets/images/slide1.jpg';     
 import Slide2 from '../assets/images/slide2.jpg';
 import Slide3 from '../assets/images/slide3.jpg';
@@ -40,6 +46,10 @@ import Phoenixcover   from '../assets/images/phoenixcover.jpg';
 import ur9group  from '../assets/images/graphic.jpg';
 import Aboutimg  from '../assets/images/Aboutimg.jpg';
 import Aboutimg2  from '../assets/images/Aboutimg2.jpg';
+import Aboutus from '../assets/images/Aboutus.png';
+import OurMission from '../assets/images/ourmission.png';
+import OurVision from '../assets/images/ourvision.png';
+import OurValues from '../assets/images/ourvalues.png';
 // Team images
 import Fhemfeltravels1 from '../assets/images/Ftravels.jpg';
 import Fhemfelhomes2 from '../assets/images/fhemfelomes2.jpg';
@@ -53,11 +63,14 @@ import SureSwitch from '../assets/images/SSW01.jpg';
 import Panth from '../assets/images/panth.jpg';
 import Portweb from '../assets/images/portweb.jpg';
 import Portweb2 from '../assets/images/portweb2.jpg';
+import Portweb3 from '../assets/images/portweb3.jpg';
+import JobsPro from '../assets/images/jobspro.jpg';
 import Osaz2 from '../assets/images/osaz.jpg';
 import Chimex from '../assets/images/Chimex.jpg';
 import James from '../assets/images/James.jpg';
 import Precious from '../assets/images/Precious.jpg';
 import Izu from '../assets/images/Izu.jpg';
+import Kachi from '../assets/images/Kachi.jpg';
 import Austinport from '../assets/images/portfolio.jpg';
 import Sures1 from '../assets/images/SSW01.jpg';
 import Sures2 from '../assets/images/SSW02.jpg';
@@ -82,6 +95,13 @@ export {
   Land3,
   Austinport,
   Line,ur9graph,
+  // Services
+  UIUXImg,
+  GraphicImg,
+  ProjectImg,
+  ProductManagementImg,
+  DigitalImg,
+  SocialImg,
   // Vertical
   Slide1,
   Slide2,
@@ -98,12 +118,12 @@ SureSwitch,
 // ABOUT Us
 
 // Partners
-Aboutimg,Aboutimg2  ,
+Aboutimg,Aboutimg2,Aboutus,OurMission,OurVision,OurValues,
 Ur9, Phoenixs, Qlogo, Fgroup, Dtech, Pelifts, Smiggle, NMI, 
 BriteA,
 // team
 
-Osaz, Osaz2, Chimex, James, Precious,Izu, Panth, Portweb, Portweb2
+Osaz, Osaz2, Chimex, James, Precious,Izu, Panth, Portweb, Portweb2, Portweb3, JobsPro, Kachi
 
 
 

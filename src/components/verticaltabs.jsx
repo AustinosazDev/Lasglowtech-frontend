@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Land1, Land2, Slide1 } from "./images";
+import { OurVision, OurMission, OurValues } from "./images";
 
 const panels = [
-  { title:"Designing the Future of Digital", subtitle:"Our Vision", desc:"At Lasglowtech, our vision is to shape the digital future by crafting smart, creative, and scalable solutions. We aim to be a trusted partner for brands seeking growth through standout websites, intuitive apps, and compelling visuals.", image:Land1 },
-  { title:"Turning Ideas into Impact",        subtitle:"Our Mission", desc:"Our mission is to deliver high-quality digital services that transform ideas into powerful user experiences. From web and app development to branding and graphic design, we combine creativity, technology, and strategy to help businesses succeed.", image:Slide1 },
-  { title:"Creativity. Precision. Reliability.", subtitle:"Our Values", desc:"We value creativity that solves problems, precision in every detail, and reliability in delivery. Whether designing a logo, building a platform, or launching a brand online, our values guide us to do meaningful work with integrity and excellence.", image:Land2 },
+  { title:"Designing the Future of Digital", subtitle:"Our Vision", desc:"At Lasglowtech, our vision is to shape the digital future by crafting smart, creative, and scalable solutions. We aim to be a trusted partner for brands seeking growth through standout websites, intuitive apps, and compelling visuals.", image:OurVision },
+  { title:"Turning Ideas into Impact",        subtitle:"Our Mission", desc:"Our mission is to deliver high-quality digital services that transform ideas into powerful user experiences. From web and app development to branding and graphic design, we combine creativity, technology, and strategy to help businesses succeed.", image:OurMission },
+  { title:"Creativity. Precision. Reliability.", subtitle:"Our Values", desc:"We value creativity that solves problems, precision in every detail, and reliability in delivery. Whether designing a logo, building a platform, or launching a brand online, our values guide us to do meaningful work with integrity and excellence.", image:OurValues },
 ];
 
 export default function VerticalTabs() {

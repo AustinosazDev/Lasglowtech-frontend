@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { FaCheckCircle } from "react-icons/fa";
-import { Contactimg } from "../components/images";
+import { Aboutus } from "../components/images";
 import Subscription from "../components/sections/subscription";
 import MeetTheTeam from "../components/meetheteam";
 import CoreValues from "../components/sections/corevalues";
 import FaqSection from "../components/Faq";
 import SEO from "../utils/seo";
 
-const ABOUT_IMG = "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80";
+const ABOUT_IMG = Aboutus;
 
 const capabilities = [
   "Web development for business platforms, e-commerce, and high-converting websites that are fast, secure, and scalable.",
@@ -38,7 +38,7 @@ export default function About() {
       <section className="relative overflow-hidden pt-32 pb-20 px-6 md:px-12 border-b border-[#8700ff]/15">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url(${Contactimg})` }}
+          style={{ backgroundImage: `url(${Aboutus})` }}
           aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-b from-[#120b1f]/80 to-[#120b1f]" />
