@@ -151,6 +151,10 @@ const CareerCourseDetail = () => {
     setDownloadingBrochure(true);
     try {
       const res = await instance.get(brochureUrl, { responseType: "blob" });
+      if (res.data.size === 0) {
+        toast.error("The brochure file is empty. Please try re-uploading the brochure.");
+        return;
+      }
       const blobUrl = window.URL.createObjectURL(new Blob([res.data], { type: "application/pdf" }));
       const link = document.createElement("a");
       const fileName = brochureUrl.split("/").pop()?.split("?")[0] || `${course.slug || "course"}-brochure.pdf`;
