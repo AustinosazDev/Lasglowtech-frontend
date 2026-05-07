@@ -338,7 +338,7 @@ const CareerCourseDetail = () => {
                 </span>
 
                 <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
-                  Become a world-class {course.title}
+                   {course.title}
                 </h1>
 
                 <p className="mt-5 max-w-2xl text-base  text-white/60  leading-8 text-white/88 sm:text-lg">
