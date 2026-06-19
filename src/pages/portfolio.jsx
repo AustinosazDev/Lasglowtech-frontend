@@ -52,15 +52,14 @@ export default function Portfolio() {
             <span className="section-tag justify-center">
             PROJECTS
             </span>
-            <h1 className="mt-5 font-extrabold text-[clamp(1.65rem,4.5vw,2.75rem)] leading-[1.12] tracking-tight text-white">
+            <h1 className="mt-5 text-white">
               Sites & brands{" "}
               <span className="bg-gradient-to-r from-[#8700ff] via-[#c084fc] to-orange-500 bg-clip-text text-transparent">
                 built to perform
               </span>
             </h1>
-            <p className="mt-4 text-sm sm:text-base text-[#b8a9d4] max-w-sm mx-auto leading-snug">
-            Websites we have built, branding, and creative projects,
-            Filter by category  check below to explore our work.
+            <p className="mt-4 type-muted max-w-sm mx-auto">
+            Websites, branding, and creative projects. Filter by category below.
             </p>
           </div>
         </motion.div>
@@ -78,8 +77,8 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28">
           <div className="text-center mb-14">
             <span className="section-tag justify-center"><span className="dot-live"/>Case studies</span>
-            <h2 className="font-extrabold text-3xl md:text-4xl text-white tracking-tight">Selected projects in depth</h2>
-            <p className="mt-3 text-[#9b8cb5] max-w-2xl mx-auto">A closer look at how we approach challenges and deliver outcomes for our clients.</p>
+            <h2 className="text-white">Selected projects in depth</h2>
+            <p className="mt-3 type-muted max-w-2xl mx-auto">How we approach challenges and deliver outcomes for clients.</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -88,9 +87,9 @@ export default function Portfolio() {
                 initial={{ opacity:0, y:20 }} whileInView={{ opacity:1, y:0 }} viewport={{ once:true }}
                 transition={{ duration:0.4, delay:i*0.1 }}
                 className="brand-card p-6 md:p-7 flex flex-col">
-                <span className="text-xs font-extrabold text-orange-500 uppercase tracking-wider mb-2">{study.category}</span>
-                <h3 className="font-extrabold text-lg text-white mb-3">{study.title}</h3>
-                <p className="text-[#9b8cb5] text-sm mb-4 leading-relaxed">{study.summary}</p>
+                <span className="type-caption font-semibold text-orange-500 uppercase tracking-wider mb-2 block">{study.category}</span>
+                <h3 className="text-white mb-3">{study.title}</h3>
+                <p className="type-muted mb-4">{study.summary}</p>
                 <div className="space-y-2 text-sm flex-1">
                   {[["Challenge", study.challenge],["Solution", study.solution],["Result", study.result]].map(([k,v]) => (
                     <p key={k} className="text-[#9b8cb5]"><span className="font-bold text-[#c4b3d8]">{k}:</span> {v}</p>

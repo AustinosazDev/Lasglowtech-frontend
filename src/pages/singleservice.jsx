@@ -17,7 +17,7 @@ const SingleService = () => {
 
             <section className="flex flex-col items-center justify-center py-16  mx-auto text-center">
                 <h1
-                    className="text-4xl sm:text-5xl md:text-6xl text-textcolor2 py-3 font-semibold"
+                    className="text-textcolor2 py-3"
                     data-aos="zoom-up"
                 >
                     {service.title}

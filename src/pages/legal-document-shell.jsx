@@ -20,7 +20,7 @@ export function LegalDocumentShell({ title, description, path, children }) {
           <FaArrowLeft className="w-3.5 h-3.5" />
           Back to site
         </Link>
-        <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">{title}</h1>
+        <h1 className="text-white">{title}</h1>
         <p className="text-xs text-[#9b8cb5] mt-2 mb-10">
           Last updated: <time dateTime="2026-04-10">10 April 2026</time>
         </p>

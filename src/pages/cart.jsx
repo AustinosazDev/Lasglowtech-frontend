@@ -37,7 +37,7 @@ const CartPage = () => {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-sm tracking-[0.2em] text-Secondarycolor uppercase">Your Cart</p>
-            <h1 className="text-4xl md:text-5xl font-semibold mt-2">Checkout Queue</h1>
+            <h1 className="text-textcolor2 mt-2">Checkout Queue</h1>
             <p className="text-gray-400 mt-4 max-w-2xl">
               Select an item and proceed to checkout. If you are not signed in, you will be redirected to login or
               register first.

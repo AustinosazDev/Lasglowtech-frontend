@@ -7,8 +7,13 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoShareSocialSharp } from "react-icons/io5";
 import moment from "moment";
 import { Osaz } from "../components/images";
-import { RingLoader } from "react-spinners";
 import SEO from "../utils/seo";
+
+const readingTimeMinutes = (html = "") => {
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  if (!text) return 1;
+  return Math.max(1, Math.ceil(text.split(" ").length / 220));
+};
 
 const BlogDetails = () => {
   const { slug } = useParams();
@@ -35,7 +40,6 @@ const BlogDetails = () => {
     fetchPost();
   }, [decodedSlug]);
 
-  //  Share handler (slug-based)
   const handleShare = () => {
     const baseUrl =
       window.location.hostname === "localhost"
@@ -58,44 +62,23 @@ const BlogDetails = () => {
     }
   };
 
-  // Skeleton Loading Component
   const SkeletonLoader = () => (
-    <div className="bg-bgcolor text-white py-16">
-      <div className="max-w-5xl mx-auto px-6 lg:px-0">
-        {/* Skeleton Back Button */}
-        <div className="mb-6 h-8 w-20 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-
-        {/* Skeleton Title */}
-        <div className="mb-6 space-y-3">
-          <div className="h-10 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-          <div className="h-10 w-3/4 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
+    <article className="bg-bgcolor text-white py-10 md:py-14">
+      <div className="max-w-4xl mx-auto px-6 md:px-8">
+        <div className="mb-8 h-8 w-24 rounded-lg bg-white/10 animate-pulse" />
+        <div className="mb-8 space-y-3">
+          <div className="h-10 rounded-lg bg-white/10 animate-pulse" />
+          <div className="h-10 w-4/5 rounded-lg bg-white/10 animate-pulse" />
         </div>
-
-        {/* Skeleton Cover Image */}
-        <div className="rounded-xl overflow-hidden mb-8 h-96 bg-gradient-to-r from-gray-700 to-gray-800 animate-pulse" />
-
-        {/* Skeleton Meta */}
-        <div className="flex flex-wrap justify-between items-center mb-10 gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-gray-700 to-gray-800 animate-pulse" />
-            <div className="space-y-2">
-              <div className="h-4 w-24 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-              <div className="h-4 w-32 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-            </div>
-          </div>
-          <div className="h-10 w-32 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-        </div>
-
-        {/* Skeleton Content */}
-        <div className="space-y-3">
-          <div className="h-4 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-          <div className="h-4 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-          <div className="h-4 w-5/6 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-          <div className="h-4 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
-          <div className="h-4 w-4/5 bg-gradient-to-r from-gray-700 to-gray-800 rounded animate-pulse" />
+        <div className="mb-8 aspect-[16/9] max-h-[480px] rounded-2xl bg-white/10 animate-pulse" />
+        <div className="mb-10 h-16 rounded-xl bg-white/10 animate-pulse" />
+        <div className="mx-auto max-w-2xl space-y-4">
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="h-4 rounded bg-white/10 animate-pulse" style={{ width: `${88 - i * 6}%` }} />
+          ))}
         </div>
       </div>
-    </div>
+    </article>
   );
 
   if (loading) {
@@ -107,11 +90,13 @@ const BlogDetails = () => {
   }
 
   if (!post) {
-    return <div className="text-center py-20 text-gray-400">Blog not found</div>;
+    return <div className="text-center py-20 text-[#9b8cb5]">Blog not found</div>;
   }
 
+  const readTime = readingTimeMinutes(post.content);
+
   return (
-    <div className="bg-bgcolor text-white py-16">
+    <article className="bg-bgcolor text-white pb-16 md:pb-20 pt-10 md:pt-14">
       <SEO
         title={`${post.title} | Lasglowtech Blogs`}
         description={(post.content || "").replace(/<[^>]+>/g, "").slice(0, 160)}
@@ -140,67 +125,75 @@ const BlogDetails = () => {
           mainEntityOfPage: `https://www.lasglowtech.com.ng/blog/${post.slug}`,
         }}
       />
-      <div className="max-w-5xl  py-16 mx-auto px-6 lg:px-0">
 
-        {/* Back */}
-        <div className="mb-6">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center text-violet-500 hover:text-violet-400 font-semibold"
-          >
-            <FaArrowLeftLong className="mr-2" /> Back
-          </button>
-        </div>
+      <div className="max-w-4xl mx-auto px-6 md:px-8">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#9b8cb5] hover:text-orange-500 transition-colors"
+        >
+          <FaArrowLeftLong className="w-4 h-4" />
+          Back
+        </button>
 
-        {/* Title */}
-        <h1 className="text-3xl md:text-5xl font-bold text-textcolor2 mb-6">
-          {post.title}
-        </h1>
+        <header className="mb-10 md:mb-12">
+          <p className="section-tag mb-4">
+            <span className="dot-live" />
+            Blog
+          </p>
 
-        {/* Cover */}
-        {post.cover && (
-          <div className="rounded-xl overflow-hidden mb-8">
-            <img
-              src={post.coverUrl || `${API_BASE_URL}/uploads/images/${post.cover}`}
-              alt={post.title}
-              loading="lazy"
-              className="w-full max-h-[480px] object-cover"
-            />
+          <h1 className="text-textcolor2 mb-6 max-w-3xl">{post.title}</h1>
+
+          {post.cover && (
+            <figure className="mb-8 overflow-hidden rounded-2xl border border-[#8700ff]/15">
+              <img
+                src={post.coverUrl || `${API_BASE_URL}/uploads/images/${post.cover}`}
+                alt={post.title}
+                loading="lazy"
+                className="w-full max-h-[480px] object-cover"
+              />
+            </figure>
+          )}
+
+          <div className="flex flex-wrap items-center justify-between gap-4 border-y border-[#8700ff]/15 py-5">
+            <div className="flex items-center gap-3 min-w-0">
+              <img src={Osaz} alt="Lasglowtech" className="w-10 h-10 rounded-full border border-[#8700ff]/25 object-cover shrink-0" />
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-white">Lasglowtech</p>
+                <p className="text-sm text-[#9b8cb5]">
+                  {moment(post.timestamp).format("MMMM D, YYYY")}
+                  <span className="mx-2 text-[#8700ff]/50">·</span>
+                  {readTime} min read
+                </p>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleShare}
+              className="btn-primary shrink-0 px-5 py-2.5 text-sm"
+            >
+              Share
+              <IoShareSocialSharp className="w-4 h-4" />
+            </button>
           </div>
-        )}
+        </header>
 
-        {/* Meta */}
-        <div className="flex flex-wrap justify-between items-center text-sm text-gray-400 mb-10">
-          <div className="flex items-center gap-3">
-            <img src={Osaz} alt="author" className="w-8 h-8 rounded-full" />
-            <span className="font-medium text-gray-300">Lasglowtech</span>
-            <span>• {moment(post.timestamp).format("MMMM D, YYYY")}</span>
-          </div>
+        <div
+          className="blog-content"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
 
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-2 bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor px-4 py-2 rounded-md shadow"
-          >
-            Share <IoShareSocialSharp />
-          </button>
-        </div>
-
-        {/* Content */}
-        <div className=" text-base font-light  prose prose-invert prose-lg max-w-none text-gray-300   leading-relaxed" dangerouslySetInnerHTML={{ __html: post.content }} />
-
-        {/* Related */}
-        <div className="mt-16 border-t border-[#8700ff]/15 pt-10">
+        <div className="mt-16 md:mt-20 border-t border-[#8700ff]/15 pt-10 md:pt-12">
           <RelatedPosts currentPostId={post.id} />
         </div>
 
-        {/* Subscription */}
-        <div className="mt-20">
+        <div className="mt-16 md:mt-20">
           <Subscription />
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 
 export default BlogDetails;
-

@@ -32,10 +32,10 @@ export default function Services() {
        
         <div className="relative max-w-4xl mx-auto text-center">
           <span className="section-tag justify-center"><span className="dot-live"/>Services</span>
-          <h2 className="font-bold text-4xl md:text-5xl text-white  pt-8  pb-3 mx-auto md:max-w-2xl tracking-tight leading-tight mb-5" >
-           <span className="text-[#8700ff]">Digital solutions </span>  for modern brands
-          </h2>
-          <p className="text-[#9b8cb5] text-lg  max-w-2xl mx-auto leading-relaxed mb-8">
+          <h1 className="text-white pt-8 pb-3 mx-auto md:max-w-2xl mb-5">
+           <span className="text-[#8700ff]">Digital solutions </span> for modern brands
+          </h1>
+          <p className="type-muted text-lg max-w-2xl mx-auto mb-8">
             From design, web and mobile development  and branding   we deliver solutions built to perform and scale, with <strong className="text-[#c4b3d8]">professional tutoring</strong>
           </p>
           
@@ -46,8 +46,8 @@ export default function Services() {
       <section className="max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-28">
         <div className="text-center mb-12">
           <span className="section-tag justify-center"><span className="dot-live"/>Choose a service</span>
-          <h2 className="font-extrabold text-3xl md:text-4xl text-white tracking-tight mb-3">What we offer</h2>
-          <p className="text-[#9b8cb5] max-w-2xl mx-auto text-sm leading-relaxed">
+          <h2 className="text-white mb-3">What we offer</h2>
+          <p className="type-muted max-w-2xl mx-auto">
             Select a category to view scope and features. Get started via custom consultation, or browse our <strong className="text-[#c4b3d8]">service catalogue</strong> for fixed-price packages and <strong className="text-[#c4b3d8]">instant checkout</strong>.
           </p>
         </div>
@@ -72,8 +72,8 @@ export default function Services() {
                 <motion.div key={active + "t"} initial={{ opacity:0, x:-16 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:16 }} transition={{ duration:0.3 }}
                   className="p-7 md:p-10 flex flex-col justify-center order-2 lg:order-1">
                   <span className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">{tabs[active].subtitle}</span>
-                  <h2 className="font-extrabold text-2xl md:text-3xl text-white tracking-tight mb-4">{tabs[active].title}</h2>
-                  <p className="text-[#9b8cb5] text-sm leading-relaxed mb-6">{tabs[active].description}</p>
+                  <h3 className="text-white mb-4">{tabs[active].title}</h3>
+                  <p className="type-muted mb-6">{tabs[active].description}</p>
 
                   {/* Feature pills */}
                   {tabs[active].features && (
@@ -110,8 +110,8 @@ export default function Services() {
             <Link to={s.link} key={s.link}
               className="brand-card p-5 group block">
               <span className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-2 block">{`0${i+1}`}</span>
-              <h3 className="font-extrabold text-base text-white mb-2 group-hover:text-orange-500 transition-colors">{s.title}</h3>
-              <p className="text-xs text-[#9b8cb5] leading-relaxed line-clamp-3">{s.description}</p>
+              <h3 className="text-white mb-2 group-hover:text-orange-500 transition-colors">{s.title}</h3>
+              <p className="type-muted line-clamp-3">{s.description}</p>
             </Link>
           ))}
         </div>

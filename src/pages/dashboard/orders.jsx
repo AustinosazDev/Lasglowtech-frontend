@@ -37,7 +37,7 @@ const OrdersAdmin = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold text-textcolor2">Orders & payments</h1>
+        <h1 className="text-textcolor2">Orders & payments</h1>
         <p className="text-gray-500 mt-1">Review catalogue transactions and payment status.</p>
       </div>
 

@@ -24,7 +24,7 @@ const CataloguePreview = () => {
       try {
         const res = await instance.get("/catalogues/preview");
         setItems(res.data || []);
-      } catch (error) {
+      } catch {
         setItems([]);
       }
     };
@@ -32,13 +32,13 @@ const CataloguePreview = () => {
   }, []);
 
   return (
-    <section className="px-6 md:px-20 py-20 bg-gradient-to-b from-bgcolor2 to-bgcolor">
+    <section className="px-6 md:px-20 py-20">
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-Secondarycolor">Marketplace</p>
-            <h2 className="text-xl md:text-2xl font-semibold text-textcolor2 mt-2">Browse Premium Service Catalogues</h2>
-            <p className="text-muted text-sm max-w-2xl mt-2">
+            <h2 className="text-textcolor2 mt-2">Browse Premium Service Catalogues</h2>
+            <p className="text-muted text-sm max-w-2xl mt-2 leading-relaxed">
               Pick a service package, pay online, and get started fast. Our catalogue supports <strong className="text-textcolor2">instant checkout</strong> and clear detail pages before payment.
             </p>
           </div>
@@ -48,11 +48,7 @@ const CataloguePreview = () => {
           {items.map((item, index) => (
             <Link key={item.id} to={`/catalogues/${item.slug}`} className="block">
               <article className={`brand-card rounded-xl overflow-hidden ${item.isPopular ? "ring-1 ring-Secondarycolor/40" : ""}`}>
-                <img
-                  src={cardImage(item, index)}
-                  alt={item.title}
-                  className="w-full h-32 object-cover max-h-40"
-                />
+                <img src={cardImage(item, index)} alt={item.title} className="w-full h-32 object-cover max-h-40" />
                 <div className="p-3">
                   <div className="flex items-center justify-between gap-2 mb-2">
                     <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-Primarycolor/40 text-muted">

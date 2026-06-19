@@ -208,7 +208,7 @@ const CatalogueDetail = () => {
               </div>
 
               <div className="max-w-3xl">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white tracking-tight leading-[1.05]">
+                <h1 className="text-white mt-5">
                   {item.title}
                 </h1>
                 <p className="mt-4 text-base md:text-lg text-white/75 leading-relaxed">

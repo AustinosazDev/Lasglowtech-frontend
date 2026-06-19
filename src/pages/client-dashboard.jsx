@@ -73,7 +73,7 @@ const ClientDashboard = () => {
 
       <section className="max-w-6xl mx-auto">
         <div className="brand-card p-5 md:py-16">
-          <h1 className="text-2xl md:text-3xl font-semibold text-textcolor2">Welcome, {firstName}</h1>
+          <h1 className="text-textcolor2">Welcome, {firstName}</h1>
           <p className="text-sm text-gray-400 mt-1">Manage your service orders and payment status.</p>
           {!loading && (
             <div className="brand-card mt-4 p-3 text-sm">

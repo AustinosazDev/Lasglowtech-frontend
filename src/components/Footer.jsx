@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { BsTwitter } from "react-icons/bs";
+import BgPatternOverlay from "./BgPatternOverlay";
 import { LOGO } from "./images";
 
 const yr = new Date().getFullYear();
@@ -18,14 +19,15 @@ const socials = [
 export default function Footer() {
 
   return (
-    <footer className="bg-[#120b1f]/80 backdrop-blur-xl border-t border-[#8700ff]/15">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-8">
+    <footer className="relative overflow-hidden bg-[#120b1f]/80 backdrop-blur-xl border-t border-[#8700ff]/15">
+      <BgPatternOverlay glow />
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 pt-16 pb-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-[#8700ff]/15">
           {/* Brand */}
           <div>
             <Link to="/" className="flex items-center gap-2.5 mb-4">
               <img src={LOGO} alt="Lasglowtech" className="w-9 h-9 object-contain" />
-              <span className="font-extrabold text-lg text-white tracking-tight">Lasglow<span className="text-orange-500">tech</span></span>
+              <span className="font-bold text-base text-white tracking-tight">Lasglow<span className="text-orange-500">tech</span></span>
             </Link>
             <p className="text-sm text-[#9b8cb5] leading-relaxed mb-6 max-w-xs">
               Nigeria's trusted web development and tech tutoring company. Building the digital future of Nigerian businesses since 2021.

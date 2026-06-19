@@ -51,8 +51,8 @@ export default function Contact() {
         <div className="absolute top-0 right-0 w-[500px] h-[400px] bg-[#8700ff] opacity-[0.08] blur-[100px] pointer-events-none" />
         <div className="relative max-w-3xl mx-auto text-center">
           <span className="section-tag justify-center"><span className="dot-live"/>Contact us</span>
-          <h1 className="font-extrabold text-4xl md:text-5xl text-white tracking-tight mb-5">Let's build something great</h1>
-          <p className="text-[#9b8cb5] text-lg leading-relaxed mb-8">Have a project in mind or need support? We'd love to hear from you. Reach out and we'll get back within 24 hours.</p>
+          <h1 className="text-white mb-5">Let's build something great</h1>
+          <p className="type-lead text-[#9b8cb5] mb-8">Have a project in mind or need support? We'd love to hear from you. Reach out and we'll get back within 24 hours.</p>
           <nav className="flex items-center justify-center gap-2 text-sm text-[#9b8cb5]" aria-label="Breadcrumb">
             <Link to="/" className="hover:text-orange-500 transition-colors">Home</Link>
             <span>/</span>
@@ -68,7 +68,7 @@ export default function Contact() {
           {/* Info sidebar */}
           <div className="lg:col-span-2 space-y-6">
             <div className="brand-card p-7">
-              <h2 className="font-extrabold text-xl text-white mb-5">Get in touch</h2>
+              <h3 className="text-white mb-5">Get in touch</h3>
               <ul className="space-y-5">
                 {[
                   { Icon:FaEnvelope, el:<a href="mailto:lasglowtech@gmail.com" className="text-sm text-[#9b8cb5] hover:text-orange-500 transition-colors break-all">lasglowtech@gmail.com</a> },
@@ -112,8 +112,8 @@ export default function Contact() {
           {/* Form */}
           <div className="lg:col-span-3">
             <div className="brand-card p-7 md:p-10">
-              <h2 className="font-extrabold text-xl text-white mb-2">Send us a message</h2>
-              <p className="text-sm text-[#9b8cb5] mb-7">Fill in the form and we'll respond within one business day.</p>
+              <h3 className="text-white mb-2">Send us a message</h3>
+              <p className="type-muted mb-7">Fill in the form and we'll respond within one business day.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

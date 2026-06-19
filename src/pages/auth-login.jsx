@@ -63,7 +63,7 @@ export default function LoginPage() {
             <span className="dot-live" />
             Welcome back
           </span>
-          <h1 className="font-extrabold text-2xl sm:text-3xl text-textcolor2 tracking-tight mb-6">Sign in to Lasglowtech</h1>
+          <h1 className="text-textcolor2 mb-6">Sign in to Lasglowtech</h1>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>

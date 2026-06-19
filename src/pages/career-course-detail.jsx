@@ -15,6 +15,7 @@ import {
 import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { logoImg as LOGO } from "../components/images";
+import BgPatternOverlay from "../components/BgPatternOverlay";
 import { getToken, getUser, isAuthenticated } from "../utils/auth";
 import { toast } from "react-toastify";
 
@@ -175,8 +176,9 @@ const CareerCourseDetail = () => {
 
   if (loading) {
     return (
-      <div className="careers-academy-light min-h-screen bg-[#f8f7fb] text-slate-900">
-        <div className="mx-auto max-w-6xl animate-pulse px-4 py-10 sm:px-6 md:py-16">
+      <div className="relative careers-academy-light min-h-screen overflow-hidden bg-[#f8f7fb] text-slate-900">
+        <BgPatternOverlay glow />
+        <div className="relative z-10 mx-auto max-w-6xl animate-pulse px-4 py-10 sm:px-6 md:py-16">
           <div className="h-5 w-40 rounded-full bg-slate-200" />
           <div className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_460px]">
             <div className="rounded-[2rem] bg-gradient-to-br from-bgcolor via-bgcolor2 to-[#2a1245] p-8">
@@ -202,7 +204,9 @@ const CareerCourseDetail = () => {
 
   if (error || !course) {
     return (
-      <div className="careers-academy-light min-h-screen bg-[#f8f7fb] text-slate-900">
+      <div className="relative careers-academy-light min-h-screen overflow-hidden bg-[#f8f7fb] text-slate-900">
+        <BgPatternOverlay glow />
+        <div className="relative z-10">
         <header className="border-b border-slate-200 bg-white/95 backdrop-blur-sm">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
             <Link to="/careers" className="flex items-center gap-3 text-slate-900 hover:text-Primarycolor">
@@ -239,12 +243,15 @@ const CareerCourseDetail = () => {
             </div>
           </div>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="careers-academy-light min-h-screen overflow-x-hidden bg-[#f8f7fb] text-slate-900">
+    <div className="relative careers-academy-light min-h-screen overflow-x-hidden bg-[#f8f7fb] text-slate-900">
+      <BgPatternOverlay glow />
+      <div className="relative z-10">
       <SEO
         title={`${course.title} | Lasglowtech Academy`}
         description={course.summary || course.description || `Course: ${course.title}`}
@@ -337,7 +344,7 @@ const CareerCourseDetail = () => {
                   {course.level || "Career Course"}
                 </span>
 
-                <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl">
+                <h1 className="mt-5 text-white">
                    {course.title}
                 </h1>
 
@@ -446,7 +453,7 @@ const CareerCourseDetail = () => {
             <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_420px] lg:items-start">
               <div className="space-y-8">
                 <article id="course-overview" className="brand-card rounded-[2rem] p-8 md:p-10">
-                  <h2 className="text-3xl font-bold tracking-tight text-Primarycolor md:text-4xl">Course Overview</h2>
+                  <h2 className="text-Primarycolor">Course Overview</h2>
                   <div className="prose mt-6 max-w-none text-slate-700 prose-headings:text-slate-900 prose-p:leading-8 prose-li:leading-8">
                     {course.description ? (
                       <div dangerouslySetInnerHTML={{ __html: course.description }} />
@@ -466,7 +473,7 @@ const CareerCourseDetail = () => {
                 </article>
 
                 <article className="brand-card rounded-[2rem] p-8 md:p-10">
-                  <h2 className="text-3xl font-bold tracking-tight text-Primarycolor md:text-4xl">Learning Outcome</h2>
+                  <h2 className="text-Primarycolor">Learning Outcome</h2>
                   <div className="mt-6 space-y-5">
                     {learningOutcomes.map((item, index) => (
                       <div key={item} className="flex items-start gap-4">
@@ -529,8 +536,8 @@ const CareerCourseDetail = () => {
                     />
                   </div>
 
-                  <h2 className="mt-6 text-4xl font-bold leading-none tracking-tight text-Primarycolor">Start Here</h2>
-                  <p className="mt-2 text-4xl font-extrabold tracking-tight text-Primarycolor">
+                  <h2 className="mt-6 text-Primarycolor">Start Here</h2>
+                  <p className="mt-2 type-stat-lg text-Primarycolor">
                     {/* {course.durationWeeks > 0 ? `${course.durationWeeks} week${course.durationWeeks !== 1 ? "s" : ""}` : "Open now"} */}
                   </p>
 
@@ -612,7 +619,7 @@ const CareerCourseDetail = () => {
           <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-Primarycolor">Take the next step</p>
-              <h2 className="mt-3 text-3xl font-bold tracking-tight text-slate-900">Ready to join this course?</h2>
+              <h2 className="mt-3 text-slate-900">Ready to join this course?</h2>
               <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600">
                 Create your learner account, enroll, and continue the full experience from your academy dashboard.
               </p>
@@ -663,27 +670,7 @@ const CareerCourseDetail = () => {
           </div>
         </section>
       </main>
-
-      <footer className="border-t border-slate-200 bg-white py-8">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 text-sm sm:px-6 md:flex-row md:items-center md:justify-between">
-          <Link to="/careers" className="flex items-center gap-2 text-slate-900 hover:text-Primarycolor">
-            <img src={LOGO} width={28} height={28} alt="Lasglowtech" className="rounded" />
-            <span className="font-medium">Lasglowtech Academy</span>
-          </Link>
-          <div className="flex flex-wrap items-center gap-5">
-            <Link to="/careers" className="text-slate-500 hover:text-Primarycolor">
-              All courses
-            </Link>
-            <Link to="/careers/dashboard" className="text-slate-500 hover:text-Primarycolor">
-              Dashboard
-            </Link>
-            <Link to="/" className="inline-flex items-center gap-2 text-slate-500 hover:text-Primarycolor">
-              Main site
-              <FaArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };

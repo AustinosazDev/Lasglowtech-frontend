@@ -43,22 +43,22 @@ const DashboardHome = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl md:text-3xl font-semibold text-textcolor2">Dashboard overview</h1>
+        <h1 className="text-textcolor2">Dashboard overview</h1>
         <p className="text-gray-500 mt-1">Monitor platform activity and manage your digital storefront.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Published blogs</p>
-          <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.posts}</p>
+          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.posts}</p>
         </article>
         <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Newsletter subscribers</p>
-          <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.subscribers}</p>
+          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.subscribers}</p>
         </article>
         <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Catalogue items</p>
-          <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.catalogues}</p>
+          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.catalogues}</p>
         </article>
         <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Total revenue</p>
@@ -70,7 +70,7 @@ const DashboardHome = () => {
         </article>
         <article className="brand-card p-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Pending orders</p>
-          <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{stats.pendingOrders}</p>
+          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.pendingOrders}</p>
         </article>
       </div>
 

@@ -41,7 +41,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
             <img src={LOGO} alt="Lasglowtech" className="w-9 h-9 object-contain" />
-            <span className="font-extrabold text-lg text-white tracking-tight">
+            <span className="font-bold text-base text-white tracking-tight">
               Lasglow<span className=" text-[#8700ff]">tech</span>
             </span>
           </Link>

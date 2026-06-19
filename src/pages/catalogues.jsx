@@ -142,11 +142,11 @@ const Catalogues = () => {
           <p className="text-sm font-semibold tracking-[0.2em] text-gray-500 uppercase mb-6">
             Client Marketplace
           </p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-textcolor2 tracking-tight leading-[1.1]">
+          <h1 className="text-textcolor2">
             <span className="block">Instant Access to</span>
             <span className="block mt-1 text-Secondarycolor">Our Services</span>
           </h1>
-          <p className="mt-6 text-base md:text-lg text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-6 type-lead text-gray-400 max-w-2xl mx-auto">
             Compare packages, open the full service breakdown on its own page, then move into checkout when you are ready.
           </p>
           <div className="mt-10 flex flex-wrap gap-4 justify-center">

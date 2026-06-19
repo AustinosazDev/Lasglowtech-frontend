@@ -64,7 +64,7 @@ export default function RegisterPage() {
         </Link>
 
         <div className="brand-card p-5 sm:p-6 md:p-7">
-          <h1 className="font-extrabold text-xl sm:text-2xl md:text-3xl text-textcolor2 tracking-tight mb-3 sm:mb-4">
+          <h1 className="text-textcolor2 mb-3 sm:mb-4">
             Join Lasglowtech
           </h1>
 
@@ -81,7 +81,7 @@ export default function RegisterPage() {
                 }`}
               >
                 <Icon className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 ${formData.role === value ? "text-Secondarycolor" : "text-muted"}`} />
-                <p className={`font-extrabold text-sm ${formData.role === value ? "text-textcolor2" : "text-muted"}`}>{label}</p>
+                <p className={`font-semibold text-sm ${formData.role === value ? "text-textcolor2" : "text-muted"}`}>{label}</p>
               </button>
             ))}
           </div>

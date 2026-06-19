@@ -17,6 +17,7 @@ import SEO from "../utils/seo";
 import { logoImg as LOGO } from "../components/images";
 import careerImage from "../assets/images/careerimage.png";
 import { CourseCardSkeletonGrid } from "../components/skeletons/CardSkeletons";
+import BgPatternOverlay from "../components/BgPatternOverlay";
 
 const PLACEHOLDER_IMAGE =
   "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop";
@@ -83,7 +84,9 @@ const CareersAcademy = () => {
     : courses;
 
   return (
-    <div className="min-h-screen bg-bgcolor text-textcolor2">
+    <div className="relative min-h-screen bg-bgcolor text-textcolor2 overflow-hidden">
+      <BgPatternOverlay glow />
+      <div className="relative z-10">
       <SEO
         title="Learning Platform | Lasglowtech Academy – Courses & Training"
         description="Grow your skills with Lasglowtech Academy. Expert-led courses in web development, design, and digital skills. Explore courses and start learning today."
@@ -158,16 +161,6 @@ const CareersAcademy = () => {
           className="absolute inset-0 bg-gradient-to-tr from-Primarycolor/35 via-transparent to-Secondarycolor/20 pointer-events-none"
           aria-hidden
         />
-        {/* Subtle grid texture */}
-        <div
-          className="absolute inset-0 opacity-[0.07] pointer-events-none"
-          aria-hidden
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='40' cy='40' r='35' fill='none' stroke='%23ffffff' stroke-width='0.6'/%3E%3Ccircle cx='40' cy='40' r='20' fill='none' stroke='%23ffffff' stroke-width='0.6'/%3E%3Cline x1='0' y1='40' x2='80' y2='40' stroke='%23ffffff' stroke-width='0.4'/%3E%3Cline x1='40' y1='0' x2='40' y2='80' stroke='%23ffffff' stroke-width='0.4'/%3E%3C/svg%3E\")",
-            backgroundSize: "80px 80px",
-          }}
-        />
         {/* Brand glow — right, behind image */}
         <div
           className="absolute right-0 top-0 w-[55%] h-full pointer-events-none bg-[radial-gradient(ellipse_70%_85%_at_92%_48%,rgba(135,0,255,0.38),transparent_68%)]"
@@ -188,7 +181,7 @@ const CareersAcademy = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <h1 className="font-extrabold leading-[1.1] sm:leading-[1] tracking-tight text-[2rem] sm:text-[3rem] md:text-[3.5rem] lg:text-[3.5rem] xl:text-[3.7rem] mb-5 mt-6 [text-wrap:balance]">
+              <h1 className="text-textcolor2 mb-5 mt-6 [text-wrap:balance]">
                 <span className="block text-white">Launch Your  Career </span>
                 <span className="block mt-1.5 sm:mt-2 text-white">
                   for{"\u00a0"}the{" "}
@@ -298,7 +291,7 @@ const CareersAcademy = () => {
                         <StatIcon className="h-6 w-6" aria-hidden />
                       </div>
                       <div className="text-left sm:text-center flex-1 sm:flex-none min-w-0">
-                        <p className="text-[1.65rem] md:text-3xl font-extrabold tabular-nums text-zinc-900 tracking-tight">
+                        <p className="type-stat-lg tabular-nums text-zinc-900">
                           {stat.value}
                         </p>
                         <p className="text-sm text-zinc-500 mt-1 font-medium leading-snug">
@@ -329,7 +322,7 @@ const CareersAcademy = () => {
       {/* ─── WHY LEARN WITH US ───────────────────────────────────────── */}
       <section className="pt-12 md:pt-16 pb-14 md:pb-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-textcolor2 mb-2">
+          <h2 className="text-textcolor2 mb-2">
             Why learn with us?
           </h2>
           <p className="text-muted mb-10 max-w-2xl">
@@ -358,7 +351,7 @@ const CareersAcademy = () => {
         className="py-12 md:py-16  border-Primarycolor/15 bg-bgcolor2/20"
       >
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-textcolor2 mb-2">
+          <h2 className="text-textcolor2 mb-2">
             {featuredCourses.length ? "Most popular" : "Courses"}
           </h2>
           <p className="text-muted mb-10">
@@ -416,22 +409,7 @@ const CareersAcademy = () => {
           )}
         </div>
       </section>
-
-      {/* ─── FOOTER STRIP ────────────────────────────────────────────── */}
-      <footer className="border-t border-Primarycolor/20 py-8 bg-bgcolor2/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2 text-textcolor2 hover:text-Secondarycolor">
-            <img src={LOGO} width={28} height={28} alt="" className="rounded" />
-            <span className="text-sm font-medium">Lasglowtech Academy</span>
-          </Link>
-          <div className="flex items-center gap-6 text-sm">
-            <Link to="/careers" className="text-muted hover:text-Secondarycolor">Courses</Link>
-            <Link to="/auth/login" className="text-muted hover:text-Secondarycolor">Login</Link>
-            <Link to="/auth/register" className="text-muted hover:text-Secondarycolor">Register</Link>
-            <Link to="/" className="text-muted hover:text-Secondarycolor">Main site</Link>
-          </div>
-        </div>
-      </footer>
+      </div>
     </div>
   );
 };

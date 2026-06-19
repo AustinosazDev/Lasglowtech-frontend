@@ -63,7 +63,7 @@ function App() {
 
   if (loading) return <SiteLoader />;
 
-  const hideLayout =
+  const hideNavbar =
     location.pathname === "/bio" ||
     location.pathname === "/catalogues" ||
     location.pathname.startsWith("/catalogues/") ||
@@ -73,9 +73,19 @@ function App() {
     location.pathname.startsWith("/auth/") ||
     location.pathname.startsWith("/legal/");
 
+  const hideFooter =
+    location.pathname === "/bio" ||
+    location.pathname === "/catalogues" ||
+    location.pathname.startsWith("/catalogues/") ||
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/careers/dashboard") ||
+    location.pathname === "/admin/login" ||
+    location.pathname.startsWith("/auth/") ||
+    location.pathname.startsWith("/legal/");
+
   return (
     <>
-      {!hideLayout && <Navbar />}
+      {!hideNavbar && <Navbar />}
 
       <Routes>
         <Route path="/" element={<Home />} />
@@ -128,8 +138,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {!hideLayout && <Footer />}
-      {!hideLayout && <WhatsAppFloat />}
+      {!hideFooter && <Footer />}
+      {!hideNavbar && <WhatsAppFloat />}
 
       <ScrollTop />
       <ToastContainer

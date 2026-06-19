@@ -544,12 +544,12 @@ const CareersDashboard = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                       <article className="brand-card p-6">
                         <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Applications</p>
-                        <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{applications.length}</p>
+                        <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{applications.length}</p>
                         <p className="text-sm text-slate-600 mt-1">Career applications submitted</p>
                       </article>
                       <article className="brand-card p-6">
                         <p className="text-xs font-semibold text-slate-500 uppercase tracking-widest">Enrolled</p>
-                        <p className="text-3xl font-bold text-textcolor2 mt-2 tabular-nums">{enrollments.length}</p>
+                        <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{enrollments.length}</p>
                         <p className="text-sm text-slate-600 mt-1">Active courses</p>
                       </article>
                       <article className="brand-card p-6">

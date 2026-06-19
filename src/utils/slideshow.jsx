@@ -14,8 +14,8 @@ const companies = [
 
 export default function CompanySlider() {
   return (
-    <div className="py-8 bg-[#120b1f] border-y border-[#8700ff]/15">
-      <p className="text-center text-xs font-bold uppercase tracking-widest text-[#9b8cb5] mb-6">Trusted by brands across Nigeria</p>
+    <div className="py-8">
+      <p className="text-center text-xs font-semibold uppercase tracking-widest text-[#9b8cb5] mb-6">Trusted by brands across Nigeria</p>
       <Marquee speed={38} gradient={false} pauseOnHover>
         {companies.map((c, i) => (
           <div key={i} className="mx-6 flex items-center justify-center min-w-[120px]">

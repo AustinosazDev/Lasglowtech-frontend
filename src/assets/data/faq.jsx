@@ -1,50 +1,36 @@
 const faqs = [
   {
-    question: "How can I get started with Lasglowtech?",
-    answer:
-      "Getting started is easy! Simply reach out via our contact form, email, or social media. We'll schedule a quick discovery call to understand your needs and kick off the process.",
+    question: "How do I get started?",
+    answer: "Contact us via the form, email, or WhatsApp. We'll schedule a short discovery call and outline next steps.",
   },
   {
     question: "What types of businesses do you work with?",
-    answer:
-      "We work with startups, SMEs, and large enterprises across industries including tech, real estate, education, healthcare, and more — especially businesses looking to grow digitally.",
+    answer: "Startups, SMEs, and established brands across tech, real estate, education, healthcare, and more.",
   },
   {
-    question: "Do you offer custom digital solutions?",
-    answer:
-      "Absolutely. Every solution we offer — from websites to branding to marketing — is tailored specifically to your goals, industry, and audience.",
+    question: "Do you offer custom solutions?",
+    answer: "Yes. Every project — websites, apps, branding, or marketing — is tailored to your goals and audience.",
   },
   {
-    question: "How do you keep clients updated during a project?",
-    answer:
-      "We use collaborative tools and provide consistent updates, reports, and previews to ensure transparency and feedback at every stage.",
+    question: "How do you keep clients updated?",
+    answer: "We share progress through regular updates, previews, and collaborative tools so you're never in the dark.",
   },
   {
-    question: "How is Lasglowtech’s pricing structured?",
-    answer:
-      "We offer flexible pricing models based on your project scope — including one-time, hourly, and subscription-based options for long-term support.",
+    question: "How is pricing structured?",
+    answer: "Pricing depends on scope — one-time projects, hourly work, or ongoing support. Browse our catalogue for fixed packages.",
   },
   {
-    question: "What’s the culture like at Lasglowtech?",
-    answer:
-      "We're a creative, agile, and innovative team. Our culture promotes collaboration, continuous learning, and pushing boundaries to deliver top-tier digital experiences.",
+    question: "What support do you offer after delivery?",
+    answer: "Post-launch support via email, chat, and scheduled calls. Maintenance can be included in ongoing plans.",
   },
   {
-    question: "What support options do you provide after project delivery?",
-    answer:
-      "We offer post-project support via email, live chat, and scheduled calls. Maintenance and updates can be included in ongoing plans if needed.",
+    question: "Can I see your previous work?",
+    answer: "Yes — view our portfolio and testimonials on the site, or ask for relevant examples on a call.",
   },
   {
-    question: "Can I see your previous work or client testimonials?",
-    answer:
-      "Yes! You can view our case studies and testimonials on our website and social platforms. We’re also happy to share relevant examples during our consultation.",
-  },
-  {
-    question: "What is Lasglowtech’s mission?",
-    answer:
-      "Our mission is to empower brands through creative digital solutions. We’re committed to excellence, innovation, and helping businesses turn ideas into impact.",
+    question: "What is Lasglowtech's mission?",
+    answer: "To help brands grow through creative, reliable digital products — from idea to launch and beyond.",
   },
 ];
 
 export default faqs;
-

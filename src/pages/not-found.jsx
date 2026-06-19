@@ -10,8 +10,8 @@ export default function NotFound() {
       <p className="font-extrabold text-[9rem] md:text-[14rem] leading-none text-[#8700ff]/10 select-none">404</p>
       <div className="relative -mt-8">
         <span className="section-tag justify-center"><span className="dot-live"/>Page not found</span>
-        <h1 className="font-extrabold text-3xl md:text-4xl text-white tracking-tight mt-2 mb-4">Wrong route</h1>
-        <p className="text-[#9b8cb5] max-w-md mx-auto leading-relaxed mb-8">
+        <h1 className="text-white mt-2 mb-4">Wrong route</h1>
+        <p className="type-muted max-w-md mx-auto mb-8">
           This page doesn't exist or may have moved. Let's get you back on track.
         </p>
         <Link to="/" className="btn-primary">← Back to Home</Link>

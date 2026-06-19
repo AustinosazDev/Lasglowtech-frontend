@@ -20,7 +20,7 @@ export default function AuthSplitShell({ slides, slideIdx, children, contentAlig
             <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-bgcolor via-bgcolor/50 to-transparent" />
             <div className="absolute bottom-12 left-10 right-10">
-              <h2 className="font-extrabold text-2xl text-white mb-2">{s.title}</h2>
+              <h2 className="text-white mb-2">{s.title}</h2>
               <p className="text-muted text-sm leading-relaxed">{s.text}</p>
             </div>
           </div>

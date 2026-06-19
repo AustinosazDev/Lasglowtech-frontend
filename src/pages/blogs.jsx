@@ -55,8 +55,8 @@ export default function Blogs() {
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-Primarycolor opacity-[0.09] blur-[100px] pointer-events-none" />
         <div className="relative max-w-4xl mx-auto text-center">
           <span className="section-tag justify-center"><span className="dot-live"/>Blog</span>
-          <h1 className="font-extrabold text-4xl md:text-5xl text-white tracking-tight mb-5">Insights & Updates</h1>
-          <p className="text-white  text-lg max-w-xl mx-auto leading-relaxed">Practical tips, design insights, and product updates from the Lasglowtech team.</p>
+          <h1 className="text-white mb-5">Insights & Updates</h1>
+          <p className="type-lead text-[#9b8cb5] max-w-xl mx-auto">Practical tips, design insights, and product updates from the Lasglowtech team.</p>
         </div>
       </section>
 
@@ -74,8 +74,8 @@ export default function Blogs() {
         {!loading && posts.length === 0 && (
           <div className="text-center py-20">
             <FaBookOpen className="w-12 h-12 text-[#8700ff]/30 mx-auto mb-4" />
-            <h3 className="font-extrabold text-xl text-white mb-2">No posts yet</h3>
-            <p className="text-[#9b8cb5]">Check back soon we&apos;re working on something great.</p>
+            <h3 className="text-white mb-2">No posts yet</h3>
+            <p className="type-muted">Check back soon — we&apos;re working on something great.</p>
           </div>
         )}
         {!loading && posts.length > 0 && featured && (
@@ -106,9 +106,9 @@ export default function Blogs() {
                     </div>
                   </div>
                   <div className="p-6 md:p-8 flex flex-col justify-center">
-                    <h2 className="text-2xl md:text-3xl font-bold text-textcolor2 group-hover:text-Secondarycolor transition-colors line-clamp-2">
+                    <h3 className="text-textcolor2 group-hover:text-Secondarycolor transition-colors line-clamp-2">
                       {featured.title}
-                    </h2>
+                    </h3>
                     <p className="text-gray-400 mt-3 line-clamp-2 text-sm md:text-base">
                       {featured.content?.replace(/<[^>]+>/g, "").slice(0, 160)}…
                     </p>

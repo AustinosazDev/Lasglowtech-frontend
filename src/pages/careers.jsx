@@ -15,6 +15,7 @@ import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { getToken, getUser } from "../utils/auth";
 import { LOGO } from "../components/images";
+import BgPatternOverlay from "../components/BgPatternOverlay";
 
 const defaultForm = {
   fullName: "",
@@ -119,7 +120,9 @@ const Careers = () => {
   };
 
   return (
-    <div className="min-h-screen bg-bgcolor text-textcolor2">
+    <div className="relative min-h-screen bg-bgcolor text-textcolor2 overflow-hidden">
+      <BgPatternOverlay glow />
+      <div className="relative z-10">
       {/* Minimal Academy header (no main site nav) */}
       <header className="sticky top-0 z-50 border-b border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
@@ -159,10 +162,10 @@ const Careers = () => {
                 <FaGraduationCap className="w-4 h-4" />
                 Career Learning Program
               </div>
-              <h1 className="text-3xl md:text-4xl font-bold text-textcolor2 tracking-tight">
+              <h1 className="text-textcolor2">
                 Build in-demand digital skills
               </h1>
-              <p className="text-base text-gray-400 mt-3 max-w-xl leading-relaxed">
+              <p className="type-muted text-gray-400 mt-3 max-w-xl">
                 Structured learning path, real project exposure, and mentorship from industry practitioners.
               </p>
               {sessionUser?.email && (
@@ -428,6 +431,7 @@ const Careers = () => {
             </form>
           </section>
         </div>
+      </div>
       </div>
     </div>
   );
