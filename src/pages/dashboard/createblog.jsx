@@ -5,6 +5,15 @@ import 'react-quill/dist/quill.snow.css';
 import instance from '../../config/axios.config';
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  adminBtnPrimary,
+  adminCardBody,
+  adminFieldLabel,
+  adminInput,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+} from "../../utils/adminUi";
 
 const Create = () => {
   const location = useLocation();
@@ -70,64 +79,46 @@ const Create = () => {
   };
 
   return (
-    <div className="brand-card p-6">
-      <div>
-        <h1 className="text-2xl px-2 font-bold text-textcolor2 mb-4">Create New Blog</h1>
-
+    <section className="brand-card overflow-hidden">
+      <div className={adminSectionHead}>
+        <h1 className={adminSectionTitle}>Create new blog</h1>
+        <p className={adminSectionDesc}>Write and publish a new article to the Lasglowtech blog.</p>
+      </div>
+      <div className={`${adminCardBody} space-y-4`}>
         <input
           type="text"
-          className="w-full border-none p-4 text-lg bg-[#F6F5FA] text-black focus:outline-none focus:ring-2 rounded-md"
+          className={adminInput}
           placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
 
-          <div className='h-[300px] w-full overflow-y-auto overflow-x-hidden border-none bg-white rounded-md'>
-          <ReactQuill
-            className='text-gray-900 h-full w-full p-4 text-lg bg-gray-50 rounded-md'
-            theme="snow"
-            value={content}
-            onChange={setContent}
-          />
+        <div className="rounded-xl border border-slate-200 overflow-hidden bg-white [&_.ql-container]:min-h-[220px] [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-slate-800">
+          <ReactQuill theme="snow" value={content} onChange={setContent} />
         </div>
 
-        <div className='mx-3 col-span-1'>
-          <div className='flex flex-col'>
-            <input
-              type='file'
-              id='file'
-              className='hidden'
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-
-            <label htmlFor='file' className='text-textcolor2 py-4 flex items-center font-medium cursor-pointer'>
-              <span className="flex items-center">
-                <FaCirclePlus className="text-4xl fill-Primarycolor" />
-                <p className="ml-3 hidden md:block">Upload Cover</p>
-              </span>
-              <button
-                className='ml-auto px-6 py-3 bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor1 shadow-md text-white font-semibold rounded-md transition-all duration-300'
-                onClick={handleSubmit}
-              >
-                Publish
-              </button>
+        <div>
+          <label className={adminFieldLabel}>Cover image</label>
+          <input type="file" id="file" className="hidden" onChange={(e) => setFile(e.target.files[0])} />
+          <div className="flex flex-wrap items-center gap-3">
+            <label htmlFor="file" className="inline-flex items-center gap-2 cursor-pointer text-[#8700ff] font-medium text-sm">
+              <FaCirclePlus className="text-2xl" />
+              Upload cover
             </label>
-
-            {existingImage && !file && (
-              <img
-                src={
-                  existingImage.startsWith('http')
-                    ? existingImage
-                    : `${backendUploadsBase}/${existingImage}`
-                }
-                alt="Current Post"
-                className="mt-2 w-full rounded-md"
-              />
-            )}
+            <button type="button" className={adminBtnPrimary} onClick={handleSubmit}>
+              Publish
+            </button>
           </div>
+          {existingImage && !file && (
+            <img
+              src={existingImage.startsWith("http") ? existingImage : `${backendUploadsBase}/${existingImage}`}
+              alt="Current post"
+              className="mt-4 w-full max-h-64 object-cover rounded-xl border border-slate-200"
+            />
+          )}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

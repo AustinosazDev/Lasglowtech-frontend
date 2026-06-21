@@ -1,21 +1,13 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  FaCheckCircle,
-  FaClock,
-  FaLaptopCode,
-  FaPalette,
-  FaUserCircle,
-  FaArrowRight,
-  FaGraduationCap,
-  FaChevronLeft,
-} from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { getToken, getUser } from "../utils/auth";
 import { LOGO } from "../components/images";
 import BgPatternOverlay from "../components/BgPatternOverlay";
+import { authInputCls } from "../components/AuthFormShell";
 
 const defaultForm = {
   fullName: "",
@@ -43,33 +35,64 @@ const experienceOptions = ["Beginner", "Intermediate", "Advanced"];
 const availabilityOptions = ["Weekdays", "Weekends", "Evenings", "Flexible"];
 const countryOptions = ["Nigeria", "Ghana", "Kenya", "South Africa", "Other"];
 
-const highlights = [
-  {
-    icon: FaLaptopCode,
-    title: "Structured Learning",
-    text: "Clear modules, practical projects, and mentorship support from working professionals.",
-  },
-  {
-    icon: FaPalette,
-    title: "Industry-Aligned Tracks",
-    text: "Choose from design, development, and product-focused tracks relevant to current market demand.",
-  },
-  {
-    icon: FaClock,
-    title: "Flexible Schedule",
-    text: "Programs are built for students, professionals, and founders with varying availability.",
-  },
+const STEPS = [
+  { id: 1, label: "Personal info" },
+  { id: 2, label: "Skills & goals" },
 ];
 
-const inputClass =
-  "w-full px-4 py-3 rounded-xl bg-bgcolor2/60 border border-Primarycolor/25 text-textcolor2 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-Primarycolor/50 focus:border-transparent transition-shadow";
-const labelClass = "block text-sm font-medium text-gray-400 mb-1.5";
+const labelClass = "block text-sm font-medium text-textcolor2 mb-2";
+
+function StepProgress({ step }) {
+  return (
+    <div className="mb-8">
+      <div className="flex items-center justify-center gap-0">
+        {STEPS.map(({ id, label }, index) => {
+          const active = step === id;
+          const done = step > id;
+          return (
+            <div key={id} className="flex items-center flex-1 last:flex-none min-w-0">
+              <div className="flex flex-col items-center gap-2 min-w-0 flex-1">
+                <span
+                  className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-colors ${
+                    active
+                      ? "bg-Primarycolor border-Primarycolor text-white"
+                      : done
+                        ? "bg-Primarycolor/20 border-Primarycolor text-Secondarycolor"
+                        : "bg-bgcolor border-Primarycolor/25 text-muted"
+                  }`}
+                >
+                  {id}
+                </span>
+                <span
+                  className={`text-xs font-medium text-center leading-tight px-1 ${
+                    active ? "text-textcolor2" : "text-muted"
+                  }`}
+                >
+                  {label}
+                </span>
+              </div>
+              {index < STEPS.length - 1 && (
+                <div
+                  className={`h-0.5 flex-1 mx-2 mb-6 rounded-full ${
+                    step > id ? "bg-Primarycolor/50" : "bg-Primarycolor/15"
+                  }`}
+                  aria-hidden
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
 
 const Careers = () => {
   const navigate = useNavigate();
   const sessionUser = useMemo(() => getUser(), []);
   const token = useMemo(() => getToken(), []);
 
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     ...defaultForm,
     fullName: sessionUser?.username || "",
@@ -83,10 +106,26 @@ const Careers = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const validateStep1 = () => {
+    if (!form.fullName.trim() || !form.email.trim() || !form.phone.trim()) {
+      toast.error("Please fill in your name, email, and phone.");
+      return false;
+    }
+    return true;
+  };
+
+  const handleContinue = () => {
+    if (validateStep1()) setStep(2);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    if (!form.skillInterest || !form.learningGoal.trim()) {
+      toast.error("Please select a skill track and share your learning goal.");
+      return;
+    }
 
+    setLoading(true);
     try {
       let pictureUrl = "";
 
@@ -101,13 +140,8 @@ const Careers = () => {
 
       await instance.post(
         "/careers/apply",
-        {
-          ...form,
-          pictureUrl,
-        },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { ...form, pictureUrl },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       toast.success("Application submitted successfully.");
@@ -120,322 +154,281 @@ const Careers = () => {
   };
 
   return (
-    <div className="relative min-h-screen bg-bgcolor text-textcolor2 overflow-hidden">
+    <div className="relative min-h-[100dvh] overflow-hidden bg-gradient-to-br from-bgcolor2 via-bgcolor to-bgcolor text-textcolor2">
       <BgPatternOverlay glow />
-      <div className="relative z-10">
-      {/* Minimal Academy header (no main site nav) */}
-      <header className="sticky top-0 z-50 border-b border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-14">
-          <Link to="/careers" className="flex items-center gap-2 text-textcolor2 hover:text-Secondarycolor transition-colors">
-            <img src={LOGO} width={32} height={32} alt="Lasglowtech" className="rounded" />
-            <span className="font-semibold text-sm">Lasglowtech Academy</span>
-          </Link>
-          <Link to="/careers" className="text-sm text-muted hover:text-Secondarycolor flex items-center gap-1">
-            <FaChevronLeft className="w-3.5 h-3.5" />
-            Back to courses
-          </Link>
-        </div>
-      </header>
-      <SEO
-        title="Tutoring & Training | Learn Tech Skills with Lasglowtech Nigeria"
-        description="Apply for Lasglowtech tutoring and training programmes—web development, mobile apps, UI/UX, design. Structured learning, LMS access, and hands-on projects. Start your tech career or upskill your team."
-        keywords="Lasglowtech tutoring, tech training Nigeria, learn web development, learn UI UX, IT training, career in tech, Lasglowtech careers, service catalogue, instant checkout"
-        url="https://www.lasglowtech.com.ng/careers/apply"
-        schema={{
-          "@context": "https://schema.org",
-          "@type": "EducationalOccupationalProgram",
-          name: "Lasglowtech Skill Learning Program",
-          provider: {
-            "@type": "Organization",
-            name: "Lasglowtech",
-            url: "https://www.lasglowtech.com.ng",
-          },
-        }}
-      />
 
-      {/* Hero */}
-      <section className="border-b border-Primarycolor/20 bg-bgcolor2/30">
-        <div className="max-w-6xl mx-auto px-6 md:px-12 py-10 md:py-14">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div>
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-Primarycolor/30 bg-Primarycolor/10 text-sm text-Secondarycolor mb-4">
-                <FaGraduationCap className="w-4 h-4" />
-                Career Learning Program
-              </div>
-              <h1 className="text-textcolor2">
-                Build in-demand digital skills
-              </h1>
-              <p className="type-muted text-gray-400 mt-3 max-w-xl">
-                Structured learning path, real project exposure, and mentorship from industry practitioners.
-              </p>
-              {sessionUser?.email && (
-                <p className="flex items-center gap-2 text-sm text-gray-500 mt-4">
-                  <FaUserCircle className="w-4 h-4 text-Primarycolor/60" />
-                  Signed in as {sessionUser.email}
-                </p>
-              )}
-            </div>
-            <Link
-              to="/careers/dashboard"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-Primarycolor/40 bg-Primarycolor/10 hover:bg-Primarycolor/20 text-Secondarycolor font-medium transition-colors shrink-0"
-            >
-              My Dashboard
-              <FaArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <div className="max-w-6xl mx-auto px-6 md:px-12 py-10">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Sidebar: Why Lasglowtech + Checklist */}
-          <aside className="lg:col-span-2 space-y-6">
-            <div className="brand-card p-6">
-              <h2 className="text-xl font-semibold text-textcolor2 mb-2">Why learn with Lasglowtech</h2>
-              <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-                We combine mentorship, practical assignments, and performance feedback to help you build job-ready skills.
-              </p>
-
-              <div className="space-y-4">
-                {highlights.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <div
-                      key={item.title}
-                      className="brand-card flex gap-4 p-4"
-                    >
-                      <span className="w-10 h-10 rounded-xl bg-Primarycolor/20 text-Secondarycolor flex items-center justify-center flex-shrink-0">
-                        <Icon className="w-5 h-5" />
-                      </span>
-                      <div>
-                        <h3 className="text-sm font-semibold text-textcolor2">{item.title}</h3>
-                        <p className="text-sm text-gray-400 mt-1">{item.text}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            <div className="brand-card p-5">
-              <h3 className="text-sm font-semibold text-Secondarycolor mb-3 flex items-center gap-2">
-                <FaCheckCircle className="w-4 h-4" />
-                Application checklist
-              </h3>
-              <ul className="space-y-2.5 text-sm text-gray-300">
-                <li className="flex items-start gap-2">
-                  <span className="text-Secondarycolor mt-0.5">•</span>
-                  Choose a skill track aligned to your goal
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-Secondarycolor mt-0.5">•</span>
-                  Share your learning objective clearly
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-Secondarycolor mt-0.5">•</span>
-                  Provide contact details for updates
-                </li>
-              </ul>
-            </div>
-          </aside>
-
-          {/* Form */}
-          <section className="lg:col-span-3 brand-card p-6 md:p-8">
-            <h2 className="text-2xl font-semibold text-textcolor2 mb-1">Submit your application</h2>
-            <p className="text-sm text-gray-500 mb-8">Complete the form below to start your admission review.</p>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Personal info</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="fullName" className={labelClass}>Full name *</label>
-                    <input
-                      id="fullName"
-                      name="fullName"
-                      value={form.fullName}
-                      onChange={handleChange}
-                      placeholder="Your full name"
-                      className={inputClass}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className={labelClass}>Email *</label>
-                    <input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={form.email}
-                      onChange={handleChange}
-                      placeholder="you@example.com"
-                      className={inputClass}
-                      required
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label htmlFor="phone" className={labelClass}>Phone number *</label>
-                    <input
-                      id="phone"
-                      name="phone"
-                      value={form.phone}
-                      onChange={handleChange}
-                      placeholder="+234 ..."
-                      className={inputClass}
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Skill & experience</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="skillInterest" className={labelClass}>Skill track *</label>
-                    <select
-                      id="skillInterest"
-                      name="skillInterest"
-                      value={form.skillInterest}
-                      onChange={handleChange}
-                      className={inputClass}
-                      required
-                    >
-                      <option value="">Select a track</option>
-                      {skillOptions.map((skill) => (
-                        <option key={skill} value={skill}>{skill}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="experienceLevel" className={labelClass}>Experience level</label>
-                    <select
-                      id="experienceLevel"
-                      name="experienceLevel"
-                      value={form.experienceLevel}
-                      onChange={handleChange}
-                      className={inputClass}
-                    >
-                      <option value="">Select level</option>
-                      {experienceOptions.map((level) => (
-                        <option key={level} value={level}>{level}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label htmlFor="availability" className={labelClass}>Availability</label>
-                    <select
-                      id="availability"
-                      name="availability"
-                      value={form.availability}
-                      onChange={handleChange}
-                      className={inputClass}
-                    >
-                      <option value="">Select availability</option>
-                      {availabilityOptions.map((item) => (
-                        <option key={item} value={item}>{item}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-4">Location</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="city" className={labelClass}>City</label>
-                    <input
-                      id="city"
-                      name="city"
-                      value={form.city}
-                      onChange={handleChange}
-                      placeholder="City"
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="country" className={labelClass}>Country</label>
-                    <select
-                      id="country"
-                      name="country"
-                      value={form.country}
-                      onChange={handleChange}
-                      className={inputClass}
-                    >
-                      <option value="">Select country</option>
-                      {countryOptions.map((country) => (
-                        <option key={country} value={country}>{country}</option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="portfolioUrl" className={labelClass}>Portfolio / LinkedIn URL</label>
-                <input
-                  id="portfolioUrl"
-                  name="portfolioUrl"
-                  value={form.portfolioUrl}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                  className={inputClass}
-                />
-              </div>
-
-              <div>
-                <label className={labelClass}>Profile picture (optional)</label>
-                <div className="flex flex-wrap items-center gap-4">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0] || null;
-                      setPictureFile(file);
-                      if (file) setPicturePreview(URL.createObjectURL(file));
-                    }}
-                    className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-Primarycolor/30 file:bg-bgcolor file:text-Secondarycolor file:text-sm file:font-medium hover:file:bg-Primarycolor/20"
-                  />
-                  {picturePreview && (
-                    <img
-                      src={picturePreview}
-                      alt="Profile preview"
-                      className="w-16 h-16 object-cover rounded-full border-2 border-Primarycolor/40"
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="learningGoal" className={labelClass}>Learning goal & motivation *</label>
-                <textarea
-                  id="learningGoal"
-                  name="learningGoal"
-                  value={form.learningGoal}
-                  onChange={handleChange}
-                  rows={4}
-                  placeholder="Tell us your learning goal and why you're applying..."
-                  className={`${inputClass} resize-y min-h-[100px]`}
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-3.5 rounded-xl bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor/90 text-white font-semibold transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                {loading ? "Submitting..." : "Submit application"}
-              </button>
-            </form>
-          </section>
-        </div>
+      <div className="absolute top-0 left-0 right-0 z-20 px-4 sm:px-6 py-4 sm:py-5">
+        <Link
+          to="/careers"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-Secondarycolor transition-colors"
+        >
+          <FaArrowLeft className="w-3.5 h-3.5" />
+          Back to courses
+        </Link>
       </div>
+
+      <div className="relative z-10 flex min-h-[100dvh] flex-col items-center justify-center px-4 py-12 sm:py-14">
+        <SEO
+          title="Academy Application | Lasglowtech"
+          description="Apply for Lasglowtech tutoring and training programmes."
+          url="https://www.lasglowtech.com.ng/careers/apply"
+        />
+
+        <div className="brand-card w-full max-w-2xl p-6 sm:p-8 md:p-10 mt-4 shadow-[0_12px_48px_rgba(135,0,255,0.18)]">
+          <div className="flex flex-col items-center text-center mb-2">
+            <Link to="/" className="flex items-center gap-2 mb-5 hover:opacity-90 transition-opacity">
+              <img src={LOGO} alt="Lasglowtech" className="w-9 h-9 object-contain rounded-lg" />
+              <span className="font-bold text-base text-textcolor2 tracking-tight">
+                Lasglow<span className="text-orange-500">tech</span> Academy
+              </span>
+            </Link>
+            <h1 className="text-xl sm:text-2xl font-bold text-textcolor2 tracking-tight">Submit your application</h1>
+            <p className="text-sm text-muted mt-2 max-w-md">
+              Join our learning program and start building job-ready digital skills.
+            </p>
+          </div>
+
+          <StepProgress step={step} />
+
+          {step === 1 && (
+            <div className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label htmlFor="fullName" className={labelClass}>
+                    Full name <span className="text-Secondarycolor">*</span>
+                  </label>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    value={form.fullName}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    className={`${authInputCls} px-4 py-3`}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className={labelClass}>
+                    Email <span className="text-Secondarycolor">*</span>
+                  </label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={form.email}
+                    onChange={handleChange}
+                    placeholder="you@email.com"
+                    className={`${authInputCls} px-4 py-3`}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="phone" className={labelClass}>
+                    Phone <span className="text-Secondarycolor">*</span>
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    placeholder="+234 ..."
+                    className={`${authInputCls} px-4 py-3`}
+                    required
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className={labelClass}>Profile photo</label>
+                  <div className="flex flex-wrap items-center gap-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        setPictureFile(file);
+                        if (file) setPicturePreview(URL.createObjectURL(file));
+                      }}
+                      className="block w-full text-sm text-muted file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border file:border-Primarycolor/30 file:bg-bgcolor file:text-Secondarycolor file:text-sm file:font-medium hover:file:bg-Primarycolor/20"
+                    />
+                    {picturePreview && (
+                      <img
+                        src={picturePreview}
+                        alt="Preview"
+                        className="w-14 h-14 object-cover rounded-full border-2 border-Primarycolor/40"
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 pt-4 border-t border-Primarycolor/15">
+                <button
+                  type="button"
+                  disabled
+                  className="text-sm font-medium text-muted/50 cursor-not-allowed"
+                >
+                  Previous
+                </button>
+                <button type="button" onClick={handleContinue} className="btn-primary px-8 min-w-[120px] justify-center">
+                  Continue
+                </button>
+              </div>
+            </div>
+          )}
+
+          {step === 2 && (
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="inline-flex items-center gap-1.5 text-sm font-medium text-muted hover:text-Secondarycolor transition-colors mb-1"
+              >
+                <FaArrowLeft className="w-3 h-3" />
+                Back to personal info
+              </button>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
+                  <label htmlFor="skillInterest" className={labelClass}>
+                    Skill track <span className="text-Secondarycolor">*</span>
+                  </label>
+                  <select
+                    id="skillInterest"
+                    name="skillInterest"
+                    value={form.skillInterest}
+                    onChange={handleChange}
+                    className={`${authInputCls} px-4 py-3`}
+                    required
+                  >
+                    <option value="">Select a track</option>
+                    {skillOptions.map((skill) => (
+                      <option key={skill} value={skill}>
+                        {skill}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="experienceLevel" className={labelClass}>
+                    Experience level
+                  </label>
+                  <select
+                    id="experienceLevel"
+                    name="experienceLevel"
+                    value={form.experienceLevel}
+                    onChange={handleChange}
+                    className={`${authInputCls} px-4 py-3`}
+                  >
+                    <option value="">Select level</option>
+                    {experienceOptions.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="availability" className={labelClass}>
+                    Availability
+                  </label>
+                  <select
+                    id="availability"
+                    name="availability"
+                    value={form.availability}
+                    onChange={handleChange}
+                    className={`${authInputCls} px-4 py-3`}
+                  >
+                    <option value="">Select availability</option>
+                    {availabilityOptions.map((item) => (
+                      <option key={item} value={item}>
+                        {item}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label htmlFor="city" className={labelClass}>
+                    City
+                  </label>
+                  <input
+                    id="city"
+                    name="city"
+                    value={form.city}
+                    onChange={handleChange}
+                    placeholder="City"
+                    className={`${authInputCls} px-4 py-3`}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="country" className={labelClass}>
+                    Country
+                  </label>
+                  <select
+                    id="country"
+                    name="country"
+                    value={form.country}
+                    onChange={handleChange}
+                    className={`${authInputCls} px-4 py-3`}
+                  >
+                    <option value="">Select country</option>
+                    {countryOptions.map((country) => (
+                      <option key={country} value={country}>
+                        {country}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="portfolioUrl" className={labelClass}>
+                    Portfolio or LinkedIn
+                  </label>
+                  <input
+                    id="portfolioUrl"
+                    name="portfolioUrl"
+                    value={form.portfolioUrl}
+                    onChange={handleChange}
+                    placeholder="https://..."
+                    className={`${authInputCls} px-4 py-3`}
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label htmlFor="learningGoal" className={labelClass}>
+                    Learning goal <span className="text-Secondarycolor">*</span>
+                  </label>
+                  <textarea
+                    id="learningGoal"
+                    name="learningGoal"
+                    value={form.learningGoal}
+                    onChange={handleChange}
+                    rows={4}
+                    placeholder="What do you want to learn and why?"
+                    className={`${authInputCls} px-4 py-3 resize-y min-h-[100px]`}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between gap-4 pt-4 border-t border-Primarycolor/15">
+                <button
+                  type="button"
+                  onClick={() => setStep(1)}
+                  className="text-sm font-medium text-muted hover:text-Secondarycolor transition-colors"
+                >
+                  Previous
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="btn-primary px-8 min-w-[120px] justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {loading ? "Submitting…" : "Submit"}
+                </button>
+              </div>
+            </form>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
 export default Careers;
-

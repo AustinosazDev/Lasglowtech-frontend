@@ -551,6 +551,192 @@
   color: var(--color-text2) !important;
 }
 
+.admin-dashboard-light .admin-dash-btn-soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid rgba(135, 0, 255, 0.22);
+  background: #f5f3ff;
+  color: #5b21b6;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.admin-dashboard-light .admin-dash-btn-soft:hover {
+  background: #ede9fe;
+  border-color: rgba(135, 0, 255, 0.35);
+  color: #4c1d95;
+}
+.admin-dashboard-light .admin-dash-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: 1px solid #e2e8f0;
+  background: transparent;
+  color: #475569;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.admin-dashboard-light .admin-dash-btn-ghost:hover {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.admin-dashboard-light .admin-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border: none;
+  background: #8700ff;
+  color: #ffffff;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.admin-dashboard-light .admin-btn-primary:hover:not(:disabled) {
+  background: #9a1aff;
+  box-shadow: 0 4px 18px rgba(135, 0, 255, 0.28);
+  transform: translateY(-1px);
+}
+.admin-dashboard-light .admin-btn-primary:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.admin-dashboard-light .admin-btn-soft {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #6b21a8;
+  background: rgba(135, 0, 255, 0.08);
+  border: 1px solid rgba(135, 0, 255, 0.22);
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.admin-dashboard-light .admin-btn-soft:hover:not(:disabled) {
+  color: #8700ff;
+  background: rgba(135, 0, 255, 0.14);
+  border-color: rgba(135, 0, 255, 0.38);
+}
+
+.admin-dashboard-light .admin-btn-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.admin-dashboard-light .admin-btn-danger:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #fca5a5;
+}
+
+.admin-dashboard-light .admin-btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.125rem;
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #475569;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+.admin-dashboard-light .admin-btn-ghost:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+.admin-dashboard-light .admin-input {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.admin-dashboard-light main h1,
+.admin-dashboard-light main h2,
+.admin-dashboard-light main h3 {
+  color: #0f172a;
+}
+
+.admin-dashboard-light main .text-gray-300,
+.admin-dashboard-light main .text-gray-200 {
+  color: #475569 !important;
+}
+
+.admin-dashboard-light main .text-gray-400 {
+  color: #64748b !important;
+}
+
+.admin-dashboard-light main .text-gray-500 {
+  color: #64748b !important;
+}
+
+.admin-dashboard-light main .text-red-300 {
+  color: #b91c1c !important;
+}
+
+.admin-dashboard-light main .text-muted {
+  color: #64748b !important;
+}
+
+/* Learner dashboard buttons — light purple accents */
+.user-dashboard-light .dash-btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed;
+  background: #8700ff;
+  color: #ffffff;
+}
+.user-dashboard-light .dash-btn-primary:hover:not(:disabled) {
+  background: #9a1aff;
+  box-shadow: 0 0 22px rgba(135, 0, 255, 0.35);
+  transform: translateY(-1px);
+}
+.user-dashboard-light .dash-btn-soft {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200;
+  color: #6b21a8;
+  background: rgba(135, 0, 255, 0.08);
+  border: 1px solid rgba(135, 0, 255, 0.22);
+}
+.user-dashboard-light .dash-btn-soft:hover {
+  color: #8700ff;
+  background: rgba(135, 0, 255, 0.14);
+  border-color: rgba(135, 0, 255, 0.4);
+  box-shadow: 0 4px 16px rgba(135, 0, 255, 0.12);
+}
+.user-dashboard-light .dash-btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200;
+  color: #64748b;
+  border: 1px solid transparent;
+}
+.user-dashboard-light .dash-btn-ghost:hover {
+  color: #8700ff;
+  background: rgba(135, 0, 255, 0.06);
+  border-color: rgba(135, 0, 255, 0.15);
+}
+
 /* ── Swiper overrides ── */
 .swiper-pagination-bullet { background: var(--muted) !important; opacity:.4; }
 .swiper-pagination-bullet-active { background: var(--orange) !important; opacity:1; }

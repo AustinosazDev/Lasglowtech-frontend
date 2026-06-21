@@ -2,6 +2,19 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminBtnSoft,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+  adminTable,
+  adminTableHead,
+  adminTableRow,
+  adminTableTd,
+  adminTableTdMuted,
+  adminTableTh,
+  adminTableWrap,
+} from "../../utils/adminUi";
 import { OrdersTableSkeleton } from "../../components/skeletons/CardSkeletons";
 
 const OrdersAdmin = () => {
@@ -36,83 +49,82 @@ const OrdersAdmin = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-textcolor2">Orders & payments</h1>
-        <p className="text-gray-500 mt-1">Review catalogue transactions and payment status.</p>
-      </div>
+      <p className={adminSectionDesc}>Review catalogue transactions, payment status, and email delivery.</p>
 
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h2 className="text-lg font-semibold text-textcolor2">All orders</h2>
-          <p className="text-sm text-gray-500 mt-0.5">{orders.length} order(s)</p>
+        <div className={adminSectionHead}>
+          <h2 className={adminSectionTitle}>All orders</h2>
+          <p className={adminSectionDesc}>{orders.length} order{orders.length === 1 ? "" : "s"} recorded</p>
         </div>
-        <div className="overflow-x-auto">
+        <div className={adminTableWrap}>
           {loading ? (
             <OrdersTableSkeleton rows={8} />
           ) : (
-          <table className="w-full min-w-[1200px] text-sm">
-            <thead>
-              <tr className="text-left text-gray-500 border-b border-Primarycolor/20 bg-bgcolor/20">
-                <th className="py-3 px-4 font-semibold">Date</th>
-                <th className="py-3 px-4 font-semibold">Service</th>
-                <th className="py-3 px-4 font-semibold">Customer</th>
-                <th className="py-3 px-4 font-semibold">Email</th>
-                <th className="py-3 px-4 font-semibold">Amount</th>
-                <th className="py-3 px-4 font-semibold">Type</th>
-                <th className="py-3 px-4 font-semibold">Status</th>
-                <th className="py-3 px-4 font-semibold">Client alert</th>
-                <th className="py-3 px-4 font-semibold">Invoice mail</th>
-                <th className="py-3 px-4 font-semibold">Reference</th>
-                <th className="py-3 px-4 font-semibold">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((item) => (
-                <tr key={item.id} className="border-b border-Primarycolor/10 hover:bg-Primarycolor/5">
-                  <td className="py-3 px-4 text-gray-300">{new Date(item.created_at).toLocaleDateString()}</td>
-                  <td className="py-3 px-4 text-gray-300">{item.service_name}</td>
-                  <td className="py-3 px-4 text-textcolor2">{item.customer_name}</td>
-                  <td className="py-3 px-4 text-gray-300">{item.email}</td>
-                  <td className="py-3 px-4 font-medium text-textcolor2">
-                    {item.currency} {Number(item.amount || 0).toLocaleString()}
-                  </td>
-                  <td className="py-3 px-4 uppercase text-xs text-gray-400">{item.payment_type}</td>
-                  <td className="py-3 px-4 uppercase text-xs text-gray-400">{item.status}</td>
-                  <td className="py-3 px-4 text-gray-300">
-                    <span className="uppercase text-xs">{item.email_notification_status || "pending"}</span>
-                    {item.email_notification_error && (
-                      <p className="text-xs text-red-300 mt-0.5 max-w-[200px] truncate" title={item.email_notification_error}>
-                        {item.email_notification_error}
-                      </p>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-gray-300">
-                    <span className="uppercase text-xs">{item.invoice_email_status || "pending"}</span>
-                    {item.invoice_email_error && (
-                      <p className="text-xs text-red-300 mt-0.5 max-w-[200px] truncate" title={item.invoice_email_error}>
-                        {item.invoice_email_error}
-                      </p>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 text-gray-400 font-mono text-xs">{item.tx_ref}</td>
-                  <td className="py-3 px-4">
-                    <button
-                      type="button"
-                      onClick={() => reverifyOrder(item.id)}
-                      className="px-3 py-2 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/20 text-xs font-medium transition-colors"
-                    >
-                      Re-verify
-                    </button>
-                  </td>
+            <table className="w-full min-w-[1200px] text-sm">
+              <thead>
+                <tr className={adminTableHead}>
+                  <th className={adminTableTh}>Date</th>
+                  <th className={adminTableTh}>Service</th>
+                  <th className={adminTableTh}>Customer</th>
+                  <th className={adminTableTh}>Email</th>
+                  <th className={adminTableTh}>Amount</th>
+                  <th className={adminTableTh}>Type</th>
+                  <th className={adminTableTh}>Status</th>
+                  <th className={adminTableTh}>Client alert</th>
+                  <th className={adminTableTh}>Invoice mail</th>
+                  <th className={adminTableTh}>Reference</th>
+                  <th className={adminTableTh}>Action</th>
                 </tr>
-              ))}
-              {!orders.length && (
-                <tr>
-                  <td colSpan={11} className="py-12 text-center text-gray-400">No orders recorded yet.</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {orders.map((item) => (
+                  <tr key={item.id} className={adminTableRow}>
+                    <td className={adminTableTdMuted}>{new Date(item.created_at).toLocaleDateString()}</td>
+                    <td className={adminTableTd}>{item.service_name}</td>
+                    <td className={`${adminTableTd} font-medium`}>{item.customer_name}</td>
+                    <td className={adminTableTdMuted}>{item.email}</td>
+                    <td className={`${adminTableTd} font-semibold text-slate-900`}>
+                      {item.currency} {Number(item.amount || 0).toLocaleString()}
+                    </td>
+                    <td className={adminTableTdMuted}>
+                      <span className="uppercase text-xs font-semibold">{item.payment_type}</span>
+                    </td>
+                    <td className={adminTableTdMuted}>
+                      <span className="uppercase text-xs font-semibold">{item.status}</span>
+                    </td>
+                    <td className={adminTableTdMuted}>
+                      <span className="uppercase text-xs font-semibold">{item.email_notification_status || "pending"}</span>
+                      {item.email_notification_error && (
+                        <p className="text-xs text-red-600 mt-0.5 max-w-[200px] truncate" title={item.email_notification_error}>
+                          {item.email_notification_error}
+                        </p>
+                      )}
+                    </td>
+                    <td className={adminTableTdMuted}>
+                      <span className="uppercase text-xs font-semibold">{item.invoice_email_status || "pending"}</span>
+                      {item.invoice_email_error && (
+                        <p className="text-xs text-red-600 mt-0.5 max-w-[200px] truncate" title={item.invoice_email_error}>
+                          {item.invoice_email_error}
+                        </p>
+                      )}
+                    </td>
+                    <td className={`${adminTableTdMuted} font-mono text-xs`}>{item.tx_ref}</td>
+                    <td className={adminTableTd}>
+                      <button type="button" onClick={() => reverifyOrder(item.id)} className={adminBtnSoft}>
+                        Re-verify
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+                {!orders.length && (
+                  <tr>
+                    <td colSpan={11} className="py-12 text-center text-slate-500">
+                      No orders recorded yet.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           )}
         </div>
       </section>
@@ -121,4 +133,3 @@ const OrdersAdmin = () => {
 };
 
 export default OrdersAdmin;
-

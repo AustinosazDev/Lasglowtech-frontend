@@ -2,6 +2,23 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminBtnSoft,
+  adminCardBody,
+  adminEmptyState,
+  adminEmptyText,
+  adminFieldLabel,
+  adminInput,
+  adminMuted,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+  adminSelect,
+  adminTextarea,
+} from "../../utils/adminUi";
 import { AdminCatalogueCardSkeletonGrid } from "../../components/skeletons/CardSkeletons";
 
 const defaultForm = {
@@ -283,18 +300,18 @@ const CataloguesAdmin = () => {
   return (
     <div className="space-y-8">
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h2 className="text-xl font-semibold text-textcolor2">Catalogue manager</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Create and publish service cards for the marketplace.</p>
+        <div className={adminSectionHead}>
+          <h2 className={adminSectionTitle}>Catalogue manager</h2>
+          <p className={adminSectionDesc}>Create and publish service cards for the marketplace.</p>
         </div>
-        <div className="p-6">
-        <div className="brand-card mb-6 p-4">
-          <p className="text-sm text-gray-300 mb-2">Quick package templates</p>
+        <div className={adminCardBody}>
+        <div className={`${adminNestedCard} mb-6 p-4`}>
+          <p className={`${adminFieldLabel} mb-2`}>Quick package templates</p>
           <div className="flex flex-col md:flex-row gap-3">
             <select
               value={selectedTemplate}
               onChange={(e) => setSelectedTemplate(e.target.value)}
-              className="p-3 rounded-md bg-[#f6f5fa] text-black md:min-w-[320px]"
+              className={`${adminSelect} md:min-w-[320px]`}
             >
               <option value="">Select a package template</option>
               {premiumPackageTemplates.map((item) => (
@@ -307,12 +324,12 @@ const CataloguesAdmin = () => {
               type="button"
               onClick={() => applyTemplate(selectedTemplate)}
               disabled={!selectedTemplate}
-              className="px-5 py-3 rounded-md border border-Primarycolor/50 text-textcolor2 hover:bg-Primarycolor transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`${adminBtnSoft} disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               Apply Template
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className={`text-xs ${adminMuted} mt-2`}>
             Template fills title, summary, description, price, and payment settings. You can edit before saving.
           </p>
         </div>
@@ -323,7 +340,7 @@ const CataloguesAdmin = () => {
             value={form.title}
             onChange={handleChange}
             placeholder="Service title"
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
             required
           />
           <input
@@ -331,7 +348,7 @@ const CataloguesAdmin = () => {
             value={form.summary}
             onChange={handleChange}
             placeholder="Summary (one line)"
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
             required
           />
           <input
@@ -340,13 +357,13 @@ const CataloguesAdmin = () => {
             onChange={handleChange}
             placeholder="Price in NGN (e.g 85000)"
             type="number"
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
           />
           <select
             name="packageTier"
             value={form.packageTier}
             onChange={handleChange}
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
           >
             <option value="starter">Starter tier</option>
             <option value="standard">Standard tier</option>
@@ -358,19 +375,19 @@ const CataloguesAdmin = () => {
             onChange={handleChange}
             type="number"
             placeholder="Sort order"
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
           />
           <select
             name="paymentType"
             value={form.paymentType}
             onChange={handleChange}
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
           >
             <option value="full">Full payment</option>
             <option value="deposit">Deposit</option>
           </select>
           <div className="md:col-span-2">
-            <label className="block text-sm text-gray-300 mb-2">Catalogue image</label>
+            <label className={adminFieldLabel}>Catalogue image</label>
             <input
               type="file"
               accept="image/*"
@@ -381,7 +398,7 @@ const CataloguesAdmin = () => {
                   setImagePreview(URL.createObjectURL(file));
                 }
               }}
-              className="w-full p-3 rounded-md bg-[#f6f5fa] text-black"
+              className={adminInput}
             />
             {(imagePreview || form.imageUrl) && (
               <img
@@ -397,7 +414,7 @@ const CataloguesAdmin = () => {
             onChange={handleChange}
             placeholder="Long description"
             rows={4}
-            className="md:col-span-2 p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={`md:col-span-2 ${adminTextarea}`}
           />
           <textarea
             name="featuresText"
@@ -405,18 +422,18 @@ const CataloguesAdmin = () => {
             onChange={handleChange}
             placeholder={"Feature list (one per line)\nCustom homepage\nSEO setup\nPayment integration"}
             rows={4}
-            className="md:col-span-2 p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={`md:col-span-2 ${adminTextarea}`}
           />
 
-          <label className="flex items-center gap-2 text-sm text-gray-300">
+          <label className={`flex items-center gap-2 text-sm ${adminMuted}`}>
             <input type="checkbox" name="isPaymentEnabled" checked={form.isPaymentEnabled} onChange={handleChange} />
             Payment enabled
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-300">
+          <label className={`flex items-center gap-2 text-sm ${adminMuted}`}>
             <input type="checkbox" name="isPopular" checked={form.isPopular} onChange={handleChange} />
             Most Popular
           </label>
-          <label className="flex items-center gap-2 text-sm text-gray-300">
+          <label className={`flex items-center gap-2 text-sm ${adminMuted}`}>
             <input type="checkbox" name="isPublished" checked={form.isPublished} onChange={handleChange} />
             Published
           </label>
@@ -424,7 +441,7 @@ const CataloguesAdmin = () => {
           <div className="md:col-span-2 flex gap-3">
             <button
               type="submit"
-              className="px-6 py-3 rounded-md bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor text-white font-semibold"
+              className={adminBtnPrimary}
             >
               {form.id ? "Update Catalogue" : "Create Catalogue"}
             </button>
@@ -437,7 +454,7 @@ const CataloguesAdmin = () => {
                   setImageFile(null);
                   setImagePreview("");
                 }}
-                className="px-6 py-3 rounded-md border border-Primarycolor/30 text-textcolor2"
+                className={adminBtnSoft}
               >
                 Cancel edit
               </button>
@@ -448,11 +465,11 @@ const CataloguesAdmin = () => {
       </section>
 
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h3 className="text-xl font-semibold text-textcolor2">Catalogue items</h3>
-          <p className="text-sm text-gray-500 mt-0.5">Search and filter your service packages.</p>
+        <div className={adminSectionHead}>
+          <h3 className={adminSectionTitle}>Catalogue items</h3>
+          <p className={adminSectionDesc}>Search and filter your service packages.</p>
         </div>
-        <div className="p-6">
+        <div className={adminCardBody}>
           {!loading && items.length > 0 && (
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
               <div className="relative flex-1">
@@ -461,7 +478,7 @@ const CataloguesAdmin = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by title, summary, or description…"
-                  className="w-full pl-4 pr-10 py-2.5 rounded-xl border border-Primarycolor/25 bg-bgcolor/50 text-textcolor2 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-Primarycolor/50 text-sm"
+                  className={adminInput}
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" aria-hidden>
                   ⌕
@@ -470,7 +487,7 @@ const CataloguesAdmin = () => {
               <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
-                className="px-4 py-2.5 rounded-xl border border-Primarycolor/25 bg-bgcolor/50 text-textcolor2 focus:outline-none focus:ring-2 focus:ring-Primarycolor/50 text-sm min-w-[180px]"
+                className={`${adminSelect} min-w-[180px]`}
               >
                 {CATEGORY_OPTIONS.map((opt) => (
                   <option key={opt.value || "all"} value={opt.value}>
@@ -496,7 +513,7 @@ const CataloguesAdmin = () => {
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-500 text-sm">
+                      <div className={`w-full h-full flex items-center justify-center ${adminEmptyText}`}>
                         No image
                       </div>
                     )}
@@ -517,24 +534,24 @@ const CataloguesAdmin = () => {
                     </div>
                   </div>
                   <div className="p-4 flex-1 flex flex-col">
-                    <h4 className="font-semibold text-textcolor2 text-lg">{item.title}</h4>
-                    <p className="text-sm text-gray-400 mt-1 line-clamp-2">{item.summary}</p>
-                    <p className="text-sm font-medium text-Secondarycolor mt-2">
+                    <h4 className="font-semibold text-slate-900 text-lg">{item.title}</h4>
+                    <p className="text-sm text-slate-500 mt-1 line-clamp-2">{item.summary}</p>
+                    <p className="text-sm font-medium text-[#8700ff] mt-2">
                       NGN {Number(item.price || 0).toLocaleString()}
-                      <span className="text-gray-500 font-normal text-xs ml-1">· {item.paymentType}</span>
+                      <span className="text-slate-400 font-normal text-xs ml-1">· {item.paymentType}</span>
                     </p>
-                    <div className="flex gap-2 mt-4 pt-4 border-t border-Primarycolor/20">
+                    <div className="flex gap-2 mt-4 pt-4 border-t border-slate-200">
                       <button
                         type="button"
                         onClick={() => handleEdit(item)}
-                        className="flex-1 py-2 rounded-lg border border-Primarycolor/40 text-textcolor2 text-sm font-medium hover:bg-Primarycolor/20 transition-colors"
+                        className={`flex-1 ${adminBtnSoft} text-sm`}
                       >
                         Edit
                       </button>
                       <button
                         type="button"
                         onClick={() => handleDelete(item.id)}
-                        className="py-2 px-4 rounded-lg border border-red-400/50 text-red-300 text-sm font-medium hover:bg-red-500/10 transition-colors"
+                        className={`py-2 px-4 ${adminBtnDanger} text-sm`}
                       >
                         Delete
                       </button>
@@ -545,7 +562,7 @@ const CataloguesAdmin = () => {
             </div>
           )}
           {!loading && !filteredItems.length && (
-            <p className="text-gray-400 text-center py-12">
+            <p className={`${adminEmptyText} text-center py-12`}>
               {items.length ? "No items match your search or filter." : "No catalogue items yet."}
             </p>
           )}

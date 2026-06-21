@@ -4,6 +4,17 @@ import { toast } from "react-toastify";
 import { FaEnvelope, FaUser, FaSearch, FaCopy, FaCalendarAlt } from "react-icons/fa";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminCardBody,
+  adminEmptyText,
+  adminFieldLabel,
+  adminInput,
+  adminLink,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+} from "../../utils/adminUi";
 
 const SITE_URL = "https://www.lasglowtech.com.ng";
 
@@ -101,15 +112,13 @@ const ContactsAdmin = () => {
           className="brand-card overflow-hidden"
           aria-labelledby="contacts-heading"
         >
-          <header className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-            <h1 id="contacts-heading" className="text-xl font-semibold text-textcolor2">
+          <header className={adminSectionHead}>
+            <h1 id="contacts-heading" className={adminSectionTitle}>
               Contact messages
             </h1>
-            <p className="text-sm text-gray-500 mt-0.5">
-              Leads and enquiries from your website contact form.
-            </p>
+            <p className={adminSectionDesc}>Leads and enquiries from your website contact form.</p>
             {!loading && (
-              <p className="text-sm text-gray-400 mt-2" aria-live="polite">
+              <p className="text-sm text-slate-500 mt-2" aria-live="polite">
                 {contacts.length === 0
                   ? "No messages yet"
                   : `${contacts.length} message${contacts.length === 1 ? "" : "s"} total${search.trim() ? ` · ${sortedContacts.length} match${sortedContacts.length === 1 ? "" : "es"}` : ""}`}
@@ -133,14 +142,14 @@ const ContactsAdmin = () => {
                   placeholder="Search by name, email, subject…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-Primarycolor/20 bg-bgcolor/50 text-textcolor2 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-Secondarycolor/50 focus:border-Secondarycolor/50"
+                  className={`${adminInput} pl-10`}
                   aria-label="Search contacts"
                 />
               </div>
             </div>
           )}
 
-          <div className="p-6">
+          <div className={adminCardBody}>
             {loading && (
               <div className="space-y-4" role="status" aria-label="Loading contacts">
                 {[1, 2, 3].map((i) => (
@@ -170,9 +179,9 @@ const ContactsAdmin = () => {
                     role="status"
                   >
                     {filteredContacts.length === 0 && contacts.length > 0 ? (
-                      <p className="text-gray-400">No contacts match your search.</p>
+                      <p className={adminEmptyText}>No contacts match your search.</p>
                     ) : (
-                      <p className="text-gray-400">No contact messages yet.</p>
+                      <p className={adminEmptyText}>No contact messages yet.</p>
                     )}
                   </div>
                 )}
@@ -180,7 +189,7 @@ const ContactsAdmin = () => {
                 {sortedContacts.map((item) => (
                   <article
                     key={item.id}
-                    className="brand-card p-5 md:p-6"
+                    className={`${adminNestedCard} p-5 md:p-6 bg-white`}
                     aria-labelledby={`contact-name-${item.id}`}
                   >
                     <div className="flex flex-col md:flex-row md:items-start gap-4">
@@ -201,7 +210,7 @@ const ContactsAdmin = () => {
                           <span className="inline-flex items-center gap-2 flex-wrap">
                             <a
                               href={`mailto:${item.email}`}
-                              className="inline-flex items-center gap-1.5 text-Secondarycolor hover:underline break-all"
+                            className={`inline-flex items-center gap-1.5 ${adminLink}`}
                               aria-label={`Email ${item.email}`}
                             >
                               <FaEnvelope className="w-4 h-4 flex-shrink-0" aria-hidden />
@@ -218,8 +227,8 @@ const ContactsAdmin = () => {
                             </button>
                           </span>
                         </div>
-                        <p className="text-sm text-gray-400">
-                          <span className="text-gray-500">Subject:</span>{" "}
+                        <p className="text-sm text-slate-600">
+                          <span className="font-medium text-slate-500">Subject:</span>{" "}
                           {item.subject || "—"}
                         </p>
                         {item.createdAt && formatDate(item.createdAt) && (
@@ -230,8 +239,8 @@ const ContactsAdmin = () => {
                             </time>
                           </p>
                         )}
-                        <div className="brand-card rounded-lg p-4">
-                          <p className="text-sm text-gray-300 whitespace-pre-wrap leading-relaxed">
+                        <div className={`${adminNestedCard} p-4 bg-slate-50/80`}>
+                          <p className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
                             {item.message || "—"}
                           </p>
                         </div>

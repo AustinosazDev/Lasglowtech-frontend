@@ -3,6 +3,29 @@ import { toast } from "react-toastify";
 import { FaUser, FaSave, FaTrash } from "react-icons/fa";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminBtnDanger,
+  adminBtnPrimary,
+  adminCardBody,
+  adminDetailLabel,
+  adminDetailValue,
+  adminEmptyState,
+  adminEmptyText,
+  adminFieldLabel,
+  adminInput,
+  adminLink,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+  adminSelect,
+  adminSideNav,
+  adminSideNavBtn,
+  adminSideNavSelect,
+  adminSideNavTitle,
+  adminStatusBadge,
+  adminTextarea,
+} from "../../utils/adminUi";
 import { CareerApplicationCardSkeletonList } from "../../components/skeletons/CardSkeletons";
 
 const statusOptions = [
@@ -15,22 +38,10 @@ const statusOptions = [
 
 const paymentOptions = [
   { value: "unpaid", label: "Unpaid" },
-  { value: "part_paid", label: "Part Paid" },
+  { value: "part_paid", label: "Part paid" },
   { value: "paid", label: "Paid" },
   { value: "waived", label: "Waived" },
 ];
-
-const statusBadgeClass = {
-  new: "bg-amber-100 text-amber-900 border-amber-300",
-  reviewing: "bg-blue-100 text-blue-900 border-blue-300",
-  accepted: "bg-emerald-100 text-emerald-900 border-emerald-300",
-  waitlist: "bg-orange-100 text-orange-900 border-orange-300",
-  rejected: "bg-red-100 text-red-800 border-red-300",
-};
-
-const inputClass =
-  "w-full px-4 py-2.5 rounded-xl border border-Primarycolor/30 bg-bgcolor2 text-textcolor2 placeholder-muted focus:outline-none focus:ring-2 focus:ring-Primarycolor/50 focus:border-transparent text-sm";
-const labelClass = "block text-sm font-medium text-muted mb-1.5";
 
 const CareersAdmin = () => {
   const [applications, setApplications] = useState([]);
@@ -99,266 +110,252 @@ const CareersAdmin = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
       <aside className="lg:w-52 flex-shrink-0">
-        <nav className="hidden lg:block sticky top-24 brand-card p-3 space-y-1">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider px-2 py-1.5">Jump to</p>
+        <nav className={`hidden lg:block ${adminSideNav}`}>
+          <p className={adminSideNavTitle}>Jump to</p>
           {careerNav.map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => scrollToSection(item.id)}
-              className="w-full text-left px-3 py-2 rounded-lg text-sm text-gray-300 hover:bg-Primarycolor/20 hover:text-textcolor2 transition-colors"
-            >
+            <button key={item.id} type="button" onClick={() => scrollToSection(item.id)} className={adminSideNavBtn}>
               {item.label}
             </button>
           ))}
         </nav>
-        <div className="lg:hidden mb-4">
+        <div className="lg:hidden mb-2">
           <select
             defaultValue=""
-            onChange={(e) => { const v = e.target.value; if (v) scrollToSection(v); e.target.value = ""; }}
-            className="text-sm rounded-lg border border-Primarycolor/30 bg-bgcolor2/80 text-textcolor2 px-3 py-2"
+            onChange={(e) => {
+              const v = e.target.value;
+              if (v) scrollToSection(v);
+              e.target.value = "";
+            }}
+            className={adminSideNavSelect}
             aria-label="Jump to section"
           >
             <option value="">Jump to section…</option>
             {careerNav.map((item) => (
-              <option key={item.id} value={item.id}>{item.label}</option>
+              <option key={item.id} value={item.id}>
+                {item.label}
+              </option>
             ))}
           </select>
         </div>
       </aside>
 
       <main className="flex-1 min-w-0">
-    <section id="career-applications" className="brand-card overflow-hidden scroll-mt-6">
-      <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-        <h2 className="text-xl font-semibold text-textcolor2">Career applications</h2>
-        <p className="text-sm text-gray-500 mt-0.5">
-          Manage candidates applying to learn skills with Lasglowtech.
-        </p>
-      </div>
+        <section id="career-applications" className="brand-card overflow-hidden scroll-mt-6">
+          <div className={adminSectionHead}>
+            <h2 className={adminSectionTitle}>Career applications</h2>
+            <p className={adminSectionDesc}>Review candidates, update admission status, fees, and cohort assignments.</p>
+          </div>
 
-      <div className="p-6">
-        {loading && <CareerApplicationCardSkeletonList count={3} />}
+          <div className={adminCardBody}>
+            {loading && <CareerApplicationCardSkeletonList count={3} />}
 
-        {!loading && (
-          <div className="space-y-6">
-            {applications.map((app) => (
-              <article
-                key={app.id}
-                className="brand-card overflow-hidden"
-              >
-                {/* Candidate info */}
-                <div className="p-5 md:p-6 border-b border-Primarycolor/20">
-                  <div className="flex flex-col md:flex-row gap-5">
-                    <div className="flex-shrink-0">
-                      {app.picture_url ? (
-                        <img
-                          src={app.picture_url}
-                          alt={app.full_name}
-                          className="w-20 h-20 rounded-xl object-cover border border-Primarycolor/30"
-                        />
-                      ) : (
-                        <div className="w-20 h-20 rounded-xl border border-Primarycolor/30 bg-bgcolor2 flex items-center justify-center text-gray-500">
-                          <FaUser className="w-8 h-8" />
+            {!loading && (
+              <div className="space-y-6">
+                {applications.map((app) => {
+                  const status = drafts[app.id]?.status || app.status;
+                  return (
+                    <article key={app.id} className={adminNestedCard}>
+                      <div className="p-5 md:p-6 border-b border-slate-200/80 bg-white">
+                        <div className="flex flex-col md:flex-row gap-5">
+                          <div className="flex-shrink-0">
+                            {app.picture_url ? (
+                              <img
+                                src={app.picture_url}
+                                alt={app.full_name}
+                                className="w-20 h-20 rounded-2xl object-cover border-2 border-[#8700ff]/20 shadow-sm"
+                              />
+                            ) : (
+                              <div className="w-20 h-20 rounded-2xl border-2 border-[#8700ff]/15 bg-violet-50 flex items-center justify-center text-[#8700ff]">
+                                <FaUser className="w-8 h-8" />
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex flex-wrap items-center gap-2 mb-4">
+                              <h3 className="text-lg font-semibold text-slate-900">{app.full_name}</h3>
+                              <span className={adminStatusBadge[status] || adminStatusBadge.new}>{status}</span>
+                              <span className="text-xs text-slate-400 ml-auto">
+                                Applied {new Date(app.created_at).toLocaleDateString()}
+                              </span>
+                            </div>
+                            <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
+                              <div>
+                                <dt className={adminDetailLabel}>Email</dt>
+                                <dd className={adminDetailValue}>
+                                  <a href={`mailto:${app.email}`} className={adminLink}>
+                                    {app.email}
+                                  </a>
+                                </dd>
+                              </div>
+                              <div>
+                                <dt className={adminDetailLabel}>Phone</dt>
+                                <dd className={adminDetailValue}>{app.phone || "—"}</dd>
+                              </div>
+                              <div>
+                                <dt className={adminDetailLabel}>Skill track</dt>
+                                <dd className={adminDetailValue}>{app.skill_interest || "—"}</dd>
+                              </div>
+                              <div>
+                                <dt className={adminDetailLabel}>Experience</dt>
+                                <dd className={adminDetailValue}>{app.experience_level || "N/A"}</dd>
+                              </div>
+                              <div>
+                                <dt className={adminDetailLabel}>Availability</dt>
+                                <dd className={adminDetailValue}>{app.availability || "N/A"}</dd>
+                              </div>
+                              <div>
+                                <dt className={adminDetailLabel}>Location</dt>
+                                <dd className={adminDetailValue}>
+                                  {[app.city, app.country].filter(Boolean).join(", ") || "—"}
+                                </dd>
+                              </div>
+                              {app.portfolio_url && (
+                                <div className="sm:col-span-2">
+                                  <dt className={adminDetailLabel}>Portfolio</dt>
+                                  <dd className={adminDetailValue}>
+                                    <a href={app.portfolio_url} target="_blank" rel="noreferrer" className={adminLink}>
+                                      {app.portfolio_url}
+                                    </a>
+                                  </dd>
+                                </div>
+                              )}
+                              <div className="sm:col-span-2">
+                                <dt className={adminDetailLabel}>Learning goal</dt>
+                                <dd className="text-sm text-slate-700 leading-relaxed mt-1 whitespace-pre-wrap">
+                                  {app.learning_goal || "—"}
+                                </dd>
+                              </div>
+                            </dl>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0 grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                      <p className="font-semibold text-textcolor2 sm:col-span-2">{app.full_name}</p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Email</span>
-                        <br />
-                        <a href={`mailto:${app.email}`} className="text-Secondarycolor hover:underline break-all">
-                          {app.email}
-                        </a>
-                      </p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Phone</span>
-                        <br />
-                        {app.phone || "—"}
-                      </p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Skill</span>
-                        <br />
-                        {app.skill_interest || "—"}
-                      </p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Experience</span>
-                        <br />
-                        {app.experience_level || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Availability</span>
-                        <br />
-                        {app.availability || "N/A"}
-                      </p>
-                      <p className="text-gray-300">
-                        <span className="text-gray-500">Location</span>
-                        <br />
-                        {[app.city, app.country].filter(Boolean).join(", ") || "—"}
-                      </p>
-                      {app.portfolio_url && (
-                        <p className="text-gray-300 sm:col-span-2">
-                          <span className="text-gray-500">Portfolio</span>
-                          <br />
-                          <a
-                            href={app.portfolio_url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-Secondarycolor hover:underline break-all"
-                          >
-                            {app.portfolio_url}
-                          </a>
-                        </p>
-                      )}
-                      <p className="text-gray-300 sm:col-span-2">
-                        <span className="text-gray-500">Learning goal</span>
-                        <br />
-                        <span className="leading-relaxed">{app.learning_goal || "—"}</span>
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                      </div>
 
-                {/* Admin controls */}
-                <div className="p-5 md:p-6 bg-bgcolor2/30">
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">
-                    Admin actions
-                  </p>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div>
-                      <label className={labelClass}>Status</label>
-                      <select
-                        value={drafts[app.id]?.status || "new"}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], status: e.target.value },
-                          }))
-                        }
-                        className={inputClass}
-                      >
-                        {statusOptions.map((o) => (
-                          <option key={o.value} value={o.value}>{o.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Payment status</label>
-                      <select
-                        value={drafts[app.id]?.paymentStatus || "unpaid"}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], paymentStatus: e.target.value },
-                          }))
-                        }
-                        className={inputClass}
-                      >
-                        {paymentOptions.map((o) => (
-                          <option key={o.value} value={o.value}>{o.label}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className={labelClass}>Training fee (NGN)</label>
-                      <input
-                        type="number"
-                        value={drafts[app.id]?.feeAmount ?? 0}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], feeAmount: e.target.value },
-                          }))
-                        }
-                        className={inputClass}
-                        placeholder="0"
-                        min={0}
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>Follow-up date</label>
-                      <input
-                        type="date"
-                        value={drafts[app.id]?.followUpDate || ""}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], followUpDate: e.target.value },
-                          }))
-                        }
-                        className={inputClass}
-                      />
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label className={labelClass}>Cohort</label>
-                      <input
-                        type="text"
-                        value={drafts[app.id]?.cohort || ""}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], cohort: e.target.value },
-                          }))
-                        }
-                        className={inputClass}
-                        placeholder="e.g. Cohort 2025-01"
-                      />
-                    </div>
-                    <div className="sm:col-span-2 lg:col-span-4">
-                      <label className={labelClass}>Admin notes</label>
-                      <textarea
-                        value={drafts[app.id]?.adminNotes || ""}
-                        onChange={(e) =>
-                          setDrafts((prev) => ({
-                            ...prev,
-                            [app.id]: { ...prev[app.id], adminNotes: e.target.value },
-                          }))
-                        }
-                        rows={2}
-                        className={`${inputClass} resize-y`}
-                        placeholder="Internal notes about this application"
-                      />
-                    </div>
+                      <div className="p-5 md:p-6 bg-slate-50/60 border-t border-slate-200/80">
+                        <p className={adminDetailLabel}>Admin actions</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                          <div>
+                            <label className={adminFieldLabel}>Status</label>
+                            <select
+                              value={drafts[app.id]?.status || "new"}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], status: e.target.value },
+                                }))
+                              }
+                              className={adminSelect}
+                            >
+                              {statusOptions.map((o) => (
+                                <option key={o.value} value={o.value}>
+                                  {o.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className={adminFieldLabel}>Payment status</label>
+                            <select
+                              value={drafts[app.id]?.paymentStatus || "unpaid"}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], paymentStatus: e.target.value },
+                                }))
+                              }
+                              className={adminSelect}
+                            >
+                              {paymentOptions.map((o) => (
+                                <option key={o.value} value={o.value}>
+                                  {o.label}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label className={adminFieldLabel}>Training fee (NGN)</label>
+                            <input
+                              type="number"
+                              value={drafts[app.id]?.feeAmount ?? 0}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], feeAmount: e.target.value },
+                                }))
+                              }
+                              className={adminInput}
+                              placeholder="0"
+                              min={0}
+                            />
+                          </div>
+                          <div>
+                            <label className={adminFieldLabel}>Follow-up date</label>
+                            <input
+                              type="date"
+                              value={drafts[app.id]?.followUpDate || ""}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], followUpDate: e.target.value },
+                                }))
+                              }
+                              className={adminInput}
+                            />
+                          </div>
+                          <div className="sm:col-span-2">
+                            <label className={adminFieldLabel}>Cohort</label>
+                            <input
+                              type="text"
+                              value={drafts[app.id]?.cohort || ""}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], cohort: e.target.value },
+                                }))
+                              }
+                              className={adminInput}
+                              placeholder="e.g. Cohort 2026-01"
+                            />
+                          </div>
+                          <div className="sm:col-span-2 lg:col-span-4">
+                            <label className={adminFieldLabel}>Admin notes</label>
+                            <textarea
+                              value={drafts[app.id]?.adminNotes || ""}
+                              onChange={(e) =>
+                                setDrafts((prev) => ({
+                                  ...prev,
+                                  [app.id]: { ...prev[app.id], adminNotes: e.target.value },
+                                }))
+                              }
+                              rows={3}
+                              className={adminTextarea}
+                              placeholder="Internal notes about this application"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3 mt-5 pt-4 border-t border-slate-200/80">
+                          <button type="button" onClick={() => updateStatus(app.id)} className={adminBtnPrimary}>
+                            <FaSave className="w-4 h-4" /> Save changes
+                          </button>
+                          <button type="button" onClick={() => deleteApplication(app.id)} className={adminBtnDanger}>
+                            <FaTrash className="w-4 h-4" /> Delete
+                          </button>
+                        </div>
+                      </div>
+                    </article>
+                  );
+                })}
+                {!applications.length && (
+                  <div className={adminEmptyState}>
+                    <p className={adminEmptyText}>No career applications yet.</p>
                   </div>
-                  <div className="flex flex-wrap gap-3 mt-4">
-                    <button
-                      type="button"
-                      onClick={() => updateStatus(app.id)}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-Primarycolor/40 bg-Primarycolor/20 text-Secondarycolor font-medium text-sm hover:bg-Primarycolor/30 transition-colors"
-                    >
-                      <FaSave /> Save
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => deleteApplication(app.id)}
-                      className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-400/50 text-red-300 font-medium text-sm hover:bg-red-500/10 transition-colors"
-                    >
-                      <FaTrash /> Delete
-                    </button>
-                    <span
-                      className={`inline-flex items-center px-3 py-1 rounded-full border text-xs font-medium ${
-                        statusBadgeClass[drafts[app.id]?.status || app.status] || "text-muted border-Primarycolor/40"
-                      }`}
-                    >
-                      {drafts[app.id]?.status || app.status}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            ))}
-            {!applications.length && (
-              <div className="brand-card p-8 text-center">
-                <p className="text-muted text-sm">No career applications yet.</p>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
-    </section>
+        </section>
       </main>
     </div>
   );
 };
 
 export default CareersAdmin;
-

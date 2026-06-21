@@ -2,6 +2,18 @@ import React, { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminBtnGhost,
+  adminBtnPrimary,
+  adminCardBody,
+  adminFieldLabel,
+  adminInput,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+  adminTextarea,
+} from "../../utils/adminUi";
 
 const BulkEmailAdmin = () => {
   const headers = useMemo(() => ({ Authorization: `Bearer ${getAdminToken()}` }), []);
@@ -90,17 +102,17 @@ const BulkEmailAdmin = () => {
   return (
     <div className="space-y-8">
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h1 className="text-xl font-semibold text-textcolor2">Bulk email campaigns</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Send updates to manual emails or CSV exported from Excel.</p>
+        <div className={adminSectionHead}>
+          <h1 className={adminSectionTitle}>Bulk email campaigns</h1>
+          <p className={adminSectionDesc}>Send updates to manual emails or CSV exported from Excel.</p>
         </div>
-        <div className="p-6">
+        <div className={adminCardBody}>
         <form onSubmit={sendManual} className="grid grid-cols-1 gap-4">
           <input
             value={form.subject}
             onChange={(e) => setForm((p) => ({ ...p, subject: e.target.value }))}
             placeholder="Email subject"
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminInput}
             required
           />
           <textarea
@@ -108,7 +120,7 @@ const BulkEmailAdmin = () => {
             onChange={(e) => setForm((p) => ({ ...p, message: e.target.value }))}
             placeholder="Campaign message"
             rows={6}
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminTextarea}
             required
           />
           <textarea
@@ -116,18 +128,19 @@ const BulkEmailAdmin = () => {
             onChange={(e) => setForm((p) => ({ ...p, emails: e.target.value }))}
             placeholder="Manual recipient emails (comma, space or newline separated)"
             rows={4}
-            className="p-3 rounded-md bg-[#f6f5fa] text-black"
+            className={adminTextarea}
           />
-          <label className="flex items-center gap-2 text-sm text-gray-300">
+          <label className="flex items-center gap-2 text-sm text-slate-700">
             <input
               type="checkbox"
               checked={form.includeSubscribers}
               onChange={(e) => setForm((p) => ({ ...p, includeSubscribers: e.target.checked }))}
+              className="rounded border-slate-300 text-[#8700ff] focus:ring-[#8700ff]"
             />
             Include subscribers + users + career applicants
           </label>
           <div>
-            <label className="text-sm text-gray-300 block mb-2">Attachments (PDF, Word, image)</label>
+            <label className={adminFieldLabel}>Attachments (PDF, Word, image)</label>
             <input
               type="file"
               multiple
@@ -140,12 +153,8 @@ const BulkEmailAdmin = () => {
             )}
           </div>
           <div>
-            <button
-              type="submit"
-              disabled={sending}
-              className="px-6 py-3 rounded-md bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor text-white font-semibold"
-            >
-              {sending ? "Sending..." : "Send Manual Campaign"}
+            <button type="submit" disabled={sending} className={adminBtnPrimary}>
+              {sending ? "Sending..." : "Send manual campaign"}
             </button>
           </div>
         </form>
@@ -153,11 +162,11 @@ const BulkEmailAdmin = () => {
       </section>
 
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h2 className="text-xl font-semibold text-textcolor2">Send from CSV (Excel export)</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Upload a .csv file with any column containing emails.</p>
+        <div className={adminSectionHead}>
+          <h2 className={adminSectionTitle}>Send from CSV (Excel export)</h2>
+          <p className={adminSectionDesc}>Upload a .csv file with any column containing emails.</p>
         </div>
-        <div className="p-6">
+        <div className={adminCardBody}>
         <form onSubmit={sendCsv} className="flex flex-col md:flex-row md:items-center gap-3">
           <input
             type="file"
@@ -168,7 +177,7 @@ const BulkEmailAdmin = () => {
           <button
             type="submit"
             disabled={sending || !csvFile}
-            className="px-5 py-2 rounded-md border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/30 disabled:opacity-60"
+            className={adminBtnGhost}
           >
             {sending ? "Sending…" : "Send CSV campaign"}
           </button>
@@ -177,18 +186,18 @@ const BulkEmailAdmin = () => {
       </section>
 
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h3 className="text-lg font-semibold text-textcolor2">Recent campaigns</h3>
-          <p className="text-sm text-gray-500 mt-0.5">History of sent bulk emails.</p>
+        <div className={adminSectionHead}>
+          <h3 className={adminSectionTitle}>Recent campaigns</h3>
+          <p className={adminSectionDesc}>History of sent bulk emails.</p>
         </div>
-        <div className="p-6">
-        {!campaigns.length && <p className="text-gray-400 text-sm">No campaigns sent yet.</p>}
+        <div className={adminCardBody}>
+        {!campaigns.length && <p className="text-sm text-slate-500">No campaigns sent yet.</p>}
         {!!campaigns.length && (
           <div className="space-y-4">
             {campaigns.map((item) => (
-              <article key={item.id} className="brand-card p-4">
-                <p className="font-semibold text-textcolor2">{item.subject}</p>
-                <p className="text-xs text-gray-400 mt-1">
+              <article key={item.id} className={`${adminNestedCard} p-4 bg-white`}>
+                <p className="font-semibold text-slate-900">{item.subject}</p>
+                <p className="text-xs text-slate-500 mt-1">
                   Recipients: {item.total_recipients} · Sent: {item.total_sent} · Failed: {item.total_failed}
                 </p>
                 <p className="text-xs text-gray-500 mt-1">

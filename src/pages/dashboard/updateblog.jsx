@@ -6,6 +6,15 @@ import 'react-quill/dist/quill.snow.css';
 import instance from '../../config/axios.config';
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import {
+  adminBtnPrimary,
+  adminCardBody,
+  adminFieldLabel,
+  adminInput,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+} from "../../utils/adminUi";
 
 const Update = () => {
   const location = useLocation();
@@ -67,71 +76,50 @@ const Update = () => {
   };
 
   return (
-    <div className="brand-card p-6">
-      <div className="">
-        <h1 className="text-2xl font-bold text-textcolor2 mb-4">
-          {postid ? "Update Blog" : "Create New Blog"}
-        </h1>
-
-        <div className="space-y-4">
-          <input
-            type="text"
-            className="w-full border-none p-4 text-lg bg-[#F6F5FA] text-black focus:outline-none focus:ring-2 rounded-md"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-
-          <div className="h-[300px] overflow-y-auto overflow-x-hidden bg-white rounded-md">
-            <ReactQuill
-              className="text-gray-900 h-full w-full border-none p-4 text-lg bg-gray-50 rounded-md"
-              theme="snow"
-              value={content}
-              onChange={setContent}
-            />
-          </div>
-
-          <div className="flex flex-col items-start">
-            <input
-              type="file"
-              id="file"
-              className="hidden"
-              onChange={(e) => {
-                const selectedFile = e.target.files[0];
-                setFile(selectedFile);
-                if (selectedFile) {
-                  setExistingImage(URL.createObjectURL(selectedFile));
-                }
-              }}
-            />
-            <label
-              htmlFor="file"
-              className="text-textcolor2 py-4 flex items-center font-medium cursor-pointer"
-            >
-              <FaCirclePlus className="text-4xl fill-Primarycolor" />
-              <p className="ml-3 hidden md:block">Upload Cover</p>
-            </label>
-
-            {existingImage && (
-              <img
-                src={existingImage}
-                alt="Post Cover"
-                className="mt-2 w-full rounded-md object-cover"
-              />
-            )}
-          </div>
-
-          <div className="mt-4">
-            <button
-              className="px-6 py-3 bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor1 shadow-md text-white font-semibold rounded-md transition-all duration-300"
-              onClick={handleSubmit}
-            >
-              {postid ? "Update" : "Publish"}
-            </button>
-          </div>
-        </div>
+    <section className="brand-card overflow-hidden">
+      <div className={adminSectionHead}>
+        <h1 className={adminSectionTitle}>{postid ? "Update blog" : "Create new blog"}</h1>
+        <p className={adminSectionDesc}>Edit article content, cover image, and publish changes.</p>
       </div>
-    </div>
+      <div className={`${adminCardBody} space-y-4`}>
+        <input
+          type="text"
+          className={adminInput}
+          placeholder="Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+
+        <div className="rounded-xl border border-slate-200 overflow-hidden bg-white [&_.ql-container]:min-h-[220px] [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-slate-800">
+          <ReactQuill theme="snow" value={content} onChange={setContent} />
+        </div>
+
+        <div>
+          <label className={adminFieldLabel}>Cover image</label>
+          <input
+            type="file"
+            id="file"
+            className="hidden"
+            onChange={(e) => {
+              const selectedFile = e.target.files[0];
+              setFile(selectedFile);
+              if (selectedFile) setExistingImage(URL.createObjectURL(selectedFile));
+            }}
+          />
+          <label htmlFor="file" className="inline-flex items-center gap-2 cursor-pointer text-[#8700ff] font-medium text-sm">
+            <FaCirclePlus className="text-2xl" />
+            Upload cover
+          </label>
+          {existingImage && (
+            <img src={existingImage} alt="Post cover" className="mt-4 w-full max-h-64 object-cover rounded-xl border border-slate-200" />
+          )}
+        </div>
+
+        <button type="button" className={adminBtnPrimary} onClick={handleSubmit}>
+          {postid ? "Update" : "Publish"}
+        </button>
+      </div>
+    </section>
   );
 };
 

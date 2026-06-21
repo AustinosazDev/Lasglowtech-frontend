@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from "react";
 import instance from "../../config/axios.config";
+import {
+  adminCardBody,
+  adminEmptyState,
+  adminEmptyText,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+} from "../../utils/adminUi";
+
 const Subscriptions = () => {
- const [data, setData] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    instance.get('/subscribe') // Replace with your actual API URL
+    instance
+      .get("/subscribe")
       .then((res) => setData(res.data))
-
-    
-     
-      .catch((err) => console.error('API error:', err));
+      .catch((err) => console.error("API error:", err));
   }, []);
 
   return (
     <section className="brand-card overflow-hidden">
-      <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-        <h2 className="text-xl font-semibold text-textcolor2">Newsletter subscribers</h2>
-        <p className="text-sm text-gray-500 mt-0.5">People interested in updates and offers.</p>
+      <div className={adminSectionHead}>
+        <h2 className={adminSectionTitle}>Newsletter subscribers</h2>
+        <p className={adminSectionDesc}>People who opted in for updates and offers.</p>
       </div>
-      <div className="p-6">
+      <div className={adminCardBody}>
         {data.length === 0 ? (
-          <p className="text-gray-400 text-center py-12">No subscribers yet.</p>
+          <div className={adminEmptyState}>
+            <p className={adminEmptyText}>No subscribers yet.</p>
+          </div>
         ) : (
           <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {data.map((sub) => (
-              <li
-                key={sub.id}
-                className="brand-card px-4 py-3 text-textcolor2 text-sm"
-              >
+              <li key={sub.id} className={`${adminNestedCard} px-4 py-3.5 text-sm font-medium text-slate-800 bg-white`}>
                 {sub.email}
               </li>
             ))}
@@ -39,10 +46,3 @@ const Subscriptions = () => {
 };
 
 export default Subscriptions;
-
-
-
-
-
-
-

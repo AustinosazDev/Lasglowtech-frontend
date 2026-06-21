@@ -3,6 +3,17 @@ import { useNavigate } from "react-router-dom";
 import instance from "../../config/axios.config";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import { toast } from "react-toastify";
+import {
+  adminBtnDanger,
+  adminBtnSoft,
+  adminCardBody,
+  adminEmptyState,
+  adminEmptyText,
+  adminNestedCard,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+} from "../../utils/adminUi";
 
 const stripHtml = (html = "") => (html || "").replace(/<[^>]+>/g, "").trim();
 
@@ -44,23 +55,20 @@ const BlogList = () => {
 
   return (
     <section className="brand-card overflow-hidden">
-      <div className="px-6 py-5 border-b border-Primarycolor/20 bg-bgcolor/30">
-        <h1 className="text-xl font-semibold text-textcolor2">Blog list</h1>
-        <p className="text-sm text-gray-500 mt-0.5">Manage blog content and keep articles fresh.</p>
+      <div className={adminSectionHead}>
+        <h1 className={adminSectionTitle}>Blog list</h1>
+        <p className={adminSectionDesc}>Manage blog content and keep articles fresh.</p>
       </div>
 
-      <div className="p-6">
+      <div className={adminCardBody}>
         <div className="space-y-4">
           {posts.map((blog) => (
-            <article
-              key={blog.id}
-              className="brand-card p-5"
-            >
+            <article key={blog.id} className={`${adminNestedCard} p-5 bg-white`}>
               <div className="flex flex-col md:flex-row md:items-center gap-4">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-textcolor2 text-lg">{blog.title}</h3>
-                  <p className="text-sm text-gray-400 mt-1 line-clamp-2">{stripHtml(blog.content)}</p>
-                  <p className="text-xs text-gray-500 mt-2">{formatDate(blog.timestamp)}</p>
+                  <h3 className="font-semibold text-slate-900 text-lg">{blog.title}</h3>
+                  <p className="text-sm text-slate-600 mt-1 line-clamp-2 leading-relaxed">{stripHtml(blog.content)}</p>
+                  <p className="text-xs text-slate-400 mt-2">{formatDate(blog.timestamp)}</p>
                 </div>
                 <div className="flex flex-wrap gap-2 flex-shrink-0">
                   <button
@@ -76,17 +84,12 @@ const BlogList = () => {
                         },
                       })
                     }
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-Primarycolor/40 text-Secondarycolor hover:bg-Primarycolor/20 text-sm font-medium transition-colors"
+                    className={adminBtnSoft}
                     title="Edit"
                   >
                     <FaEdit className="w-4 h-4" /> Edit
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => deleteBlog(blog.id)}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-400/50 text-red-300 hover:bg-red-500/10 text-sm font-medium transition-colors"
-                    title="Delete"
-                  >
+                  <button type="button" onClick={() => deleteBlog(blog.id)} className={adminBtnDanger} title="Delete">
                     <FaTrash className="w-4 h-4" /> Delete
                   </button>
                 </div>
@@ -94,7 +97,9 @@ const BlogList = () => {
             </article>
           ))}
           {!posts.length && (
-            <p className="text-gray-400 text-center py-12">No blog posts found.</p>
+            <div className={adminEmptyState}>
+              <p className={adminEmptyText}>No blog posts found.</p>
+            </div>
           )}
         </div>
       </div>
@@ -103,4 +108,3 @@ const BlogList = () => {
 };
 
 export default BlogList;
-

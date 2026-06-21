@@ -1,42 +1,61 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams, useLocation } from "react-router-dom";
-import { FaEye, FaEyeSlash, FaBriefcase, FaBookOpen, FaEnvelope, FaUser } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaEnvelope,
+  FaUser,
+} from "react-icons/fa";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { getRoleHomePath, saveSession } from "../utils/auth";
-import { Land1, Land2, Land3 } from "../components/images";
-import AuthSplitShell from "../components/AuthSplitShell";
-
-const slides = [
-  { image: Land1, title: "Join the network", text: "One account for hiring and learning." },
-  { image: Land2, title: "Built for growth", text: "Design, dev, and delivery in one place." },
-  { image: Land3, title: "Quick setup", text: "Compare services and pay when you’re ready." },
-];
-
-const inputCls =
-  "w-full rounded-xl bg-bgcolor border border-Primarycolor/25 text-textcolor2 placeholder-muted text-sm font-semibold focus:outline-none focus:border-Primarycolor focus:ring-1 focus:ring-Primarycolor/40 transition-all";
+import AuthFormShell, { authInputCls } from "../components/AuthFormShell";
 
 const roles = [
-  { value: "client", label: "Client", Icon: FaBriefcase },
-  { value: "learner", label: "Learner", Icon: FaBookOpen },
+  {
+    value: "client",
+    label: "Client",
+    desc: "Browse our catalogue, place orders, and manage your projects with us.",
+  },
+  {
+    value: "learner",
+    label: "Student",
+    desc: "Join the academy, follow structured courses, and earn certificates.",
+  },
 ];
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams] = useSearchParams();
-  const from = location.state?.from || (searchParams.get("redirect") ? decodeURIComponent(searchParams.get("redirect")) : null);
+  const from =
+    location.state?.from ||
+    (searchParams.get("redirect") ? decodeURIComponent(searchParams.get("redirect")) : null);
+
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [showPwd, setShowPwd] = useState(false);
-  const [slideIdx, setSlideIdx] = useState(0);
-  const [formData, setFormData] = useState({ username: "", email: "", password: "", role: "client" });
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    role: "client",
+  });
 
   useEffect(() => {
-    const t = setInterval(() => setSlideIdx((p) => (p + 1) % slides.length), 4000);
-    return () => clearInterval(t);
-  }, []);
+    const role = searchParams.get("role");
+    if (role === "learner" || role === "student") {
+      setFormData((p) => ({ ...p, role: "learner" }));
+    } else if (role === "client") {
+      setFormData((p) => ({ ...p, role: "client" }));
+    }
+  }, [searchParams]);
+
+  const selectedRole = roles.find((r) => r.value === formData.role) || roles[0];
 
   const handleChange = (e) => setFormData((p) => ({ ...p, [e.target.name]: e.target.value }));
+
+  const handleContinue = () => setStep(2);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,128 +72,163 @@ export default function RegisterPage() {
     }
   };
 
-  return (
-    <AuthSplitShell slides={slides} slideIdx={slideIdx} contentAlign="start">
-      <div className="max-w-md mx-auto w-full shrink-0 pb-4">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-muted hover:text-Secondarycolor text-xs sm:text-sm font-semibold mb-2 sm:mb-3 transition-colors"
-        >
-          ← Back
-        </Link>
+  if (step === 1) {
+    return (
+      <AuthFormShell backTo="/" backLabel="Back to site" maxWidth="max-w-2xl">
+        <div className="mb-8 text-left">
+          <span className="text-xs font-semibold uppercase tracking-widest text-Secondarycolor">
+            Step 1 of 2
+          </span>
+          <h1 className="text-2xl font-bold text-textcolor2 tracking-tight mt-3">Create your account</h1>
+          <p className="text-sm text-muted mt-2 leading-relaxed">
+            Pick how you want to use Lasglowtech, whether as a client or a student.
+          </p>
+        </div>
 
-        <div className="brand-card p-5 sm:p-6 md:p-7">
-          <h1 className="text-textcolor2 mb-3 sm:mb-4">
-            Join Lasglowtech
-          </h1>
-
-          <div className="grid grid-cols-2 gap-2 mb-4" role="group" aria-label="Account type">
-            {roles.map(({ value, label, Icon }) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5" role="group" aria-label="Account type">
+          {roles.map(({ value, label, desc }) => {
+            const active = formData.role === value;
+            return (
               <button
                 key={value}
                 type="button"
                 onClick={() => setFormData((p) => ({ ...p, role: value }))}
-                className={`p-2.5 sm:p-3 rounded-xl border text-left transition-all ${
-                  formData.role === value
-                    ? "border-Primarycolor/50 bg-Primarycolor/20 ring-1 ring-Primarycolor/30"
-                    : "border-Primarycolor/20 hover:border-Primarycolor/40 bg-bgcolor/40"
+                className={`text-left min-h-[168px] sm:min-h-[180px] p-6 sm:p-7 rounded-2xl border transition-all duration-200 ${
+                  active
+                    ? "border-Primarycolor bg-Primarycolor/10 shadow-[0_8px_32px_rgba(135,0,255,0.28)] ring-1 ring-Primarycolor/30"
+                    : "border-Primarycolor/20 bg-bgcolor/45 shadow-[0_4px_24px_rgba(0,0,0,0.28)] hover:border-Primarycolor/40 hover:shadow-[0_6px_28px_rgba(135,0,255,0.14)]"
                 }`}
               >
-                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 mb-1 ${formData.role === value ? "text-Secondarycolor" : "text-muted"}`} />
-                <p className={`font-semibold text-sm ${formData.role === value ? "text-textcolor2" : "text-muted"}`}>{label}</p>
+                <span className="block font-semibold text-base leading-snug text-textcolor2">
+                  {label}
+                </span>
+                <span className="block text-sm text-muted mt-2 leading-relaxed">{desc}</span>
               </button>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-3">
-            <div>
-              <label htmlFor="username" className="block text-xs font-medium text-textcolor2 mb-1">
-                Username
-              </label>
-              <div className="relative">
-                <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
-                <input
-                  id="username"
-                  name="username"
-                  type="text"
-                  placeholder="johndoe"
-                  value={formData.username}
-                  onChange={handleChange}
-                  className={`${inputCls} pl-10 pr-3 py-2.5 text-sm`}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-xs font-medium text-textcolor2 mb-1">
-                Email
-              </label>
-              <div className="relative">
-                <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="you@email.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={`${inputCls} pl-10 pr-3 py-2.5 text-sm`}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-xs font-medium text-textcolor2 mb-1">
-                Password
-              </label>
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPwd ? "text" : "password"}
-                  placeholder="Min. 8 characters"
-                  value={formData.password}
-                  onChange={handleChange}
-                  className={`${inputCls} px-3 py-2.5 pr-12 text-sm`}
-                  required
-                  minLength={8}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPwd((p) => !p)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-Secondarycolor transition-colors p-1"
-                  aria-label={showPwd ? "Hide password" : "Show password"}
-                >
-                  {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
-            <button
-              type="submit"
-              disabled={loading}
-              className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-0.5 py-2.5 text-sm"
-            >
-              {loading ? "Creating account…" : "Create account →"}
-            </button>
-          </form>
-
-          <p className="text-muted text-xs sm:text-sm text-center mt-4">
-            Have an account?{" "}
+        <div className="flex flex-wrap items-center gap-4 pt-6">
+          <button type="button" onClick={handleContinue} className="btn-primary px-8 min-w-[148px] justify-center">
+            Continue
+          </button>
+          <p className="text-sm text-muted">
+            Already have an account?{" "}
             <Link to="/auth/login" className="text-Secondarycolor hover:underline font-semibold">
               Sign in
             </Link>
           </p>
-          <p className="text-[11px] text-muted/90 text-center mt-2 leading-tight">
-            <Link to="/legal/terms" className="text-Primarycolor hover:underline font-medium">
-              Terms
-            </Link>
-            {" · "}
-            <Link to="/legal/privacy" className="text-Primarycolor hover:underline font-medium">
-              Privacy
-            </Link>
-          </p>
         </div>
+      </AuthFormShell>
+    );
+  }
+
+  return (
+    <AuthFormShell onBack={() => setStep(1)} backLabel="Back" maxWidth="max-w-md">
+      <div className="flex flex-col items-center text-center mb-6">
+        <span className="text-xs font-semibold uppercase tracking-widest text-Secondarycolor">
+          Step 2 of 2
+        </span>
+        <h1 className="text-xl font-bold text-textcolor2 tracking-tight mt-3">Create your account</h1>
+        <p className="text-sm text-muted mt-2">
+          Set up your{" "}
+          <span className="text-textcolor2 font-semibold">{selectedRole.label.toLowerCase()}</span>{" "}
+          profile to get started.
+        </p>
       </div>
-    </AuthSplitShell>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="username" className="block text-sm font-medium text-textcolor2 mb-2">
+            Username
+          </label>
+          <div className="relative">
+            <FaUser className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+            <input
+              id="username"
+              name="username"
+              type="text"
+              placeholder="johndoe"
+              value={formData.username}
+              onChange={handleChange}
+              className={`${authInputCls} pl-10 pr-3 py-3`}
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-textcolor2 mb-2">
+            Email
+          </label>
+          <div className="relative">
+            <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="you@email.com"
+              value={formData.email}
+              onChange={handleChange}
+              className={`${authInputCls} pl-10 pr-3 py-3`}
+              required
+            />
+          </div>
+        </div>
+        <div>
+          <label htmlFor="password" className="block text-sm font-medium text-textcolor2 mb-2">
+            Password
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPwd ? "text" : "password"}
+              placeholder="Min. 8 characters"
+              value={formData.password}
+              onChange={handleChange}
+              className={`${authInputCls} px-3 py-3 pr-12`}
+              required
+              minLength={8}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPwd((p) => !p)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-Secondarycolor transition-colors p-1"
+              aria-label={showPwd ? "Hide password" : "Show password"}
+            >
+              {showPwd ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+            </button>
+          </div>
+          <p className="text-xs text-muted mt-1.5">Password must be at least 8 characters.</p>
+        </div>
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary w-full justify-center disabled:opacity-60 disabled:cursor-not-allowed mt-1"
+        >
+          {loading ? "Creating account…" : `Create ${selectedRole.label.toLowerCase()} account`}
+        </button>
+      </form>
+
+      <p className="text-xs text-muted text-center mt-4 leading-relaxed">
+        By signing up you agree to our{" "}
+        <Link to="/legal/terms" className="text-Secondarycolor hover:underline font-medium">
+          Terms
+        </Link>
+        {" and "}
+        <Link to="/legal/privacy" className="text-Secondarycolor hover:underline font-medium">
+          Privacy Policy
+        </Link>
+        .
+      </p>
+
+      <p className="text-sm text-center text-muted mt-5">
+        Already have an account?{" "}
+        <Link to="/auth/login" className="text-Secondarycolor hover:underline font-semibold">
+          Sign in
+        </Link>
+      </p>
+    </AuthFormShell>
   );
 }

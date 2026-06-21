@@ -1,6 +1,24 @@
 import React, { useEffect, useMemo, useState } from "react";
 import instance from "../../config/axios.config";
 import { getAdminToken } from "../../utils/adminAuth";
+import {
+  adminCardBody,
+  adminDetailLabel,
+  adminEmptyText,
+  adminSectionDesc,
+  adminSectionHead,
+  adminSectionTitle,
+  adminTable,
+  adminTableHead,
+  adminTableRow,
+  adminTableTd,
+  adminTableTdMuted,
+  adminTableTh,
+  adminTableWrap,
+} from "../../utils/adminUi";
+
+const statLabel = "text-xs font-semibold text-slate-500 uppercase tracking-widest";
+const statValue = "text-3xl font-bold text-slate-900 mt-2 tabular-nums";
 
 const DashboardHome = () => {
   const [stats, setStats] = useState({
@@ -43,68 +61,71 @@ const DashboardHome = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-textcolor2">Dashboard overview</h1>
-        <p className="text-gray-500 mt-1">Monitor platform activity and manage your digital storefront.</p>
+        <p className={adminSectionDesc}>Monitor platform activity, revenue, and content at a glance.</p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Published blogs</p>
-          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.posts}</p>
+          <p className={statLabel}>Published blogs</p>
+          <p className={statValue}>{stats.posts}</p>
         </article>
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Newsletter subscribers</p>
-          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.subscribers}</p>
+          <p className={statLabel}>Newsletter subscribers</p>
+          <p className={statValue}>{stats.subscribers}</p>
         </article>
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Catalogue items</p>
-          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.catalogues}</p>
+          <p className={statLabel}>Catalogue items</p>
+          <p className={statValue}>{stats.catalogues}</p>
         </article>
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Total revenue</p>
-          <p className="text-2xl font-bold text-Secondarycolor mt-2 tabular-nums">NGN {stats.totalRevenue.toLocaleString()}</p>
+          <p className={statLabel}>Total revenue</p>
+          <p className="text-2xl font-bold text-[#8700ff] mt-2 tabular-nums">NGN {stats.totalRevenue.toLocaleString()}</p>
         </article>
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Revenue this month</p>
-          <p className="text-2xl font-bold text-textcolor2 mt-2 tabular-nums">NGN {stats.revenueThisMonth.toLocaleString()}</p>
+          <p className={statLabel}>Revenue this month</p>
+          <p className="text-2xl font-bold text-slate-900 mt-2 tabular-nums">NGN {stats.revenueThisMonth.toLocaleString()}</p>
         </article>
         <article className="brand-card p-6">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Pending orders</p>
-          <p className="type-stat-lg text-textcolor2 mt-2 tabular-nums">{stats.pendingOrders}</p>
+          <p className={statLabel}>Pending orders</p>
+          <p className={statValue}>{stats.pendingOrders}</p>
         </article>
       </div>
 
       <section className="brand-card overflow-hidden">
-        <div className="px-6 py-4 border-b border-Primarycolor/20 bg-bgcolor/30">
-          <h2 className="text-lg font-semibold text-textcolor2">Recent orders</h2>
-          <p className="text-sm text-gray-500 mt-0.5">Latest payment activity</p>
+        <div className={adminSectionHead}>
+          <h2 className={adminSectionTitle}>Recent orders</h2>
+          <p className={adminSectionDesc}>Latest payment activity across the catalogue.</p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-sm">
+        <div className={adminTableWrap}>
+          <table className={adminTable}>
             <thead>
-              <tr className="text-left text-gray-500 border-b border-Primarycolor/20 bg-bgcolor/20">
-                <th className="py-3 px-4 font-semibold">Service</th>
-                <th className="py-3 px-4 font-semibold">Customer</th>
-                <th className="py-3 px-4 font-semibold">Amount</th>
-                <th className="py-3 px-4 font-semibold">Status</th>
-                <th className="py-3 px-4 font-semibold">Date</th>
+              <tr className={adminTableHead}>
+                <th className={adminTableTh}>Service</th>
+                <th className={adminTableTh}>Customer</th>
+                <th className={adminTableTh}>Amount</th>
+                <th className={adminTableTh}>Status</th>
+                <th className={adminTableTh}>Date</th>
               </tr>
             </thead>
             <tbody>
               {latestOrders.map((item) => (
-                <tr key={item.id} className="border-b border-Primarycolor/10 hover:bg-Primarycolor/5">
-                  <td className="py-3 px-4 text-gray-300">{item.service_name}</td>
-                  <td className="py-3 px-4 text-gray-300">{item.customer_name}</td>
-                  <td className="py-3 px-4 text-textcolor2 font-medium">
+                <tr key={item.id} className={adminTableRow}>
+                  <td className={adminTableTd}>{item.service_name}</td>
+                  <td className={adminTableTd}>{item.customer_name}</td>
+                  <td className={`${adminTableTd} font-semibold text-slate-900`}>
                     {item.currency} {Number(item.amount || 0).toLocaleString()}
                   </td>
-                  <td className="py-3 px-4"><span className="uppercase text-xs font-medium text-gray-400">{item.status}</span></td>
-                  <td className="py-3 px-4 text-gray-400">{new Date(item.created_at).toLocaleDateString()}</td>
+                  <td className={adminTableTdMuted}>
+                    <span className="uppercase text-xs font-semibold">{item.status}</span>
+                  </td>
+                  <td className={adminTableTdMuted}>{new Date(item.created_at).toLocaleDateString()}</td>
                 </tr>
               ))}
               {!latestOrders.length && (
                 <tr>
-                  <td colSpan={5} className="py-8 text-center text-gray-400">No orders yet.</td>
+                  <td colSpan={5} className="py-10 text-center text-slate-500">
+                    No orders yet.
+                  </td>
                 </tr>
               )}
             </tbody>
@@ -116,4 +137,3 @@ const DashboardHome = () => {
 };
 
 export default DashboardHome;
-
