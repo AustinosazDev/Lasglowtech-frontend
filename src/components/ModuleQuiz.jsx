@@ -1,9 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { FaCheckCircle, FaTimes } from "react-icons/fa";
 import instance from "../config/axios.config";
+import { CACHE_KEYS, readCache, removeCache, writeCache } from "../utils/localCache";
 
 const getOptionLabel = (question, optionId) =>
   question?.options?.find((o) => Number(o.id) === Number(optionId))?.optionText || null;
+
+const quizDataCacheKey = (enrollmentId, moduleId) =>
+  `lasglowtech-quiz-data-${enrollmentId}-${moduleId}`;
 
 const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHint = false, onSubmitted }) => {
   const [quiz, setQuiz] = useState(null);
@@ -15,6 +19,9 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
   const [results, setResults] = useState(null);
   const [error, setError] = useState("");
   const [loadFailed, setLoadFailed] = useState(false);
+  const [usingOfflineQuiz, setUsingOfflineQuiz] = useState(false);
+
+  const draftKey = enrollmentId && moduleId ? CACHE_KEYS.quizDraft(enrollmentId, moduleId) : null;
 
   const questions = quiz?.questions || [];
   const totalQuestions = questions.length;
@@ -25,7 +32,29 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
     [questions, answers]
   );
 
+  const clearDraft = () => {
+    if (draftKey) removeCache(draftKey);
+  };
+
   const resetAttempt = () => {
+    setAnswers({});
+    setCurrentIndex(0);
+    setStep("question");
+    setResults(null);
+    setError("");
+    clearDraft();
+  };
+
+  const restoreDraft = () => {
+    const draft = draftKey ? readCache(draftKey) : null;
+    if (draft && draft.step !== "results") {
+      setAnswers(draft.answers || {});
+      setCurrentIndex(Number(draft.currentIndex) || 0);
+      setStep(draft.step || "question");
+      setResults(null);
+      setError("");
+      return;
+    }
     setAnswers({});
     setCurrentIndex(0);
     setStep("question");
@@ -44,18 +73,33 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
     let cancelled = false;
     const load = async () => {
       setLoading(true);
-      resetAttempt();
       setLoadFailed(false);
+      setUsingOfflineQuiz(false);
+      setError("");
+
       try {
         const res = await instance.get(`/lms/my/enrollments/${enrollmentId}/modules/${moduleId}/quiz`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        if (!cancelled) setQuiz(res.data || null);
+        if (cancelled) return;
+        const data = res.data || null;
+        setQuiz(data);
+        if (data?.questions?.length) {
+          writeCache(quizDataCacheKey(enrollmentId, moduleId), data);
+        }
+        restoreDraft();
       } catch (err) {
-        if (!cancelled) {
+        if (cancelled) return;
+        const cachedQuiz = readCache(quizDataCacheKey(enrollmentId, moduleId));
+        if (cachedQuiz?.questions?.length) {
+          setQuiz(cachedQuiz);
+          restoreDraft();
+          setUsingOfflineQuiz(true);
+          setError("You're offline. Your quiz progress is saved on this device.");
+        } else {
           setQuiz(null);
           setLoadFailed(true);
-          setError(err.response?.data?.error || "Could not load the quiz. Try refreshing the page.");
+          setError(err.response?.data?.error || "Could not load the quiz. Connect and try again.");
         }
       } finally {
         if (!cancelled) setLoading(false);
@@ -67,6 +111,11 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
       cancelled = true;
     };
   }, [enrollmentId, moduleId, token]);
+
+  useEffect(() => {
+    if (!draftKey || !quiz?.questions?.length || step === "results") return;
+    writeCache(draftKey, { answers, currentIndex, step });
+  }, [answers, currentIndex, step, draftKey, quiz]);
 
   const submitQuiz = async () => {
     if (!totalQuestions) return;
@@ -87,9 +136,14 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
       );
       setResults(res.data);
       setStep("results");
+      clearDraft();
+      setUsingOfflineQuiz(false);
       onSubmitted?.(res.data);
     } catch (err) {
-      setError(err.response?.data?.error || "Unable to submit quiz.");
+      setError(
+        err.response?.data?.error ||
+          "Unable to submit quiz. Your answers are saved — try again when you're back online."
+      );
     } finally {
       setSubmitting(false);
     }
@@ -127,11 +181,12 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
           else if (isWrongSelected) optionClass += "bg-red-50 text-red-900 md:border md:border-red-300";
           else optionClass += "bg-transparent text-slate-600 md:border md:border-slate-100";
         } else if (selected) {
-          optionClass += "bg-violet-50 text-slate-900 md:border md:border-[#8700ff]/40";
+          optionClass += " bg-violet-50 text-slate-900 border border-violet-300 rounded-lg";
         } else if (readOnly) {
-          optionClass += "bg-transparent text-slate-600";
+          optionClass += " bg-transparent text-slate-600";
         } else {
-          optionClass += "bg-slate-50/80 text-slate-800 md:bg-white md:border md:border-slate-200 hover:border-[#8700ff]/30 cursor-pointer";
+          optionClass +=
+            " bg-white text-slate-800 border border-slate-200 rounded-lg hover:border-violet-400 hover:bg-violet-50/40 cursor-pointer";
         }
 
         return (
@@ -162,17 +217,20 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
     </div>
   );
 
+  const panelClass =
+    "module-quiz-panel w-full overflow-hidden rounded-xl bg-white border border-slate-200/90 shadow-[0_1px_3px_rgba(15,23,42,0.06)]";
+
   if (loading) {
     return (
-      <div className="w-full px-1 py-4 md:brand-card md:p-5" id="module-quiz">
-        <p className="text-sm text-slate-500">Loading quiz…</p>
+      <div className={`${panelClass} px-4 py-5`} id="module-quiz">
+        <p className="text-sm text-slate-600">Loading quiz…</p>
       </div>
     );
   }
 
   if (loadFailed) {
     return (
-      <div className="w-full px-1 py-4 md:brand-card md:p-5 md:border md:border-red-200 md:bg-red-50/50" id="module-quiz">
+      <div className={`${panelClass} px-4 py-5 border-red-200 bg-red-50/80`} id="module-quiz">
         <p className="text-sm font-semibold text-red-800">Quiz unavailable</p>
         <p className="text-sm text-red-700 mt-1">{error}</p>
       </div>
@@ -182,10 +240,10 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
   if (!totalQuestions) {
     if (!hasQuizHint) return null;
     return (
-      <div className="w-full px-1 py-4 md:brand-card md:p-5 md:border md:border-slate-200 md:bg-slate-50/60" id="module-quiz">
-        <p className="text-xs font-semibold uppercase tracking-widest text-slate-500">Module quiz</p>
-        <p className="text-sm text-slate-600 mt-2 leading-relaxed">
-          No quiz has been added to <strong className="text-slate-800">{moduleTitle || "this module"}</strong> yet.
+      <div className={`${panelClass} px-4 py-5 bg-slate-50/90`} id="module-quiz">
+        <p className="text-xs font-semibold uppercase tracking-widest text-violet-700">Module quiz</p>
+        <p className="text-sm text-slate-700 mt-2 leading-relaxed">
+          No quiz has been added to <strong className="text-slate-900">{moduleTitle || "this module"}</strong> yet.
         </p>
       </div>
     );
@@ -194,16 +252,21 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
   const progressPercent = step === "question" ? Math.round(((currentIndex + 1) / totalQuestions) * 100) : 100;
 
   return (
-    <div className="w-full overflow-hidden md:brand-card md:rounded-xl" id="module-quiz">
-      <div className="px-1 py-3 md:px-5 md:py-4 md:border-b md:border-[#8700ff]/15 md:bg-violet-50/40">
-        <p className="text-xs font-semibold uppercase tracking-widest text-[#8700ff]">Module quiz</p>
+    <div className={panelClass} id="module-quiz">
+      <div className="px-4 py-4 border-b border-violet-100 bg-gradient-to-b from-violet-50/90 to-white">
+        <p className="text-xs font-semibold uppercase tracking-widest text-violet-700">Module quiz</p>
         <h4 className="text-lg font-semibold text-slate-900 mt-1 leading-snug">{quiz.title || "Module quiz"}</h4>
+        {usingOfflineQuiz && (
+          <p className="text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mt-2">
+            Offline mode — answers are saved on this device until you submit when online.
+          </p>
+        )}
         {step === "question" && (
           <>
-            <p className="text-sm text-slate-600 mt-1">
+            <p className="text-sm text-slate-700 mt-1">
               Question {currentIndex + 1} of {totalQuestions}
             </p>
-            <div className="mt-3 h-1.5 w-full rounded-full bg-slate-200 overflow-hidden">
+            <div className="mt-3 h-2 w-full rounded-full bg-slate-200 overflow-hidden">
               <div
                 className="h-full bg-[#8700ff] rounded-full transition-all duration-300"
                 style={{ width: `${progressPercent}%` }}
@@ -223,10 +286,10 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
         )}
       </div>
 
-      <div className="px-1 py-3 md:px-5 md:py-5 space-y-4">
+      <div className="px-4 py-4 md:px-5 md:py-5 space-y-4 bg-white">
         {step === "question" && currentQuestion && (
           <div className="w-full">
-            <p className="text-base md:text-sm font-semibold text-slate-900 leading-relaxed break-words">
+            <p className="text-base font-semibold text-slate-900 leading-relaxed break-words">
               {currentIndex + 1}. {currentQuestion.questionText}
             </p>
             {renderOptions(currentQuestion)}
@@ -274,10 +337,11 @@ const ModuleQuiz = ({ enrollmentId, moduleId, token, moduleTitle = "", hasQuizHi
               <button
                 type="button"
                 onClick={submitQuiz}
-                disabled={submitting || answeredCount < totalQuestions}
+                disabled={submitting || answeredCount < totalQuestions || usingOfflineQuiz}
+                title={usingOfflineQuiz ? "Connect to the internet to submit" : undefined}
                 className="dash-btn-primary w-full sm:w-auto !py-2.5 disabled:opacity-50"
               >
-                {submitting ? "Submitting…" : "Submit quiz"}
+                {submitting ? "Submitting…" : usingOfflineQuiz ? "Submit when online" : "Submit quiz"}
               </button>
             </div>
           </div>

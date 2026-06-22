@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaArrowLeft } from "react-icons/fa";
 import instance from "../config/axios.config";
 import SEO from "../utils/seo";
 import { getToken, getUser } from "../utils/auth";
+import { CACHE_KEYS, readCache, removeCache, writeCache } from "../utils/localCache";
 import { LOGO } from "../components/images";
 import BgPatternOverlay from "../components/BgPatternOverlay";
 import { authInputCls } from "../components/AuthFormShell";
@@ -93,14 +94,29 @@ const Careers = () => {
   const token = useMemo(() => getToken(), []);
 
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState({
-    ...defaultForm,
-    fullName: sessionUser?.username || "",
-    email: sessionUser?.email || "",
+  const [form, setForm] = useState(() => {
+    const draft = readCache(CACHE_KEYS.careersApplicationDraft);
+    if (draft?.form) {
+      return { ...defaultForm, ...draft.form };
+    }
+    return {
+      ...defaultForm,
+      fullName: sessionUser?.username || "",
+      email: sessionUser?.email || "",
+    };
   });
   const [pictureFile, setPictureFile] = useState(null);
   const [picturePreview, setPicturePreview] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const draft = readCache(CACHE_KEYS.careersApplicationDraft);
+    if (draft?.step) setStep(draft.step);
+  }, []);
+
+  useEffect(() => {
+    writeCache(CACHE_KEYS.careersApplicationDraft, { form, step });
+  }, [form, step]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -144,6 +160,7 @@ const Careers = () => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
+      removeCache(CACHE_KEYS.careersApplicationDraft);
       toast.success("Application submitted successfully.");
       navigate("/careers/dashboard", { replace: true });
     } catch (error) {

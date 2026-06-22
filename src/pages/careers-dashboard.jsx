@@ -28,6 +28,7 @@ import { jsPDF } from "jspdf";
 import instance from "../config/axios.config";
 import { exportCertificateToA4Pdf } from "../utils/certificatePdfExport";
 import { clearSession, getToken, getUser } from "../utils/auth";
+import { CACHE_KEYS, readCache, writeCache } from "../utils/localCache";
 import SEO from "../utils/seo";
 import CertificatePreview from "../components/certificate-preview";
 import ModuleQuiz from "../components/ModuleQuiz";
@@ -279,6 +280,9 @@ const CareersDashboard = () => {
   const [modulesLoading, setModulesLoading] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isOffline, setIsOffline] = useState(
+    () => typeof navigator !== "undefined" && !navigator.onLine
+  );
   const [personalNotes, setPersonalNotes] = useState("");
   const [certificatePreviewData, setCertificatePreviewData] = useState(null);
   const [certificatePreviewOpen, setCertificatePreviewOpen] = useState(false);
@@ -302,6 +306,17 @@ const CareersDashboard = () => {
     activeEnrollment?.course?.title ||
     latest?.skill_interest ||
     (isAccepted ? "Course access pending" : "Awaiting acceptance");
+
+  useEffect(() => {
+    const onOnline = () => setIsOffline(false);
+    const onOffline = () => setIsOffline(true);
+    window.addEventListener("online", onOnline);
+    window.addEventListener("offline", onOffline);
+    return () => {
+      window.removeEventListener("online", onOnline);
+      window.removeEventListener("offline", onOffline);
+    };
+  }, []);
 
   useEffect(() => {
     if (!profileOpen) return;
@@ -372,11 +387,15 @@ const CareersDashboard = () => {
         instance.get("/lms/my/dashboard", { headers }),
       ]);
 
-      setApplications(careerRes.data?.applications || []);
+      const applications = careerRes.data?.applications || [];
       const latestApp = careerRes.data?.latest || null;
-      setLatest(latestApp);
       const enrolled = lmsRes.data?.enrollments || [];
+
+      setApplications(applications);
+      setLatest(latestApp);
       setEnrollments(enrolled);
+      writeCache(CACHE_KEYS.learnerDashboard, { applications, latest: latestApp, enrollments: enrolled });
+
       if (!enrolled.length) {
         setSelectedEnrollmentId("");
         setModules([]);
@@ -384,13 +403,34 @@ const CareersDashboard = () => {
         setSelectedEnrollmentId(pickEnrollmentId(enrolled, latestApp));
       }
     } catch (e) {
-      setError("Unable to load your learner dashboard right now.");
+      const cached = readCache(CACHE_KEYS.learnerDashboard);
+      if (cached) {
+        setApplications(cached.applications || []);
+        setLatest(cached.latest || null);
+        setEnrollments(cached.enrollments || []);
+        if (cached.enrollments?.length) {
+          setSelectedEnrollmentId(pickEnrollmentId(cached.enrollments, cached.latest));
+        }
+        setError("You're offline or the connection failed. Showing your last saved dashboard data.");
+        toast.info("Showing saved data — reconnect to refresh.");
+      } else {
+        setError("Unable to load your learner dashboard right now.");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
+    const cached = readCache(CACHE_KEYS.learnerDashboard);
+    if (cached) {
+      setApplications(cached.applications || []);
+      setLatest(cached.latest || null);
+      setEnrollments(cached.enrollments || []);
+      if (cached.enrollments?.length) {
+        setSelectedEnrollmentId(pickEnrollmentId(cached.enrollments, cached.latest));
+      }
+    }
     loadData();
   }, [token]);
 
@@ -400,6 +440,10 @@ const CareersDashboard = () => {
         setModules([]);
         return;
       }
+      const cached = readCache(CACHE_KEYS.learnerModules(selectedEnrollmentId));
+      if (cached?.length) {
+        setModules(cached);
+      }
       setModulesLoading(true);
       try {
         const res = await instance.get(`/lms/my/enrollments/${selectedEnrollmentId}/modules`, {
@@ -407,13 +451,23 @@ const CareersDashboard = () => {
         });
         const loaded = res.data || [];
         setModules(loaded);
+        writeCache(CACHE_KEYS.learnerModules(selectedEnrollmentId), loaded);
         setSelectedModuleId((prev) => {
           if (prev && loaded.some((m) => String(m.id) === String(prev))) return String(prev);
           return loaded[0] ? String(loaded[0].id) : "";
         });
       } catch (err) {
-        setModules([]);
-        setSelectedModuleId("");
+        const cached = readCache(CACHE_KEYS.learnerModules(selectedEnrollmentId));
+        if (cached?.length) {
+          setModules(cached);
+          setSelectedModuleId((prev) => {
+            if (prev && cached.some((m) => String(m.id) === String(prev))) return String(prev);
+            return cached[0] ? String(cached[0].id) : "";
+          });
+          toast.info("Offline — showing your last saved modules.");
+        } else {
+          toast.warn("Could not load modules. Check your connection and try again.");
+        }
       } finally {
         setModulesLoading(false);
       }
@@ -446,13 +500,15 @@ const CareersDashboard = () => {
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setModules((prev) =>
-        prev.map((m) =>
+      setModules((prev) => {
+        const next = prev.map((m) =>
           m.id === module.id
             ? { ...m, isCompleted: !m.isCompleted, completedAt: !m.isCompleted ? new Date().toISOString() : null }
             : m
-        )
-      );
+        );
+        writeCache(CACHE_KEYS.learnerModules(selectedEnrollmentId), next);
+        return next;
+      });
       loadData();
     } catch (err) {
       const message = err.response?.data?.error || "Unable to update module progress.";
@@ -722,13 +778,14 @@ const CareersDashboard = () => {
               <CareersDashboardSkeleton />
             </div>
           )}
-          {!loading && error && (
-            <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-800 text-sm">
+          {!loading && (isOffline || error) && (
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900 text-sm mb-4">
+              {isOffline && !error && "You are offline. Showing saved data on this device."}
               {error}
             </div>
           )}
 
-          {!loading && !error && (
+          {!loading && (
             <>
               {/* Overview */}
               {activeSection === "overview" && (
@@ -1382,7 +1439,7 @@ const CareersDashboard = () => {
                         <article
                           className={`flex-1 min-w-0 ${
                             selectedModule && isQuizOnlyModule(selectedModule)
-                              ? "p-3 md:brand-card md:p-6 md:rounded-xl"
+                              ? "p-3 md:p-0"
                               : "brand-card p-4 md:p-6"
                           } ${mobileModulesTab === "modules" ? "hidden md:block" : ""}`}
                         >
@@ -1396,7 +1453,7 @@ const CareersDashboard = () => {
                                 <p className="text-xs text-slate-500 uppercase tracking-wider">Module {selectedModule.moduleOrder}</p>
                                 <h3 className="text-xl font-semibold text-textcolor2 mt-1">{selectedModule.title}</h3>
                                 {formatModuleScheduleLabel(selectedModule) && (
-                                  <p className="text-sm text-[#8700ff] font-medium mt-1">
+                                  <p className="text-sm learner-module-schedule font-medium mt-1">
                                     Scheduled: {formatModuleScheduleLabel(selectedModule)}
                                   </p>
                                 )}

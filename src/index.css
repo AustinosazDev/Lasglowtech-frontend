@@ -737,6 +737,18 @@
   border-color: rgba(135, 0, 255, 0.15);
 }
 
+/* Learner dashboard: quiz panel + schedule text readable on dark cards */
+.brand-card .module-quiz-panel {
+  background: #ffffff;
+  color: #0f172a;
+}
+.brand-card .learner-module-schedule {
+  color: #c4b5fd;
+}
+.user-dashboard-light .brand-card .learner-module-schedule {
+  color: #6d28d9;
+}
+
 /* ── Swiper overrides ── */
 .swiper-pagination-bullet { background: var(--muted) !important; opacity:.4; }
 .swiper-pagination-bullet-active { background: var(--orange) !important; opacity:1; }
