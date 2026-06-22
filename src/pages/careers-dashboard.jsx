@@ -14,7 +14,6 @@ import {
   FaCircle,
   FaDownload,
   FaExternalLinkAlt,
-  FaPlay,
   FaList,
   FaStickyNote,
   FaPrint,
@@ -32,6 +31,7 @@ import { CACHE_KEYS, readCache, writeCache } from "../utils/localCache";
 import SEO from "../utils/seo";
 import CertificatePreview from "../components/certificate-preview";
 import ModuleQuiz from "../components/ModuleQuiz";
+import ModuleVideoEmbed from "../components/ModuleVideoEmbed";
 import { CareersDashboardSkeleton, OrderListSkeleton } from "../components/skeletons/CardSkeletons";
 
 const QUILL_MODULES = {
@@ -115,18 +115,6 @@ const isPdfResource = (url = "") => {
   return u.endsWith(".pdf") || u.includes(".pdf?");
 };
 
-/** Extract YouTube video ID for embed. Supports watch?v=, youtu.be/, embed/ */
-const getYouTubeVideoId = (url = "") => {
-  if (!url || typeof url !== "string") return null;
-  const u = url.trim();
-  const watchMatch = u.match(/(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/i);
-  if (watchMatch) return watchMatch[1];
-  const shortMatch = u.match(/(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
-  if (shortMatch) return shortMatch[1];
-  const embedMatch = u.match(/(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/i);
-  if (embedMatch) return embedMatch[1];
-  return null;
-};
 
 const stripHtml = (html = "") =>
   String(html)
@@ -1593,36 +1581,13 @@ const CareersDashboard = () => {
                               </div>
                             )}
 
-                            {/* Video – watch without leaving site (YouTube iframe) */}
-                            {!!selectedModule.videoUrl && (() => {
-                              const videoUrl = selectedModule.videoUrl;
-                              const ytId = getYouTubeVideoId(videoUrl);
-                              return (
-                                <div className="brand-card p-4">
-                                  <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Video – watch without leaving the site</p>
-                                  {ytId ? (
-                                    <div className="w-full rounded-lg overflow-hidden bg-black aspect-video">
-                                      <iframe
-                                        src={`https://www.youtube.com/embed/${ytId}`}
-                                        title="Lesson video"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowFullScreen
-                                        className="w-full h-full"
-                                      />
-                                    </div>
-                                  ) : (
-                                    <a
-                                      href={resolveAssetUrl(videoUrl)}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="inline-flex items-center gap-2 text-Secondarycolor hover:underline text-sm font-medium"
-                                    >
-                                      <FaPlay /> Watch lesson video (opens in new tab)
-                                    </a>
-                                  )}
-                                </div>
-                              );
-                            })()}
+                            {!!selectedModule.videoUrl && (
+                              <ModuleVideoEmbed
+                                url={selectedModule.videoUrl}
+                                title={selectedModule.title || "Lesson video"}
+                                baseApiUrl={instance.defaults.baseURL}
+                              />
+                            )}
 
                             {/* My notes */}
                             {!isQuizOnlyModule(selectedModule) && (

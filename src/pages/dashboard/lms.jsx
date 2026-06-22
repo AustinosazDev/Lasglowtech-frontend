@@ -1092,7 +1092,7 @@ const LmsAdmin = () => {
           <input
             value={moduleForm.videoUrl}
             onChange={(e) => setModuleForm((p) => ({ ...p, videoUrl: e.target.value }))}
-            placeholder="Video URL (optional)"
+            placeholder="Video URL — YouTube, Vimeo, Loom, Google Drive, MP4, or other embed link"
             className={adminInput}
           />
           <div className="md:col-span-2">
