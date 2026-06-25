@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { FaLock, FaShoppingBag } from "react-icons/fa";
 import { toast } from "react-toastify";
 import instance from "../config/axios.config";
+import { LOGO } from "../components/images";
+import CircularBackButton from "../components/CircularBackButton";
 import { getToken, getUser } from "../utils/auth";
+import { formatNaira } from "../utils/catalogue";
 
-const formatNaira = (amount) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(amount || 0);
+const fieldClass =
+  "w-full px-4 py-3 rounded-xl bg-white border border-Primarycolor/25 text-gray-900 text-sm placeholder:text-gray-500 caret-Primarycolor focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 focus:border-Primarycolor/50 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#ffffff] [&:-webkit-autofill]:[-webkit-text-fill-color:#111827]";
 
 const Checkout = () => {
   const { slug } = useParams();
@@ -22,7 +26,7 @@ const Checkout = () => {
     const user = getUser();
     if (user) {
       setFormData({
-        customerName: user.username || "",
+        customerName: user.username || user.name || "",
         email: user.email || "",
       });
     }
@@ -34,7 +38,12 @@ const Checkout = () => {
         const res = await instance.get(`/payments/packages/${slug}`);
         setServicePackage(res.data);
       } catch (error) {
-        toast.error("This service does not have an online payment package yet.");
+        const msg =
+          error.response?.data?.error ||
+          (error.response?.status === 404
+            ? "This service does not have an online payment package yet."
+            : "Unable to load checkout. Please try again.");
+        toast.error(msg);
       } finally {
         setLoadingPackage(false);
       }
@@ -54,21 +63,20 @@ const Checkout = () => {
     try {
       const callbackUrl = `${window.location.origin}/payment/success`;
       const token = getToken();
-      const res = await instance.post("/payments/initialize", {
-        serviceSlug: slug,
-        customerName: formData.customerName,
-        email: formData.email,
-        callbackUrl,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const config = token ? { headers: { Authorization: `Bearer ${token}` } } : {};
+      const res = await instance.post(
+        "/payments/initialize",
+        {
+          serviceSlug: slug,
+          customerName: formData.customerName,
+          email: formData.email,
+          callbackUrl,
         },
-      });
+        config
+      );
 
       const paymentLink = res.data?.data?.link;
-      if (!paymentLink) {
-        throw new Error("No payment link returned");
-      }
+      if (!paymentLink) throw new Error("No payment link returned");
 
       window.location.href = paymentLink;
     } catch (error) {
@@ -77,72 +85,112 @@ const Checkout = () => {
     }
   };
 
-  if (loadingPackage) {
-    return (
-      <div className="min-h-screen px-6 md:px-20 py-16 bg-bgcolor2 text-textcolor2">
-        <p>Loading payment package...</p>
-      </div>
-    );
-  }
-
-  if (!servicePackage) {
-    return (
-      <div className="min-h-screen px-6 md:px-20 py-16 bg-bgcolor2 text-textcolor2">
-        <h1 className="text-2xl font-semibold mb-4">Payment package unavailable</h1>
-        <Link to="/services" className="text-violet-500 hover:underline">
-          Back to services
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen px-6 md:px-20 py-16 bg-bgcolor2 text-textcolor2">
-      <div className="max-w-2xl mx-auto bg-[#121726] border border-Primarycolor/40 rounded-xl p-6 md:p-8">
-        <h1 className="text-3xl font-semibold mb-2">Checkout</h1>
-        <p className="text-gray-400 mb-6">Complete payment via Flutterwave.</p>
-
-        <div className="mb-6 border border-Primarycolor/30 rounded-lg p-4">
-          <p className="text-sm text-gray-400">Service</p>
-          <p className="text-lg font-medium">{servicePackage.name}</p>
-          <p className="text-sm text-gray-400 mt-2">Payment type: {servicePackage.paymentType}</p>
-          <p className="text-xl font-semibold mt-3 text-Secondarycolor">
-            {formatNaira(servicePackage.amount)}
-          </p>
+    <div className="min-h-screen bg-bgcolor text-textcolor2 flex flex-col overflow-x-hidden">
+      <header className="bg-bgcolor2/80 backdrop-blur-sm">
+        <div className="max-w-lg mx-auto px-4 h-14 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <CircularBackButton fallback={`/catalogues/${slug}`} />
+            <Link to="/" className="flex items-center gap-2 min-w-0">
+              <img src={LOGO} width={28} height={28} alt="Lasglowtech" className="rounded-md shrink-0" />
+              <span className="font-semibold text-sm truncate">Lasglowtech</span>
+            </Link>
+          </div>
         </div>
+      </header>
 
-        <form onSubmit={handlePayment} className="space-y-4">
-          <input
-            type="text"
-            name="customerName"
-            value={formData.customerName}
-            onChange={handleChange}
-            placeholder="Full name"
-            className="w-full p-3 rounded-md bg-[#F6F5FA] text-black focus:outline-none"
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email address"
-            className="w-full p-3 rounded-md bg-[#F6F5FA] text-black focus:outline-none"
-            required
-          />
+      <main className="flex-1 flex items-center justify-center px-4 py-10">
+        {loadingPackage && (
+          <div className="brand-card rounded-3xl p-8 w-full max-w-md animate-pulse">
+            <div className="h-6 w-32 bg-bgcolor2/70 rounded mb-4" />
+            <div className="h-20 bg-bgcolor2/70 rounded-2xl mb-6" />
+            <div className="space-y-3">
+              <div className="h-11 bg-bgcolor2/70 rounded-xl" />
+              <div className="h-11 bg-bgcolor2/70 rounded-xl" />
+              <div className="h-12 bg-bgcolor2/70 rounded-full mt-4" />
+            </div>
+          </div>
+        )}
 
-          <button
-            type="submit"
-            disabled={loadingPay}
-            className="w-full text-white px-6 py-3 bg-gradient-to-r from-Primarycolor to-Primarycolor1 hover:from-Secondarycolor hover:to-Secondarycolor rounded-md duration-300"
-          >
-            {loadingPay ? "Redirecting..." : "Pay with Flutterwave"}
-          </button>
-        </form>
-      </div>
+        {!loadingPackage && !servicePackage && (
+          <div className="text-center max-w-sm">
+            <p className="text-gray-400 mb-4">This product is not available for checkout.</p>
+            <Link to="/catalogues" className="text-Secondarycolor text-sm hover:underline">
+              Browse catalogue
+            </Link>
+          </div>
+        )}
+
+        {!loadingPackage && servicePackage && (
+          <div className="w-full max-w-md">
+            <div className="text-center mb-6">
+              <h1 className="text-xl font-bold text-textcolor2">Checkout</h1>
+              <p className="text-sm text-gray-500 mt-1">No account needed — enter your details and pay securely</p>
+            </div>
+
+            <div className="brand-card rounded-3xl p-6 md:p-7">
+              <div className="flex items-start gap-4 pb-5 mb-5 border-b border-white/10">
+                <span className="flex items-center justify-center w-10 h-10 rounded-xl bg-Primarycolor/15 text-Primarycolor shrink-0">
+                  <FaShoppingBag className="w-4 h-4" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-textcolor2 truncate">{servicePackage.name}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 capitalize">{servicePackage.paymentType} payment</p>
+                </div>
+                <p className="text-lg font-bold text-Secondarycolor shrink-0">
+                  {formatNaira(servicePackage.amount)}
+                </p>
+              </div>
+
+              <form onSubmit={handlePayment} className="space-y-4">
+                <div>
+                  <label htmlFor="customerName" className="block text-xs text-gray-500 mb-1.5">
+                    Full name
+                  </label>
+                  <input
+                    id="customerName"
+                    type="text"
+                    name="customerName"
+                    value={formData.customerName}
+                    onChange={handleChange}
+                    className={fieldClass}
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-xs text-gray-500 mb-1.5">
+                    Email address
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className={fieldClass}
+                    required
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loadingPay}
+                  className="w-full mt-2 py-3.5 rounded-full text-sm font-semibold bg-gradient-to-r from-Primarycolor to-Primarycolor1 text-white hover:opacity-95 transition-opacity disabled:opacity-60"
+                >
+                  {loadingPay ? "Redirecting to payment…" : "Pay with Flutterwave"}
+                </button>
+              </form>
+
+              <p className="mt-4 flex items-center justify-center gap-1.5 text-[0.7rem] text-gray-500">
+                <FaLock className="w-3 h-3" />
+                Secured by Flutterwave
+              </p>
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 };
 
 export default Checkout;
-

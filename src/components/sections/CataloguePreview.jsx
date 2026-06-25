@@ -1,20 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaArrowRight } from "react-icons/fa";
 import instance from "../../config/axios.config";
-
-const formatNaira = (amount) =>
-  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(Number(amount || 0));
-
-const previewFallbacks = [
-  "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600",
-  "https://images.unsplash.com/photo-1559028006-448665bd7c7f?w=600",
-  "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600",
-  "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600",
-  "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600",
-  "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=600",
-];
-
-const cardImage = (item, index) => item.imageUrl || previewFallbacks[index % previewFallbacks.length];
+import CatalogueProductCard from "../CatalogueProductCard";
 
 const CataloguePreview = () => {
   const [items, setItems] = useState([]);
@@ -34,43 +22,29 @@ const CataloguePreview = () => {
   return (
     <section className="px-6 md:px-20 py-20">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-Secondarycolor">Marketplace</p>
-            <h2 className="text-textcolor2 mt-2">Browse Premium Service Catalogues</h2>
+            <h2 className="text-textcolor2 mt-2">Services &amp; Digital Products</h2>
             <p className="text-muted text-sm max-w-2xl mt-2 leading-relaxed">
-              Pick a service package, pay online, and get started fast. Our catalogue supports <strong className="text-textcolor2">instant checkout</strong> and clear detail pages before payment.
+              Pay online and get instant access to eBooks, templates, and service packages — no back-and-forth required.
             </p>
           </div>
+          <Link
+            to="/catalogues"
+            className="inline-flex items-center gap-2 text-sm font-medium text-Secondarycolor hover:underline shrink-0"
+          >
+            View full catalogue
+            <FaArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
           {items.map((item, index) => (
-            <Link key={item.id} to={`/catalogues/${item.slug}`} className="block">
-              <article className={`brand-card rounded-xl overflow-hidden ${item.isPopular ? "ring-1 ring-Secondarycolor/40" : ""}`}>
-                <img src={cardImage(item, index)} alt={item.title} className="w-full h-32 object-cover max-h-40" />
-                <div className="p-3">
-                  <div className="flex items-center justify-between gap-2 mb-2">
-                    <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-Primarycolor/40 text-muted">
-                      {item.packageTier || "standard"}
-                    </span>
-                    {item.isPopular && (
-                      <span className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full border border-Secondarycolor/40 text-Secondarycolor">
-                        Most Popular
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="text-base font-semibold text-textcolor2">{item.title}</h3>
-                  <p className="text-sm text-muted mt-1">{item.summary}</p>
-                  {item.isPaymentEnabled && (
-                    <p className="text-base font-semibold text-Secondarycolor mt-4">{formatNaira(item.price)}</p>
-                  )}
-                </div>
-              </article>
-            </Link>
+            <CatalogueProductCard key={item.id} item={item} index={index} />
           ))}
           {!items.length && (
-            <div className="col-span-full brand-card p-6 text-muted">
+            <div className="col-span-full brand-card p-6 text-muted text-sm">
               Catalogue preview will appear after admin creates and publishes catalogue items.
             </div>
           )}

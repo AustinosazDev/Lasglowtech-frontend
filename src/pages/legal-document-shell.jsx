@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
 import SEO from "../utils/seo";
 
 /**
@@ -13,13 +12,6 @@ export function LegalDocumentShell({ title, description, path, children }) {
     <div className="min-h-[100dvh] bg-gradient-to-br from-[#120b1f] via-[#1a1030] to-[#120b1f] text-[#e8ddf8]">
       <SEO title={`${title} | Lasglowtech`} description={description} url={url} />
       <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 pb-16">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-[#9b8cb5] hover:text-[#f97316] text-sm font-semibold mb-8 transition-colors"
-        >
-          <FaArrowLeft className="w-3.5 h-3.5" />
-          Back to site
-        </Link>
         <h1 className="text-white">{title}</h1>
         <p className="text-xs text-[#9b8cb5] mt-2 mb-10">
           Last updated: <time dateTime="2026-04-10">10 April 2026</time>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clearCart, readCart, removeFromCart } from "../utils/cart";
+import CircularBackButton from "../components/CircularBackButton";
 
 const formatNaira = (amount) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(Number(amount || 0));
@@ -34,13 +35,15 @@ const CartPage = () => {
   return (
     <div className="min-h-screen px-6 md:px-20 py-16 bg-gradient-to-b from-bgcolor2 via-bgcolor2 to-bgcolor text-textcolor2">
       <section className="max-w-5xl mx-auto">
+        <div className="mb-6">
+          <CircularBackButton fallback="/catalogues" />
+        </div>
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="text-sm tracking-[0.2em] text-Secondarycolor uppercase">Your Cart</p>
             <h1 className="text-textcolor2 mt-2">Checkout Queue</h1>
             <p className="text-gray-400 mt-4 max-w-2xl">
-              Select an item and proceed to checkout. If you are not signed in, you will be redirected to login or
-              register first.
+              Select an item and proceed to checkout. No account required — pay as a guest with your name and email.
             </p>
           </div>
           {!!items.length && (

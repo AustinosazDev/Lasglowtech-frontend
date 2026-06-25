@@ -1,9 +1,8 @@
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import instance, { API_BASE_URL } from "../config/axios.config";
 import RelatedPosts from "../components/sections/relatedposts";
 import Subscription from "../components/sections/subscription";
-import { FaArrowLeftLong } from "react-icons/fa6";
 import { IoShareSocialSharp } from "react-icons/io5";
 import moment from "moment";
 import { Osaz } from "../components/images";
@@ -18,7 +17,6 @@ const readingTimeMinutes = (html = "") => {
 const BlogDetails = () => {
   const { slug } = useParams();
   const decodedSlug = decodeURIComponent(slug);
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -127,15 +125,6 @@ const BlogDetails = () => {
       />
 
       <div className="max-w-4xl mx-auto px-6 md:px-8">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-[#9b8cb5] hover:text-orange-500 transition-colors"
-        >
-          <FaArrowLeftLong className="w-4 h-4" />
-          Back
-        </button>
-
         <header className="mb-10 md:mb-12">
           <p className="section-tag mb-4">
             <span className="dot-live" />

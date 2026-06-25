@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import CircularBackButton from "./CircularBackButton";
 import BgPatternOverlay from "./BgPatternOverlay";
 
 /**
@@ -8,13 +7,9 @@ import BgPatternOverlay from "./BgPatternOverlay";
 export default function AuthFormShell({
   children,
   backTo = "/",
-  backLabel = "Back",
   onBack,
   maxWidth = "max-w-md",
 }) {
-  const backClass =
-    "inline-flex items-center gap-2 text-sm font-semibold text-muted hover:text-Secondarycolor transition-colors";
-
   return (
     <div className="relative min-h-[100dvh] flex flex-col items-center justify-center px-4 py-10 overflow-hidden text-textcolor2 bg-gradient-to-br from-bgcolor2 via-bgcolor to-bgcolor">
       <BgPatternOverlay glow />
@@ -24,15 +19,9 @@ export default function AuthFormShell({
         aria-label="Navigation"
       >
         {onBack ? (
-          <button type="button" onClick={onBack} className={backClass}>
-            <FaArrowLeft className="w-3.5 h-3.5" />
-            {backLabel}
-          </button>
+          <CircularBackButton onClick={onBack} className="!static" />
         ) : (
-          <Link to={backTo} className={backClass}>
-            <FaArrowLeft className="w-3.5 h-3.5" />
-            {backLabel}
-          </Link>
+          <CircularBackButton to={backTo} className="!static" />
         )}
       </div>
 

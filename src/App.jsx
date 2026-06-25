@@ -50,6 +50,7 @@ import BulkEmailAdmin from "./pages/dashboard/bulk-email";
 import TermsOfServicePage from "./pages/terms-of-service";
 import PrivacyPolicyPage from "./pages/privacy-policy";
 import VerifyCertificatePage from "./pages/verify-certificate";
+import DownloadPage from "./pages/download";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -67,20 +68,30 @@ function App() {
     location.pathname === "/bio" ||
     location.pathname === "/catalogues" ||
     location.pathname.startsWith("/catalogues/") ||
+    location.pathname === "/products" ||
+    location.pathname.startsWith("/products/") ||
+    location.pathname.startsWith("/checkout/") ||
+    location.pathname === "/payment/success" ||
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/careers") ||
     location.pathname === "/admin/login" ||
     location.pathname.startsWith("/auth/") ||
+    location.pathname.startsWith("/download/") ||
     location.pathname.startsWith("/legal/");
 
   const hideFooter =
     location.pathname === "/bio" ||
     location.pathname === "/catalogues" ||
     location.pathname.startsWith("/catalogues/") ||
+    location.pathname === "/products" ||
+    location.pathname.startsWith("/products/") ||
+    location.pathname.startsWith("/checkout/") ||
+    location.pathname === "/payment/success" ||
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/careers/dashboard") ||
     location.pathname === "/admin/login" ||
     location.pathname.startsWith("/auth/") ||
+    location.pathname.startsWith("/download/") ||
     location.pathname.startsWith("/legal/");
 
   return (
@@ -104,10 +115,12 @@ function App() {
         <Route path="/careers/dashboard" element={<ProtectedRoute allowedRoles={["learner","student","talent"]}><CareersDashboard /></ProtectedRoute>} />
         <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/services/:slug" element={<SingleService />} />
-        <Route path="/checkout/:slug" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-        <Route path="/payment/success" element={<ProtectedRoute><PaymentSuccess /></ProtectedRoute>} />
+        <Route path="/checkout/:slug" element={<Checkout />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/download/:token" element={<DownloadPage />} />
         <Route path="/catalogues" element={<Catalogues />} />
         <Route path="/catalogues/:slug" element={<CatalogueDetail />} />
+        <Route path="/products/:slug" element={<CatalogueDetail />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/my/orders" element={<ProtectedRoute allowedRoles={["client"]}><MyOrders /></ProtectedRoute>} />
         <Route path="/client/dashboard" element={<ProtectedRoute allowedRoles={["client"]}><ClientDashboard /></ProtectedRoute>} />

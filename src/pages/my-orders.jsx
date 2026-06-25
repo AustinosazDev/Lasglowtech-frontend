@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaDownload, FaExternalLinkAlt } from "react-icons/fa";
 import instance from "../config/axios.config";
 import { getToken } from "../utils/auth";
 import SEO from "../utils/seo";
@@ -18,6 +19,14 @@ const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const handleDownload = (delivery) => {
+    if (delivery?.downloadUrl) {
+      window.location.href = delivery.downloadUrl;
+    } else if (delivery?.externalUrl) {
+      window.open(delivery.externalUrl, "_blank", "noopener,noreferrer");
+    }
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -83,6 +92,7 @@ const MyOrders = () => {
                         <th className="py-3 pr-4 font-semibold">Amount</th>
                         <th className="py-3 pr-4 font-semibold">Type</th>
                         <th className="py-3 pr-4 font-semibold">Status</th>
+                        <th className="py-3 pr-4 font-semibold">Access</th>
                         <th className="py-3 pr-4 font-semibold">Reference</th>
                       </tr>
                     </thead>
@@ -103,6 +113,24 @@ const MyOrders = () => {
                             >
                               {item.status}
                             </span>
+                          </td>
+                          <td className="py-3 pr-4">
+                            {item.status === "paid" && item.delivery?.isDigitalProduct ? (
+                              <button
+                                type="button"
+                                onClick={() => handleDownload(item.delivery)}
+                                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-emerald-400/40 text-emerald-300 text-[0.75rem] uppercase font-medium hover:bg-emerald-500/10 transition"
+                              >
+                                {item.delivery.deliveryType === "digital_file" ? (
+                                  <FaDownload className="w-3 h-3" />
+                                ) : (
+                                  <FaExternalLinkAlt className="w-3 h-3" />
+                                )}
+                                {item.delivery.deliveryType === "digital_file" ? "Download" : "Open"}
+                              </button>
+                            ) : (
+                              <span className="text-gray-500 text-[0.75rem]">—</span>
+                            )}
                           </td>
                           <td className="py-3 pr-4 text-gray-400 text-[0.8125rem] font-mono break-all max-w-[140px]">{item.tx_ref}</td>
                         </tr>
@@ -131,6 +159,20 @@ const MyOrders = () => {
                           {item.status}
                         </span>
                       </div>
+                      {item.status === "paid" && item.delivery?.isDigitalProduct && (
+                        <button
+                          type="button"
+                          onClick={() => handleDownload(item.delivery)}
+                          className="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-emerald-400/40 text-emerald-300 text-[0.75rem] uppercase font-medium"
+                        >
+                          {item.delivery.deliveryType === "digital_file" ? (
+                            <FaDownload className="w-3 h-3" />
+                          ) : (
+                            <FaExternalLinkAlt className="w-3 h-3" />
+                          )}
+                          {item.delivery.deliveryType === "digital_file" ? "Download" : "Open link"}
+                        </button>
+                      )}
                       <p className="mt-2 text-[0.75rem] text-gray-500 break-all font-mono" title={item.tx_ref}>{item.tx_ref}</p>
                     </article>
                   ))}

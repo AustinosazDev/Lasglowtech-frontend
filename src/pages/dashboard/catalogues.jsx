@@ -20,6 +20,7 @@ import {
   adminTextarea,
 } from "../../utils/adminUi";
 import { AdminCatalogueCardSkeletonGrid } from "../../components/skeletons/CardSkeletons";
+import { PRODUCT_COVER_IMAGE_HINT } from "../../utils/catalogue";
 
 const defaultForm = {
   id: null,
@@ -36,6 +37,10 @@ const defaultForm = {
   isPaymentEnabled: true,
   isPublished: true,
   sortOrder: 0,
+  deliveryType: "service",
+  deliverableFileUrl: "",
+  deliverableFileName: "",
+  deliverableExternalUrl: "",
 };
 
 const premiumPackageTemplates = [
@@ -156,6 +161,7 @@ const CataloguesAdmin = () => {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+  const [deliverableFile, setDeliverableFile] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
 
@@ -209,6 +215,8 @@ const CataloguesAdmin = () => {
     e.preventDefault();
     try {
       let imageUrl = form.imageUrl;
+      let deliverableFileUrl = form.deliverableFileUrl;
+      let deliverableFileName = form.deliverableFileName;
 
       if (imageFile) {
         const formData = new FormData();
@@ -218,6 +226,16 @@ const CataloguesAdmin = () => {
         imageUrl = `${instance.defaults.baseURL}/uploads/images/${filename}`;
       }
 
+      if (deliverableFile && form.deliveryType === "digital_file") {
+        const formData = new FormData();
+        formData.append("file", deliverableFile);
+        const uploadRes = await instance.post("/admin/upload/catalogue-deliverable", formData, {
+          headers: authHeader,
+        });
+        deliverableFileUrl = uploadRes.data?.storedName || deliverableFileUrl;
+        deliverableFileName = uploadRes.data?.originalName || deliverableFile.name;
+      }
+
       const payload = {
         ...form,
         features: form.featuresText
@@ -225,6 +243,8 @@ const CataloguesAdmin = () => {
           .map((item) => item.trim())
           .filter(Boolean),
         imageUrl,
+        deliverableFileUrl,
+        deliverableFileName,
       };
 
       if (form.id) {
@@ -238,6 +258,7 @@ const CataloguesAdmin = () => {
       setSelectedTemplate("");
       setImageFile(null);
       setImagePreview("");
+      setDeliverableFile(null);
       fetchCatalogues();
     } catch (error) {
       toast.error(error.response?.data?.error || "Unable to save catalogue.");
@@ -281,9 +302,14 @@ const CataloguesAdmin = () => {
       isPaymentEnabled: Boolean(item.isPaymentEnabled),
       isPublished: Boolean(item.isPublished),
       sortOrder: item.sortOrder || 0,
+      deliveryType: item.deliveryType || "service",
+      deliverableFileUrl: item.deliverableFileUrl || "",
+      deliverableFileName: item.deliverableFileName || "",
+      deliverableExternalUrl: item.deliverableExternalUrl || "",
     });
     setImageFile(null);
     setImagePreview(item.imageUrl || "");
+    setDeliverableFile(null);
   };
 
   const handleDelete = async (id) => {
@@ -386,8 +412,58 @@ const CataloguesAdmin = () => {
             <option value="full">Full payment</option>
             <option value="deposit">Deposit</option>
           </select>
+          <select
+            name="deliveryType"
+            value={form.deliveryType}
+            onChange={handleChange}
+            className={adminInput}
+          >
+            <option value="service">Service (manual delivery)</option>
+            <option value="digital_file">Digital file (PDF, ZIP, eBook upload)</option>
+            <option value="digital_link">External link (Drive, WhatsApp, etc.)</option>
+          </select>
+
+          {form.deliveryType === "digital_file" && (
+            <div className="md:col-span-2">
+              <label className={adminFieldLabel}>Product file</label>
+              <input
+                type="file"
+                accept=".pdf,.zip,.epub,.doc,.docx"
+                onChange={(e) => setDeliverableFile(e.target.files?.[0] || null)}
+                className={adminInput}
+              />
+              <p className={`text-xs ${adminMuted} mt-2`}>
+                Customers download instantly after payment. Guest buyers receive a download link by email; signed-in customers use the success page or My Orders.
+              </p>
+              {(form.deliverableFileName || deliverableFile) && (
+                <p className="text-sm text-emerald-700 mt-2">
+                  Current file: {deliverableFile?.name || form.deliverableFileName}
+                </p>
+              )}
+            </div>
+          )}
+
+          {form.deliveryType === "digital_link" && (
+            <div className="md:col-span-2">
+              <label className={adminFieldLabel}>External access URL</label>
+              <input
+                name="deliverableExternalUrl"
+                value={form.deliverableExternalUrl}
+                onChange={handleChange}
+                placeholder="https://drive.google.com/... or WhatsApp group link"
+                className={adminInput}
+              />
+              <p className={`text-xs ${adminMuted} mt-2`}>
+                Link is emailed to the customer after payment and shown on the success page.
+              </p>
+            </div>
+          )}
+
           <div className="md:col-span-2">
             <label className={adminFieldLabel}>Catalogue image</label>
+            <p className={`text-xs ${adminMuted} mb-2`}>
+              Best size: {PRODUCT_COVER_IMAGE_HINT}. Landscape photos fill the card without cropping awkwardly.
+            </p>
             <input
               type="file"
               accept="image/*"
@@ -404,7 +480,7 @@ const CataloguesAdmin = () => {
               <img
                 src={imagePreview || form.imageUrl}
                 alt="Catalogue preview"
-                className="mt-3 w-full max-w-xs h-36 object-cover rounded-md border border-Primarycolor/30"
+                className="mt-3 w-full max-w-sm aspect-[16/10] object-cover object-center rounded-2xl border border-Primarycolor/30"
               />
             )}
           </div>
@@ -453,6 +529,7 @@ const CataloguesAdmin = () => {
                   setSelectedTemplate("");
                   setImageFile(null);
                   setImagePreview("");
+                  setDeliverableFile(null);
                 }}
                 className={adminBtnSoft}
               >
@@ -539,6 +616,11 @@ const CataloguesAdmin = () => {
                     <p className="text-sm font-medium text-[#8700ff] mt-2">
                       NGN {Number(item.price || 0).toLocaleString()}
                       <span className="text-slate-400 font-normal text-xs ml-1">· {item.paymentType}</span>
+                      {item.isDigitalProduct && (
+                        <span className="block text-emerald-600 text-xs mt-1 capitalize">
+                          {item.deliveryType?.replace("_", " ")}
+                        </span>
+                      )}
                     </p>
                     <div className="flex gap-2 mt-4 pt-4 border-t border-slate-200">
                       <button
