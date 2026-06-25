@@ -11,6 +11,9 @@ import { formatNaira } from "../utils/catalogue";
 const fieldClass =
   "w-full px-4 py-3 rounded-xl bg-white border border-Primarycolor/25 text-gray-900 text-sm placeholder:text-gray-500 caret-Primarycolor focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 focus:border-Primarycolor/50 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#ffffff] [&:-webkit-autofill]:[-webkit-text-fill-color:#111827]";
 
+const isValidFlutterwaveLink = (link) =>
+  typeof link === "string" && /^https:\/\/checkout\.flutterwave\.com\/v3\/hosted\/pay\/.+/i.test(link.trim());
+
 const Checkout = () => {
   const { slug } = useParams();
 
@@ -76,11 +79,20 @@ const Checkout = () => {
       );
 
       const paymentLink = res.data?.data?.link;
-      if (!paymentLink) throw new Error("No payment link returned");
+      if (!isValidFlutterwaveLink(paymentLink)) {
+        throw new Error(
+          res.data?.error ||
+            "Payment provider did not return a valid checkout link. Please try again or contact support."
+        );
+      }
 
-      window.location.href = paymentLink;
+      window.location.assign(paymentLink);
     } catch (error) {
-      toast.error(error.response?.data?.error || "Unable to start payment.");
+      const message =
+        error.response?.data?.error ||
+        error.message ||
+        "Unable to start payment. Check that Flutterwave keys are set on the server.";
+      toast.error(message);
       setLoadingPay(false);
     }
   };
