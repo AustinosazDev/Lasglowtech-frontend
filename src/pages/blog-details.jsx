@@ -61,7 +61,7 @@ const BlogDetails = () => {
   };
 
   const SkeletonLoader = () => (
-    <article className="bg-bgcolor text-white py-10 md:py-14">
+    <article className="bg-bgcolor text-white pt-32 md:pt-36 lg:pt-40 pb-16 md:pb-20">
       <div className="max-w-4xl mx-auto px-6 md:px-8">
         <div className="mb-8 h-8 w-24 rounded-lg bg-white/10 animate-pulse" />
         <div className="mb-8 space-y-3">
@@ -84,17 +84,17 @@ const BlogDetails = () => {
   }
 
   if (error) {
-    return <div className="text-center py-20 text-red-500">{error}</div>;
+    return <div className="text-center pt-32 md:pt-36 pb-20 text-red-500">{error}</div>;
   }
 
   if (!post) {
-    return <div className="text-center py-20 text-[#9b8cb5]">Blog not found</div>;
+    return <div className="text-center pt-32 md:pt-36 pb-20 text-[#9b8cb5]">Blog not found</div>;
   }
 
   const readTime = readingTimeMinutes(post.content);
 
   return (
-    <article className="bg-bgcolor text-white pb-16 md:pb-20 pt-10 md:pt-14">
+    <article className="bg-bgcolor text-white pb-16 md:pb-20 pt-32 md:pt-36 lg:pt-40">
       <SEO
         title={`${post.title} | Lasglowtech Blogs`}
         description={(post.content || "").replace(/<[^>]+>/g, "").slice(0, 160)}
