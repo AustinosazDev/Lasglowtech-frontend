@@ -16,6 +16,8 @@ import {
   adminTableWrap,
 } from "../../utils/adminUi";
 import { OrdersTableSkeleton } from "../../components/skeletons/CardSkeletons";
+import { paymentTypeLabel } from "../../utils/catalogue";
+import { humanizeToken } from "../../utils/displayText";
 
 const OrdersAdmin = () => {
   const headers = useMemo(() => ({ Authorization: `Bearer ${getAdminToken()}` }), []);
@@ -87,10 +89,10 @@ const OrdersAdmin = () => {
                       {item.currency} {Number(item.amount || 0).toLocaleString()}
                     </td>
                     <td className={adminTableTdMuted}>
-                      <span className="uppercase text-xs font-semibold">{item.payment_type}</span>
+                      <span className="text-xs font-semibold">{paymentTypeLabel(item)}</span>
                     </td>
                     <td className={adminTableTdMuted}>
-                      <span className="uppercase text-xs font-semibold">{item.status}</span>
+                      <span className="text-xs font-semibold">{humanizeToken(item.status)}</span>
                     </td>
                     <td className={adminTableTdMuted}>
                       <span className="uppercase text-xs font-semibold">{item.email_notification_status || "pending"}</span>

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Portfolio from "./pages/portfolio";
+import ProjectsPage from "./pages/projects";
 import About from "./pages/about";
 import Services from "./pages/services";
 import Contact from "./pages/contact";
@@ -36,6 +36,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLogin from "./pages/admin-login";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
 import CataloguesAdmin from "./pages/dashboard/catalogues";
+import ProjectsAdmin from "./pages/dashboard/projects";
 import ContactsAdmin from "./pages/dashboard/contacts";
 import Careers from "./pages/careers";
 import CareersAcademy from "./pages/careers-academy";
@@ -91,8 +92,7 @@ function App() {
     location.pathname.startsWith("/careers/dashboard") ||
     location.pathname === "/admin/login" ||
     location.pathname.startsWith("/auth/") ||
-    location.pathname.startsWith("/download/") ||
-    location.pathname.startsWith("/legal/");
+    location.pathname.startsWith("/download/");
 
   return (
     <>
@@ -113,7 +113,8 @@ function App() {
           element={<Navigate to="/careers/dashboard?section=browse" replace />}
         />
         <Route path="/careers/dashboard" element={<ProtectedRoute allowedRoles={["learner","student","talent"]}><CareersDashboard /></ProtectedRoute>} />
-        <Route path="/portfolio" element={<Portfolio />} />
+        <Route path="/projects" element={<ProjectsPage />} />
+        <Route path="/portfolio" element={<Navigate to="/projects" replace />} />
         <Route path="/services/:slug" element={<SingleService />} />
         <Route path="/checkout/:slug" element={<Checkout />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
@@ -134,6 +135,7 @@ function App() {
         <Route path="/dashboard" element={<AdminProtectedRoute><AdminLayout /></AdminProtectedRoute>}>
           <Route index element={<DashboardHome />} />
           <Route path="catalogues" element={<CataloguesAdmin />} />
+          <Route path="projects" element={<ProjectsAdmin />} />
           <Route path="updateblog" element={<Update />} />
           <Route path="createblog" element={<Create />} />
           <Route path="subscriptions" element={<Subscriptions />} />

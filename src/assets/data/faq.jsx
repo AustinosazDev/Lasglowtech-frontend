@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: "Can I see your previous work?",
-    answer: "Yes — view our portfolio and testimonials on the site, or ask for relevant examples on a call.",
+    answer: "Yes — view our projects and testimonials on the site, or ask for relevant examples on a call.",
   },
   {
     question: "What is Lasglowtech's mission?",

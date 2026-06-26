@@ -4,6 +4,8 @@ import { FaDownload, FaExternalLinkAlt } from "react-icons/fa";
 import instance from "../config/axios.config";
 import { getToken } from "../utils/auth";
 import SEO from "../utils/seo";
+import { paymentTypeLabel } from "../utils/catalogue";
+import { humanizeToken } from "../utils/displayText";
 import { ClientOrdersTableSkeleton, OrderListSkeleton } from "../components/skeletons/CardSkeletons";
 
 const statusClass = {
@@ -104,14 +106,14 @@ const MyOrders = () => {
                           <td className="py-3 pr-4 text-gray-300">
                             {item.currency} {Number(item.amount || 0).toLocaleString()}
                           </td>
-                          <td className="py-3 pr-4 text-gray-400 uppercase text-[0.8125rem]">{item.payment_type}</td>
+                          <td className="py-3 pr-4 text-gray-400 text-[0.8125rem]">{paymentTypeLabel(item)}</td>
                           <td className="py-3 pr-4">
                             <span
                               className={`inline-block px-2.5 py-1 rounded-full border text-[0.8125rem] uppercase font-medium ${
                                 statusClass[item.status] || "text-gray-300 border-gray-300/40"
                               }`}
                             >
-                              {item.status}
+                              {humanizeToken(item.status)}
                             </span>
                           </td>
                           <td className="py-3 pr-4">
@@ -148,15 +150,15 @@ const MyOrders = () => {
                         {item.currency} {Number(item.amount || 0).toLocaleString()}
                       </p>
                       <div className="mt-3 flex gap-2 flex-wrap">
-                        <span className="px-2 py-1 rounded-md border border-Primarycolor/30 text-[0.8125rem] uppercase text-gray-400">
-                          {item.payment_type}
+                        <span className="px-2 py-1 rounded-md border border-Primarycolor/30 text-[0.8125rem] text-gray-400">
+                          {paymentTypeLabel(item)}
                         </span>
                         <span
                           className={`px-2 py-1 rounded-md border text-[0.8125rem] uppercase font-medium ${
                             statusClass[item.status] || "text-gray-300 border-gray-300/40"
                           }`}
                         >
-                          {item.status}
+                          {humanizeToken(item.status)}
                         </span>
                       </div>
                       {item.status === "paid" && item.delivery?.isDigitalProduct && (

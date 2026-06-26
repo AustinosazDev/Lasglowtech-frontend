@@ -2,8 +2,7 @@ import { Link } from "react-router-dom";
 import { IoShareSocialSharp } from "react-icons/io5";
 import { PiArrowCircleUpRightFill } from "react-icons/pi";
 import { API_BASE_URL } from "../config/axios.config";
-
-const stripHtml = (html = "") => html.replace(/<[^>]+>/g, "").trim();
+import { cleanDisplayText } from "../utils/displayText";
 
 const formatDate = (timestamp) => {
   if (!timestamp) return "Recent";
@@ -51,7 +50,7 @@ export default function BlogPostCard({ post, showShare = true }) {
             {post.title}
           </h3>
           <p className="text-sm text-muted mt-3 line-clamp-3 leading-relaxed flex-1">
-            {stripHtml(post.content)}
+            {cleanDisplayText(post.content)}
           </p>
 
           <div className="flex flex-row justify-between items-center pt-4">

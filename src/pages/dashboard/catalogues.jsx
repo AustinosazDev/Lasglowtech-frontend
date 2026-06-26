@@ -20,7 +20,8 @@ import {
   adminTextarea,
 } from "../../utils/adminUi";
 import { AdminCatalogueCardSkeletonGrid } from "../../components/skeletons/CardSkeletons";
-import { PRODUCT_COVER_IMAGE_HINT } from "../../utils/catalogue";
+import { PRODUCT_COVER_IMAGE_HINT, paymentTypeLabel } from "../../utils/catalogue";
+import { humanizeToken } from "../../utils/displayText";
 
 const defaultForm = {
   id: null,
@@ -615,10 +616,10 @@ const CataloguesAdmin = () => {
                     <p className="text-sm text-slate-500 mt-1 line-clamp-2">{item.summary}</p>
                     <p className="text-sm font-medium text-[#8700ff] mt-2">
                       NGN {Number(item.price || 0).toLocaleString()}
-                      <span className="text-slate-400 font-normal text-xs ml-1">· {item.paymentType}</span>
+                      <span className="text-slate-400 font-normal text-xs ml-1">· {paymentTypeLabel(item)}</span>
                       {item.isDigitalProduct && (
-                        <span className="block text-emerald-600 text-xs mt-1 capitalize">
-                          {item.deliveryType?.replace("_", " ")}
+                        <span className="block text-emerald-600 text-xs mt-1">
+                          {humanizeToken(item.deliveryType)}
                         </span>
                       )}
                     </p>

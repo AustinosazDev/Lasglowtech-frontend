@@ -467,6 +467,70 @@
   text-decoration-color: rgba(249, 115, 22, 0.6);
 }
 
+/* ── Legal pages (Privacy, Terms) ── */
+.legal-prose {
+  color: #c4b5dc;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+}
+
+.legal-prose > section + section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(135, 0, 255, 0.12);
+}
+
+.legal-prose h2 {
+  color: #ffffff;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.legal-prose p + p {
+  margin-top: 0.875rem;
+}
+
+.legal-prose ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.legal-prose li + li {
+  margin-top: 0.5rem;
+}
+
+.legal-prose li > span:first-child {
+  color: #e8ddf8;
+  font-weight: 500;
+}
+
+.legal-prose a {
+  color: #8700ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color 0.2s ease;
+}
+
+.legal-prose a:hover {
+  color: #f97316;
+}
+
+.legal-prose strong {
+  color: #e8ddf8;
+  font-weight: 600;
+}
+
+.legal-prose code {
+  color: #e8ddf8;
+  font-size: 0.875em;
+  background: rgba(135, 0, 255, 0.12);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+}
+
 /* ── Light shell: admin + client + learner dashboards (readable cards & tokens) ── */
 .admin-dashboard-light,
 .user-dashboard-light,

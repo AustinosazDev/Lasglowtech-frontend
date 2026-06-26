@@ -64,7 +64,7 @@ export default function Hero() {
 
           <motion.div variants={up} className="flex flex-wrap items-center justify-center gap-4 mb-20">
             <Link to="/catalogues" className="btn-primary">Explore Services & Pricing</Link>
-            <Link to="/portfolio" className="btn-outline">View our Work →</Link>
+            <Link to="/projects" className="btn-outline">View our Work →</Link>
           </motion.div>
 
           <motion.div variants={up} className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">

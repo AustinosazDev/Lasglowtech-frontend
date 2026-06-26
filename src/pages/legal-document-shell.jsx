@@ -14,9 +14,9 @@ export function LegalDocumentShell({ title, description, path, children }) {
       <div className="max-w-3xl mx-auto px-6 py-10 md:py-14 pb-16">
         <h1 className="text-white">{title}</h1>
         <p className="text-xs text-[#9b8cb5] mt-2 mb-10">
-          Last updated: <time dateTime="2026-04-10">10 April 2026</time>
+          Last updated: <time dateTime="2026-06-25">25 June 2026</time>
         </p>
-        <article className="space-y-8 text-sm text-[#c4b5dc] leading-relaxed border-t border-[#8700ff]/20 pt-8">
+        <article className="legal-prose border-t border-[#8700ff]/20 pt-8">
           {children}
         </article>
         <p className="mt-12 pt-8 border-t border-[#8700ff]/15 text-xs text-[#9b8cb5]">

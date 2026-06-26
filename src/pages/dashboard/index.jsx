@@ -10,6 +10,7 @@ import {
   FaMoneyCheckAlt,
   FaBookOpen,
   FaPaperPlane,
+  FaBriefcase,
   FaBars,
   FaTimes,
   FaChevronLeft,
@@ -21,6 +22,7 @@ import { clearAdminSession, getAdminUser } from "../../utils/adminAuth";
 
 const menu = [
   { to: "/dashboard", label: "Overview", icon: <FaListUl /> },
+  { to: "/dashboard/projects", label: "Projects", icon: <FaBriefcase /> },
   { to: "/dashboard/catalogues", label: "Catalogues", icon: <FaRegImages /> },
   { to: "/dashboard/createblog", label: "Create Blog", icon: <FaPlus /> },
   { to: "/dashboard/updateblog", label: "Update Blog", icon: <FaPlus /> },

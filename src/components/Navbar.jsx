@@ -24,7 +24,7 @@ export default function Navbar() {
     { label: "Home",      to: "/" },
     { label: "About",     to: "/about" },
     { label: "Services",  to: "/services" },
-    { label: "Portfolio", to: "/portfolio" },
+    { label: "Projects", to: "/projects" },
     { label: "Blog",      to: "/blogs" },
     { label: "Careers",   to: "/careers" },
     ...(authed && role === "client" ? [{ label: "Catalogues", to: "/catalogues" }] : []),

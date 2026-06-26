@@ -3,6 +3,7 @@ import { FaShoppingCart } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { addToCart } from "../utils/cart";
 import { cardImage, formatNaira } from "../utils/catalogue";
+import { cleanDisplayText } from "../utils/displayText";
 
 const buildCartItem = (item) => ({
   id: item.id,
@@ -16,7 +17,7 @@ const buildCartItem = (item) => ({
 });
 
 const shortDescription = (item) => {
-  const text = [item.summary, item.description].filter(Boolean).join(" ").trim();
+  const text = cleanDisplayText([item.summary, item.description].filter(Boolean).join(" "));
   return text || "Explore this package on the product page.";
 };
 

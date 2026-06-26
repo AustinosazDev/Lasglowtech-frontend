@@ -5,6 +5,8 @@ import instance from "../config/axios.config";
 import { getToken, getUser } from "../utils/auth";
 import SEO from "../utils/seo";
 import { OrderListSkeleton, StatCardSkeletonRow } from "../components/skeletons/CardSkeletons";
+import { paymentTypeLabel } from "../utils/catalogue";
+import { humanizeToken } from "../utils/displayText";
 
 const statusClass = {
   initiated: "text-gray-300 border-gray-300/40",
@@ -141,11 +143,11 @@ const ClientDashboard = () => {
                             statusClass[item.status] || "text-gray-300 border-gray-300/40"
                           }`}
                         >
-                          {item.status}
+                          {humanizeToken(item.status)}
                         </span>
                       </div>
                       <p className="text-sm text-gray-300 mt-2">
-                        {item.currency} {Number(item.amount || 0).toLocaleString()} - {item.payment_type}
+                        {item.currency} {Number(item.amount || 0).toLocaleString()} — {paymentTypeLabel(item)}
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
                         {new Date(item.created_at).toLocaleDateString()} - {item.tx_ref}

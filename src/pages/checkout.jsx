@@ -6,7 +6,7 @@ import instance from "../config/axios.config";
 import { LOGO } from "../components/images";
 import CircularBackButton from "../components/CircularBackButton";
 import { getToken, getUser } from "../utils/auth";
-import { formatNaira } from "../utils/catalogue";
+import { formatNaira, paymentTypeLabel } from "../utils/catalogue";
 
 const fieldClass =
   "w-full px-4 py-3 rounded-xl bg-white border border-Primarycolor/25 text-gray-900 text-sm placeholder:text-gray-500 caret-Primarycolor focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 focus:border-Primarycolor/50 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#ffffff] [&:-webkit-autofill]:[-webkit-text-fill-color:#111827]";
@@ -147,7 +147,7 @@ const Checkout = () => {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-textcolor2 truncate">{servicePackage.name}</p>
-                  <p className="text-xs text-gray-500 mt-0.5 capitalize">{servicePackage.paymentType} payment</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{paymentTypeLabel(servicePackage)}</p>
                 </div>
                 <p className="text-lg font-bold text-Secondarycolor shrink-0">
                   {formatNaira(servicePackage.amount)}

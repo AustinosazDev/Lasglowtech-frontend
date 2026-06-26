@@ -30,5 +30,10 @@ export const deliveryLabel = (item) => {
   return null;
 };
 
-export const paymentTypeLabel = (item) =>
-  item?.paymentType === "deposit" ? "Deposit" : "Full payment";
+export const paymentTypeLabel = (item) => {
+  const type =
+    typeof item === "string"
+      ? item
+      : item?.paymentType ?? item?.payment_type ?? "full";
+  return type === "deposit" ? "Deposit" : "Full payment";
+};

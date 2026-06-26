@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { clearCart, readCart, removeFromCart } from "../utils/cart";
 import CircularBackButton from "../components/CircularBackButton";
+import { paymentTypeLabel } from "../utils/catalogue";
+import { cleanDisplayText } from "../utils/displayText";
 
 const formatNaira = (amount) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN" }).format(Number(amount || 0));
@@ -83,8 +85,10 @@ const CartPage = () => {
                 />
                 <div className="flex-1">
                   <h2 className="text-xl font-semibold">{item.title}</h2>
-                  <p className="text-sm text-gray-400 mt-1">{item.summary || "No summary available."}</p>
-                  <p className="text-sm text-gray-400 mt-2">Payment: {item.paymentType || "full"}</p>
+                  <p className="text-sm text-gray-400 mt-1">
+                    {cleanDisplayText(item.summary) || "No summary available."}
+                  </p>
+                  <p className="text-sm text-gray-400 mt-2">Payment: {paymentTypeLabel(item)}</p>
                   <p className="text-lg font-semibold text-Secondarycolor mt-1">{formatNaira(item.price)}</p>
                 </div>
                 <div className="flex flex-wrap gap-2">

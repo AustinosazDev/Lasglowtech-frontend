@@ -50,6 +50,7 @@ const PortfolioCard = ({ image, alt, title, description, price, link, delay = 0,
           <p className="text-md font-bold text-Secondarycolor">{price}</p>
         )}
 
+        {link && link !== "#" && (
         <a
           href={link}
           target="_blank"
@@ -65,6 +66,7 @@ const PortfolioCard = ({ image, alt, title, description, price, link, delay = 0,
         >
           View project
         </a>
+        )}
       </div>
     </motion.div>
   );

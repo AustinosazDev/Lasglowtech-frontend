@@ -13,6 +13,7 @@ import SEO from "../utils/seo";
 import { LOGO } from "../components/images";
 import { addToCart, readCart, removeFromCart } from "../utils/cart";
 import { formatNaira } from "../utils/catalogue";
+import { cleanDisplayText } from "../utils/displayText";
 import CircularBackButton from "../components/CircularBackButton";
 
 const catalogueFallbacks = [
@@ -105,7 +106,8 @@ const ProductDetails = () => {
   );
 
   const descriptionText =
-    [item?.summary, item?.description].filter(Boolean).join(" ") || "No description available.";
+    cleanDisplayText([item?.summary, item?.description].filter(Boolean).join(" ")) ||
+    "No description available.";
 
   const trustBadges = item
     ? [
@@ -157,7 +159,7 @@ const ProductDetails = () => {
     <div className="min-h-screen bg-bgcolor text-textcolor2">
       <SEO
         title={`${item.title} | Product Details | Lasglowtech`}
-        description={item.summary || item.description || `Buy ${item.title} on Lasglowtech.`}
+        description={cleanDisplayText(item.summary || item.description || `Buy ${item.title} on Lasglowtech.`)}
         url={`https://www.lasglowtech.com.ng/catalogues/${item.slug}`}
       />
 

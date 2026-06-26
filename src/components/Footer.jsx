@@ -6,7 +6,7 @@ import { LOGO } from "./images";
 
 const yr = new Date().getFullYear();
 const cols = [
-  { title: "Navigate", links: [{ to:"/", label:"Home" },{ to:"/about", label:"About" },{ to:"/services", label:"Services" },{ to:"/portfolio", label:"Portfolio" },{ to:"/blogs", label:"Blog" },{ to:"/contact", label:"Contact" }] },
+  { title: "Navigate", links: [{ to:"/", label:"Home" },{ to:"/about", label:"About" },{ to:"/services", label:"Services" },{ to:"/projects", label:"Projects" },{ to:"/blogs", label:"Blog" },{ to:"/contact", label:"Contact" }] },
   { title: "Products",  links: [{ to:"/catalogues", label:"Service catalogue" },{ to:"/careers", label:"Tutoring & training" },{ to:"/services/web-development", label:"Web development" },{ to:"/services/mobile-apps", label:"Mobile apps" },{ to:"/services/ui-ux-design", label:"UI/UX design" }] },
 ];
 const socials = [
@@ -76,7 +76,14 @@ export default function Footer() {
         {/* Bottom */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-[#9b8cb5]">© {yr} Lasglowtech. All rights reserved.</p>
-          <span className="text-sm text-[#9b8cb5]">Powered by Lasglowtech</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm">
+            <Link to="/legal/privacy" className="text-[#9b8cb5] hover:text-orange-500 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/legal/terms" className="text-[#9b8cb5] hover:text-orange-500 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
         </div>
       </div>
     </footer>
