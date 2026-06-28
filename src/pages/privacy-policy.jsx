@@ -14,7 +14,7 @@ export default function PrivacyPolicyPage() {
         <h2>1. Introduction</h2>
         <p>
           Lasglowtech ("we", "us", "our") operates{" "}
-          <a href="https://www.lasglowtech.com.ng">lasglowtech.com.ng</a> and related services. This Privacy
+          <a href="https://lasglowtech.com.ng">lasglowtech.com.ng</a> and related services. This Privacy
           Policy explains how we collect, use, disclose, and protect personal information when you visit our
           website, create an account, purchase products, apply for programmes, or use our learning platform.
         </p>
@@ -106,7 +106,7 @@ export default function PrivacyPolicyPage() {
             Google's partner sites policy
           </a>
           . Our site verification uses the AdSense code and{" "}
-          <a href="https://www.lasglowtech.com.ng/ads.txt" target="_blank" rel="noopener noreferrer">
+          <a href="https://lasglowtech.com.ng/ads.txt" target="_blank" rel="noopener noreferrer">
             ads.txt
           </a>{" "}
           file as required by Google.

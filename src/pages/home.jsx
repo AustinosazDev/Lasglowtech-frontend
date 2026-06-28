@@ -12,6 +12,8 @@ import Subscription from "../components/sections/subscription";
 import SEO from "../utils/seo";
 import CataloguePreview from "../components/sections/CataloguePreview";
 import TestimonialSection from "../components/sections/TestimonialSection";
+import { DEFAULT_TITLE, DEFAULT_DESCRIPTION, SITE_URL } from "../utils/siteConfig";
+import { defaultSiteSchemas } from "../utils/structuredData";
 
 const pillars = [
   { title: "Product Strategy", text: "Clear discovery, scope definition, and execution roadmap aligned to your business goals.", Icon: FaLightbulb },
@@ -30,10 +32,10 @@ export default function Home() {
   return (
     <div className="home-page bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="Lasglowtech | Web Development, Tutoring, Service Catalogue & Instant Checkout Nigeria"
-        description="Lasglowtech delivers web and mobile development, UI/UX design, professional IT tutoring and training, and a service catalogue with instant checkout. Nigeria's growth-focused digital partner."
-        keywords="Lasglowtech, web development Nigeria, mobile app development, UI UX design, IT tutoring, tech training Nigeria, service catalogue, instant checkout, digital agency Nigeria"
-        url="https://www.lasglowtech.com.ng"
+        title={DEFAULT_TITLE}
+        description={DEFAULT_DESCRIPTION}
+        url={SITE_URL}
+        schema={defaultSiteSchemas()}
       />
 
       <Hero />
@@ -41,58 +43,58 @@ export default function Home() {
       <AboutSection />
       <OurServices />
 
-      <section className="py-20 md:py-28 px-6 md:px-12">
+      <section className="py-20 md:py-28 px-6 md:px-12" aria-labelledby="why-heading">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-14">
             <span className="section-tag justify-center"><span className="dot-live" />Why Lasglowtech</span>
-            <h2 className="text-white mb-4">Built for brands that want results</h2>
-            <p className="text-sm text-[#9b8cb5] leading-relaxed">We combine product thinking, design excellence, and technical depth to help businesses launch and scale with confidence.</p>
+            <h2 id="why-heading" className="text-white mb-4">Built for brands that want results</h2>
+            <p className="type-muted max-w-2xl mx-auto">We combine product thinking, design excellence, and technical depth to help businesses launch and scale with confidence.</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {pillars.map(({ title, text, Icon }) => (
-              <div key={title} className="brand-card p-6 group">
+              <article key={title} className="brand-card p-6 group">
                 <div className="w-11 h-11 rounded-xl bg-[#8700ff]/15 flex items-center justify-center mb-5 group-hover:bg-[#8700ff]/25 transition-colors">
-                  <Icon className="w-5 h-5 text-[#8700ff]" />
+                  <Icon className="w-5 h-5 text-[#8700ff]" aria-hidden />
                 </div>
                 <h3 className="font-semibold text-white mb-3 group-hover:text-orange-500 transition-colors">{title}</h3>
-                <p className="text-sm text-[#9b8cb5] leading-relaxed">{text}</p>
-              </div>
+                <p className="type-muted">{text}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="py-20 md:py-28 px-6 md:px-12">
+      <section className="py-20 md:py-28 px-6 md:px-12" aria-labelledby="process-heading">
         <div className="max-w-7xl mx-auto">
           <div className="brand-card overflow-hidden">
             <div className="px-6 md:px-10 py-6 border-b border-[#8700ff]/15">
               <span className="section-tag"><span className="dot-live" />Execution model</span>
-              <h2 className="text-white">How we deliver</h2>
+              <h2 id="process-heading" className="text-white">How we deliver</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-0">
               {processFlow.map((item, i) => (
-                <div key={item.step} className={`p-6 md:p-8 ${i < processFlow.length - 1 ? "md:border-r border-[#8700ff]/15" : ""}`}>
-                  <p className="font-bold text-2xl text-orange-500 mb-3">{item.step}</p>
+                <article key={item.step} className={`p-6 md:p-8 ${i < processFlow.length - 1 ? "md:border-r border-[#8700ff]/15" : ""}`}>
+                  <p className="font-bold text-2xl text-orange-500 mb-3" aria-hidden>{item.step}</p>
                   <h3 className="font-semibold text-white mb-2">{item.title}</h3>
-                  <p className="text-sm text-[#9b8cb5] leading-relaxed">{item.text}</p>
-                </div>
+                  <p className="type-muted">{item.text}</p>
+                </article>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 px-6 md:px-12">
+      <section className="py-16 px-6 md:px-12" aria-labelledby="more-heading">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-white text-center mb-8">More ways to work with us</h2>
+          <h2 id="more-heading" className="text-white text-center mb-8">More ways to work with us</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {[
               { to: "/careers", title: "Tutoring & training", desc: "Structured programmes to upskill your team or start a career in tech — with real-world projects and LMS access.", cta: "Explore careers & learning →" },
               { to: "/catalogues", title: "Service catalogue & instant checkout", desc: "Choose a fixed-price package, pay online, and get started. No lengthy quotes — browse and checkout instantly.", cta: "Browse catalogue →" },
             ].map(({ to, title, desc, cta }) => (
-              <Link key={to} to={to} className="brand-card p-6 group block">
+              <Link key={to} to={to} className="brand-card p-6 group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8700ff]/50">
                 <h3 className="font-semibold text-white mb-2 group-hover:text-orange-500 transition-colors">{title}</h3>
-                <p className="text-sm text-[#9b8cb5] leading-relaxed mb-4">{desc}</p>
+                <p className="type-muted mb-4">{desc}</p>
                 <span className="text-sm font-semibold text-[#8700ff] group-hover:translate-x-1 inline-block transition-transform">{cta}</span>
               </Link>
             ))}

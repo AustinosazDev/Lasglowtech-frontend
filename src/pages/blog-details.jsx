@@ -96,10 +96,9 @@ const BlogDetails = () => {
   return (
     <article className="bg-bgcolor text-white pb-16 md:pb-20 pt-32 md:pt-36 lg:pt-40">
       <SEO
-        title={`${post.title} | Lasglowtech Blogs`}
+        title={`${post.title} | Lasglowtech Blog`}
         description={(post.content || "").replace(/<[^>]+>/g, "").slice(0, 160)}
-        keywords="Lasglowtech blog, digital insights, development tips"
-        url={`https://www.lasglowtech.com.ng/blog/${post.slug}`}
+        url={`/blog/${post.slug}`}
         image={post.coverUrl}
         type="article"
         schema={{
@@ -117,10 +116,10 @@ const BlogDetails = () => {
             name: "Lasglowtech",
             logo: {
               "@type": "ImageObject",
-              url: "https://www.lasglowtech.com.ng/LOGO.png",
+              url: "https://lasglowtech.com.ng/LOGO.png",
             },
           },
-          mainEntityOfPage: `https://www.lasglowtech.com.ng/blog/${post.slug}`,
+          mainEntityOfPage: `https://lasglowtech.com.ng/blog/${post.slug}`,
         }}
       />
 

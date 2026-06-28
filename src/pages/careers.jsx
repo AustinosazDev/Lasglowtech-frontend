@@ -188,7 +188,7 @@ const Careers = () => {
         <SEO
           title="Academy Application | Lasglowtech"
           description="Apply for Lasglowtech tutoring and training programmes."
-          url="https://www.lasglowtech.com.ng/careers/apply"
+          url="https://lasglowtech.com.ng/careers/apply"
         />
 
         <div className="brand-card w-full max-w-2xl p-6 sm:p-8 md:p-10 mt-4 shadow-[0_12px_48px_rgba(135,0,255,0.18)]">

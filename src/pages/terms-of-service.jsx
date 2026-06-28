@@ -12,7 +12,7 @@ export default function TermsOfServicePage() {
         <h2>1. Agreement</h2>
         <p>
           These Terms of Service ("Terms") govern your access to and use of Lasglowtech's website at{" "}
-          <a href="https://www.lasglowtech.com.ng">lasglowtech.com.ng</a>, applications, service catalogue,
+          <a href="https://lasglowtech.com.ng">lasglowtech.com.ng</a>, applications, service catalogue,
           digital products, training programmes, and related services (collectively, the "Services").
         </p>
         <p>

@@ -2,6 +2,10 @@
   RewriteEngine On
   RewriteBase /
 
+  # Permanent redirect www → non-www (canonical)
+  RewriteCond %{HTTP_HOST} ^www\.lasglowtech\.com\.ng [NC]
+  RewriteRule ^(.*)$ https://lasglowtech.com.ng/$1 [R=301,L]
+
   # Prevent rewriting existing files or directories
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d

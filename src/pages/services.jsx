@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import SEO from "../utils/seo";
+import { breadcrumbSchema } from "../utils/structuredData";
 import Subscription from "../components/sections/subscription";
 import TestimonialSection from "../components/sections/TestimonialSection";
 import ServicesData from "../assets/data/serviceslist";
@@ -14,10 +15,13 @@ export default function Services() {
   return (
     <div className="min-h-screen bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="Lasglowtech Services | Web, Mobile, Design, Tutoring & Service Catalogue"
-        description="Lasglowtech offers web and mobile development, UI/UX and graphic design, professional IT tutoring and training, and a service catalogue with instant checkout."
-        keywords="Lasglowtech services, web development, mobile apps, UI UX design, graphic design, IT tutoring Nigeria, tech training, service catalogue, instant checkout"
-        url="https://www.lasglowtech.com.ng/services"
+        title="Services | Lasglowtech — Web, Apps, Design & AI"
+        description="Explore Lasglowtech services: web development, mobile apps, UI/UX, graphic design, branding, SEO, AI solutions, IT training, and digital product development."
+        url="/services"
+        schema={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Services", url: "/services" },
+        ])}
       />
 
       {/* Hero */}

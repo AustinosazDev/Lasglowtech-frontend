@@ -631,7 +631,7 @@ const CareersDashboard = () => {
       <SEO
         title="Learner Dashboard | Lasglowtech"
         description="Track your career application and learning progress."
-        url="https://www.lasglowtech.com.ng/careers/dashboard"
+        url="https://lasglowtech.com.ng/careers/dashboard"
       />
 
       {/* Mobile overlay backdrop */}

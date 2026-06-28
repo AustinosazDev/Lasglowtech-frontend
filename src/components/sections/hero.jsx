@@ -1,11 +1,23 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import BgPatternOverlay from "../BgPatternOverlay";
 import { Typewriter } from "react-simple-typewriter";
+import BgPatternOverlay from "../BgPatternOverlay";
 
 const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.13 } } };
-const up = { hidden: { opacity: 0, y: 32 }, visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } } };
+const up = {
+  hidden: { opacity: 0, y: 32 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: [0.22, 1, 0.36, 1] } },
+};
+
+const typewriterWords = [
+  "For All Businesses",
+  "For Startups Ready to Scale",
+  "For Creators Building Brands",
+  "For Founders & Entrepreneurs",
+  "For Modern Digital Brands",
+  "For Vision-Driven Teams",
+];
 
 export default function Hero() {
   const [scrollY, setScrollY] = useState(0);
@@ -17,7 +29,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center flex-col overflow-hidden bg-[#120b1f] py-16">
+    <div className="relative w-full min-h-[100dvh] flex items-center justify-center flex-col overflow-hidden bg-[#120b1f] pt-28 md:pt-36 lg:pt-40 pb-16">
       <BgPatternOverlay />
       <div
         className="absolute top-[-120px] right-[-80px] w-[520px] h-[520px] rounded-full bg-primary1 opacity-[0.12] blur-[100px] pointer-events-none z-0"
@@ -31,23 +43,24 @@ export default function Hero() {
       />
 
       <section
-        className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-12 py-16 pb-24 pt-16 text-center"
+        aria-labelledby="hero-heading"
+        className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-12 pb-24 text-center"
         style={{ transform: `translateY(${scrollY * 0.04}px)` }}
       >
         <motion.div variants={stagger} initial="hidden" animate="visible">
-          <motion.h1 variants={up} className="mx-auto text-center max-w-4xl text-white mb-6 mt-8">
+          <motion.h1
+            id="hero-heading"
+            variants={up}
+            className="mx-auto text-center max-w-4xl text-white mb-6"
+          >
             Digital Service Providers
             <br />
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-Secondarycolor to-Secondarycolor">
+            <span
+              className="text-orange-500 inline-block min-h-[1.2em]"
+              aria-live="polite"
+            >
               <Typewriter
-                words={[
-                  "For All Businesses",
-                  "For Startups Ready to Scale",
-                  "For Creators Building Brands",
-                  "For Founders & Entrepreneurs",
-                  "For Modern Digital Brands",
-                  "For Vision-Driven Teams",
-                ]}
+                words={typewriterWords}
                 loop
                 cursor
                 cursorStyle="|"
@@ -59,12 +72,18 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p variants={up} className="text-lg text-[#9b8cb5] max-w-3xl mx-auto leading-relaxed mb-10">
-            At Lasglowtech, we help businesses grow with powerful websites, scalable applications, and creative digital solutions that drive visibility, engagement, and real results.
+            At Lasglowtech, we help businesses grow with powerful websites, scalable applications,
+            <br />
+            and creative digital solutions that drive visibility, engagement, and real results.
           </motion.p>
 
           <motion.div variants={up} className="flex flex-wrap items-center justify-center gap-4 mb-20">
-            <Link to="/catalogues" className="btn-primary">Explore Services & Pricing</Link>
-            <Link to="/projects" className="btn-outline">View our Work →</Link>
+            <Link to="/catalogues" className="btn-primary min-h-[48px]">
+              Explore Services & Pricing
+            </Link>
+            <Link to="/projects" className="btn-outline min-h-[48px]">
+              View our Work →
+            </Link>
           </motion.div>
 
           <motion.div variants={up} className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
@@ -83,7 +102,7 @@ export default function Hero() {
         </motion.div>
       </section>
 
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 opacity-30">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 opacity-30" aria-hidden>
         <span className="text-xs text-[#9b8cb5]">Scroll</span>
         <div className="w-px h-8 bg-gradient-to-b from-[#8700ff] to-transparent" />
       </div>

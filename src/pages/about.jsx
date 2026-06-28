@@ -13,6 +13,7 @@ import MeetTheTeam from "../components/meetheteam";
 import CoreValues from "../components/sections/corevalues";
 import FaqSection from "../components/Faq";
 import SEO from "../utils/seo";
+import { breadcrumbSchema } from "../utils/structuredData";
 
 const stats = [
   { value: "2021", label: "Year founded", Icon: FaCalendar },
@@ -44,10 +45,13 @@ export default function About() {
   return (
     <div className="min-h-screen bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="About Lasglowtech | Digital Agency, Tutoring & Service Catalogue Nigeria"
-        description="Lasglowtech: web and mobile development, UI/UX design, IT tutoring and training, and a service catalogue with instant checkout. Learn about our team, process, and how we help brands grow."
-        keywords="About Lasglowtech, digital agency Nigeria, web development, tutoring, tech training, service catalogue, instant checkout"
-        url="https://www.lasglowtech.com.ng/about"
+        title="About Lasglowtech | Creative Technology Company Nigeria"
+        description="Meet Lasglowtech — a creative technology company delivering web development, mobile apps, UI/UX, branding, and digital products with creativity, precision, and reliability."
+        url="/about"
+        schema={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "About", url: "/about" },
+        ])}
       />
 
       {/* Hero */}

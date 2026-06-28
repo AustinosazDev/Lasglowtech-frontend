@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.lasglowtech.com.ng/sitemap.xml
+Sitemap: https://lasglowtech.com.ng/sitemap.xml

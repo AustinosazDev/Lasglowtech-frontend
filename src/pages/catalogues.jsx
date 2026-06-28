@@ -88,10 +88,9 @@ const Catalogues = () => {
   return (
     <div className="min-h-screen bg-bgcolor text-textcolor2">
       <SEO
-        title="Service Catalogue | Buy Digital Services Online with Instant Checkout | Lasglowtech"
-        description="Browse Lasglowtech service packages, eBooks, and digital products with instant checkout and download delivery."
-        keywords="Lasglowtech catalogue, buy services online Nigeria, instant checkout, digital downloads, eBooks"
-        url="https://www.lasglowtech.com.ng/catalogues"
+        title="Service Catalogue | Lasglowtech — Instant Checkout"
+        description="Browse fixed-price web, design, and digital packages from Lasglowtech. Pay online and get started without lengthy quotes."
+        url="/catalogues"
       />
 
       <header className="sticky top-0 z-50 border-b border-Primarycolor/20 bg-bgcolor2/95 backdrop-blur-sm">

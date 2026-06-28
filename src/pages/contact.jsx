@@ -4,9 +4,10 @@ import { toast } from "react-toastify";
 import FaqSection from "../components/Faq";
 import instance from "../config/axios.config";
 import SEO from "../utils/seo";
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaLinkedin, FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
+import { CONTACT } from "../utils/siteConfig";
+import { breadcrumbSchema } from "../utils/structuredData";
 
-const SITE_URL = "https://www.lasglowtech.com.ng";
+import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaLinkedin, FaInstagram, FaFacebookF, FaTwitter } from "react-icons/fa";
 
 const socials = [
   { href:"https://linkedin.com/in/austinosaz", Icon:FaLinkedin, label:"LinkedIn" },
@@ -40,10 +41,13 @@ export default function Contact() {
   return (
     <div className="min-h-screen bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="Contact Us | Lasglowtech – Get in Touch"
-        description="Contact Lasglowtech for web development, mobile apps, UI/UX design, and IT services in Nigeria. Email lasglowtech@gmail.com or call +234 903 182 1590. Gwarinpa, Abuja."
-        keywords="contact Lasglowtech, web development Abuja, digital agency contact, Lasglowtech email, Lasglowtech phone"
-        url={`${SITE_URL}/contact`}
+        title="Contact Lasglowtech | Start Your Project"
+        description="Reach Lasglowtech for web development, mobile apps, UI/UX, branding, and AI solutions. Email, call, or WhatsApp — we respond within 24 hours. Gwarinpa, Abuja."
+        url="/contact"
+        schema={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Contact", url: "/contact" },
+        ])}
       />
 
       {/* Hero */}
@@ -147,6 +151,20 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      <div className="fixed bottom-0 inset-x-0 z-40 md:hidden border-t border-[#8700ff]/20 bg-[#120b1f]/95 backdrop-blur-xl px-4 py-3 flex gap-3 safe-area-pb">
+        <a
+          href="https://wa.me/2349031821590?text=Hi%20Lasglowtech%2C%20I%27d%20like%20to%20enquire%20about%20your%20services"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-outline flex-1 justify-center min-h-[44px] text-xs"
+        >
+          WhatsApp
+        </a>
+        <Link to="/contact" className="btn-primary flex-1 justify-center min-h-[44px] text-xs">
+          Start project
+        </Link>
+      </div>
 
       <FaqSection />
     </div>

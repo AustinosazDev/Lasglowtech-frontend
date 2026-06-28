@@ -5,6 +5,7 @@ import Blogcard from "../components/blogcard";
 import instance, { API_BASE_URL } from "../config/axios.config";
 import { BlogCardSkeleton, BlogGridTileSkeletonGrid } from "../components/skeletons/CardSkeletons";
 import SEO from "../utils/seo";
+import { breadcrumbSchema } from "../utils/structuredData";
 import Subscription from "../components/sections/subscription";
 import { FaArrowRight, FaBookOpen } from "react-icons/fa";
 import { Slide3 } from "../components/images";
@@ -36,10 +37,13 @@ export default function Blogs() {
   return (
     <div className="min-h-screen bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="Lasglowtech Blog | Tech Insights & Digital Tips"
-        description="Read practical insights, guides, and product updates from Lasglowtech."
-        keywords="Lasglowtech blog, web development tips, design insights Nigeria"
-        url="https://www.lasglowtech.com.ng/blogs"
+        title="Blog | Lasglowtech — Tech Insights & Digital Tips"
+        description="Practical guides, product updates, and digital strategy insights from the Lasglowtech team."
+        url="/blogs"
+        schema={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Blog", url: "/blogs" },
+        ])}
       />
 
       {/* Hero */}

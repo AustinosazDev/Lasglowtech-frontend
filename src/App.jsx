@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import SkipLink from "./components/SkipLink";
 import ProjectsPage from "./pages/projects";
 import About from "./pages/about";
 import Services from "./pages/services";
@@ -16,12 +17,12 @@ import Blogs from "./pages/blogs";
 import BlogDetails from "./pages/blog-details";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import DashboardHome from "./pages/dashboard/DashboardHome";
-import Create from "./pages/dashboard/createblog";
-import Subscriptions from "./pages/dashboard/subscriptions";
-import BlogList from "./pages/dashboard/bloglist";
-import Update from "./pages/dashboard/updateblog";
-import AdminLayout from "./pages/dashboard";
+const DashboardHome = lazy(() => import("./pages/dashboard/DashboardHome"));
+const Create = lazy(() => import("./pages/dashboard/createblog"));
+const Subscriptions = lazy(() => import("./pages/dashboard/subscriptions"));
+const BlogList = lazy(() => import("./pages/dashboard/bloglist"));
+const Update = lazy(() => import("./pages/dashboard/updateblog"));
+const AdminLayout = lazy(() => import("./pages/dashboard"));
 import Links from "./pages/bio";
 import Checkout from "./pages/checkout";
 import PaymentSuccess from "./pages/payment-success";
@@ -35,19 +36,19 @@ import ResetPasswordPage from "./pages/auth-reset-password";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLogin from "./pages/admin-login";
 import AdminProtectedRoute from "./components/AdminProtectedRoute";
-import CataloguesAdmin from "./pages/dashboard/catalogues";
-import ProjectsAdmin from "./pages/dashboard/projects";
-import ContactsAdmin from "./pages/dashboard/contacts";
+const CataloguesAdmin = lazy(() => import("./pages/dashboard/catalogues"));
+const ProjectsAdmin = lazy(() => import("./pages/dashboard/projects"));
+const ContactsAdmin = lazy(() => import("./pages/dashboard/contacts"));
 import Careers from "./pages/careers";
 import CareersAcademy from "./pages/careers-academy";
 import CareerCourseDetail from "./pages/career-course-detail";
-import CareersAdmin from "./pages/dashboard/careers";
+const CareersAdmin = lazy(() => import("./pages/dashboard/careers"));
 import CareersDashboard from "./pages/careers-dashboard";
-import OrdersAdmin from "./pages/dashboard/orders";
+const OrdersAdmin = lazy(() => import("./pages/dashboard/orders"));
 import MyOrders from "./pages/my-orders";
 import ClientDashboard from "./pages/client-dashboard";
-import LmsAdmin from "./pages/dashboard/lms";
-import BulkEmailAdmin from "./pages/dashboard/bulk-email";
+const LmsAdmin = lazy(() => import("./pages/dashboard/lms"));
+const BulkEmailAdmin = lazy(() => import("./pages/dashboard/bulk-email"));
 import TermsOfServicePage from "./pages/terms-of-service";
 import PrivacyPolicyPage from "./pages/privacy-policy";
 import VerifyCertificatePage from "./pages/verify-certificate";
@@ -94,10 +95,19 @@ function App() {
     location.pathname.startsWith("/auth/") ||
     location.pathname.startsWith("/download/");
 
+  const dashFallback = (
+    <div className="min-h-screen bg-[#120b1f] flex items-center justify-center" role="status" aria-live="polite">
+      <span className="text-[#9b8cb5] text-sm">Loading…</span>
+    </div>
+  );
+
   return (
     <>
+      {!hideNavbar && <SkipLink />}
       {!hideNavbar && <Navbar />}
 
+      <main id="main-content" tabIndex={-1} className={hideNavbar ? undefined : "outline-none"}>
+      <Suspense fallback={location.pathname.startsWith("/dashboard") ? dashFallback : null}>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -152,6 +162,8 @@ function App() {
         <Route path="/bio" element={<Links />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      </Suspense>
+      </main>
 
       {!hideFooter && <Footer />}
       {!hideNavbar && <WhatsAppFloat />}

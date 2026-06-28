@@ -24,13 +24,13 @@ export default function Subscription() {
   };
 
   return (
-    <section className="relative py-20 overflow-hidden border-t border-[#8700ff]/15">
+    <section id="newsletter" className="relative py-20 overflow-hidden border-t border-[#8700ff]/15" aria-labelledby="newsletter-heading">
       <div className="absolute left-1/2 -translate-x-1/2 bottom-0 w-[700px] h-[200px] bg-[#8700ff] opacity-[0.08] blur-[80px] pointer-events-none" />
       <div className="absolute right-0 top-0 w-[300px] h-[300px] bg-orange-500 opacity-[0.05] blur-[80px] pointer-events-none" />
 
       <div className="relative max-w-2xl mx-auto px-6 text-center">
         <span className="section-tag justify-center"><span className="dot-live" />Stay in the loop</span>
-        <h2 className="text-white mb-4">
+        <h2 id="newsletter-heading" className="text-white mb-4">
           Get weekly tech tips & updates
         </h2>
         <p className="text-sm text-[#9b8cb5] mb-8 leading-relaxed">

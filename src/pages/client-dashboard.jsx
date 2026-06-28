@@ -70,7 +70,7 @@ const ClientDashboard = () => {
       <SEO
         title="Client Dashboard | Lasglowtech"
         description="Track your service orders and payments."
-        url="https://www.lasglowtech.com.ng/client/dashboard"
+        url="https://lasglowtech.com.ng/client/dashboard"
       />
 
       <section className="max-w-6xl mx-auto">

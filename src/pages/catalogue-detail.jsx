@@ -160,7 +160,7 @@ const ProductDetails = () => {
       <SEO
         title={`${item.title} | Product Details | Lasglowtech`}
         description={cleanDisplayText(item.summary || item.description || `Buy ${item.title} on Lasglowtech.`)}
-        url={`https://www.lasglowtech.com.ng/catalogues/${item.slug}`}
+        url={`https://lasglowtech.com.ng/catalogues/${item.slug}`}
       />
 
       {header}

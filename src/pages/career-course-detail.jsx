@@ -255,7 +255,7 @@ const CareerCourseDetail = () => {
       <SEO
         title={`${course.title} | Lasglowtech Academy`}
         description={course.summary || course.description || `Course: ${course.title}`}
-        url={`https://www.lasglowtech.com.ng/careers/courses/${course.slug}`}
+        url={`https://lasglowtech.com.ng/careers/courses/${course.slug}`}
         image={course.imageUrl || undefined}
       />
 

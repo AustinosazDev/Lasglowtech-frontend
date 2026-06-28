@@ -88,10 +88,9 @@ const CareersAcademy = () => {
       <BgPatternOverlay glow />
       <div className="relative z-10">
       <SEO
-        title="Learning Platform | Lasglowtech Academy – Courses & Training"
-        description="Grow your skills with Lasglowtech Academy. Expert-led courses in web development, design, and digital skills. Explore courses and start learning today."
-        keywords="Lasglowtech academy, tech courses Nigeria, learn web development, UI UX training, online courses, skills training"
-        url="https://www.lasglowtech.com.ng/careers"
+        title="Academy | Lasglowtech — IT Training & Courses"
+        description="Expert-led courses in web development, design, and digital skills. Build job-ready skills with practical projects from Lasglowtech Academy."
+        url="/careers"
         image={LOGO}
       />
 

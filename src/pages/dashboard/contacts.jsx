@@ -16,7 +16,7 @@ import {
   adminSectionTitle,
 } from "../../utils/adminUi";
 
-const SITE_URL = "https://www.lasglowtech.com.ng";
+const SITE_URL = "https://lasglowtech.com.ng";
 
 const PAGE_TITLE = "Contact Messages | Lasglow Admin";
 const PAGE_DESCRIPTION =

@@ -1,12 +1,11 @@
 {
-  "rewrites": [
+  "redirects": [
     {
-      "source": "/Ausinosaz",
-      "destination": "https://austinosaz.vercel.app"
-    },
-    {
-      "source": "/Ausinosaz/:path*",
-      "destination": "https://austinosaz.vercel.app/:path*"
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "www.lasglowtech.com.ng" }],
+      "destination": "https://lasglowtech.com.ng/:path*",
+      "permanent": true
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }

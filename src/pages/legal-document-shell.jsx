@@ -5,7 +5,7 @@ import SEO from "../utils/seo";
  * Shared layout for Terms of Service & Privacy Policy (matches auth dark theme).
  */
 export function LegalDocumentShell({ title, description, path, children }) {
-  const siteUrl = "https://www.lasglowtech.com.ng";
+  const siteUrl = "https://lasglowtech.com.ng";
   const url = `${siteUrl}${path}`;
 
   return (

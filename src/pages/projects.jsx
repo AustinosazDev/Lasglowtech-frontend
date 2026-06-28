@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import SEO from "../utils/seo";
+import { breadcrumbSchema } from "../utils/structuredData";
 import Subscription from "../components/sections/subscription";
 import QuickContact from "../components/sections/Quickcontact";
 import ProjectTabs from "../components/sections/projecttabs";
@@ -32,10 +33,13 @@ export default function ProjectsPage() {
   return (
     <div className="min-h-screen bg-[#120b1f] text-[#e8ddf8]">
       <SEO
-        title="Lasglowtech | Projects"
-        description="Explore websites, branding, and design projects delivered for clients across Nigeria and globally."
-        keywords="Projects, Lasglowtech, case studies, web design, branding Nigeria"
-        url="https://www.lasglowtech.com.ng/projects"
+        title="Projects | Lasglowtech — Case Studies & Portfolio"
+        description="See websites, mobile apps, branding, and digital products Lasglowtech has delivered for clients across Nigeria and globally."
+        url="/projects"
+        schema={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Projects", url: "/projects" },
+        ])}
       />
 
       <section className="relative overflow-hidden pt-28 sm:pt-32 pb-14 sm:pb-18 px-6 md:px-12 border-b border-[#8700ff]/15">

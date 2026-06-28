@@ -45,7 +45,14 @@
     background-color: var(--color-bg);
     color: var(--color-text2);
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.65;
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+  :focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 2px;
   }
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight tracking-tight;
@@ -96,6 +103,13 @@
     box-shadow: 0 0 28px var(--purple-glow);
     transform: translateY(-2px);
   }
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 3px;
+  }
 
   .btn-orange {
     @apply inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-bold text-white transition-all duration-200;
@@ -115,6 +129,40 @@
   .btn-outline:hover {
     background: var(--purple-dim);
     border-color: var(--purple);
+  }
+  .btn-outline:focus-visible {
+    outline: 2px solid var(--purple);
+    outline-offset: 3px;
+  }
+
+  .glass-card {
+    background: rgba(26, 16, 48, 0.45);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    background: var(--purple);
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+  .skip-link:focus {
+    top: 1rem;
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
   }
 
   /* Glassmorphism card with subtle effects */

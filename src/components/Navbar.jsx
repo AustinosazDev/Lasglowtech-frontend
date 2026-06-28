@@ -11,45 +11,64 @@ export default function Navbar() {
   const [acctOpen, setAcctOpen] = useState(false);
 
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 24);
-    window.addEventListener("scroll", fn);
+    const fn = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [open]);
 
   const authed = isAuthenticated();
   const user = getUser();
   const role = user?.role || "client";
 
   const links = [
-    { label: "Home",      to: "/" },
-    { label: "About",     to: "/about" },
-    { label: "Services",  to: "/services" },
+    { label: "Home", to: "/" },
+    { label: "About", to: "/about" },
+    { label: "Services", to: "/services" },
     { label: "Projects", to: "/projects" },
-    { label: "Blog",      to: "/blogs" },
-    { label: "Careers",   to: "/careers" },
+    { label: "Blog", to: "/blogs" },
+    { label: "Careers", to: "/careers" },
+    { label: "Contact", to: "/contact" },
     ...(authed && role === "client" ? [{ label: "Catalogues", to: "/catalogues" }] : []),
   ];
 
-  const lc = ({ isActive }) =>
-    `text-sm font-semibold transition-colors duration-200 ${isActive ? "text-orange-500" : "text-[#c4b3d8] hover:text-white"}`;
+  const navLinkClass = ({ isActive }) =>
+    `relative text-sm font-semibold transition-colors duration-200 py-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8700ff]/50 rounded ${
+      isActive ? "text-orange-500" : "text-[#c4b3d8] hover:text-white"
+    } after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:rounded-full after:bg-orange-500 after:transition-all ${
+      isActive ? "after:w-full" : "after:w-0 hover:after:w-full"
+    }`;
 
   return (
     <>
-      <nav className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${scrolled ? "py-3 bg-[#120b1f]/80 backdrop-blur-2xl shadow-2xl shadow-[#8700ff]/10" : "py-5 bg-transparent"}`}>
+      <header>
+        <nav
+          aria-label="Main navigation"
+          className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+            scrolled
+              ? "py-3 bg-[#120b1f]/85 backdrop-blur-2xl border-b border-[#8700ff]/10 shadow-lg shadow-black/20"
+              : "py-5 bg-transparent"
+          }`}
+        >
         <div className="max-w-7xl mx-auto px-5 md:px-10 flex items-center justify-between">
 
           {/* Logo */}
-          <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5">
-            <img src={LOGO} alt="Lasglowtech" className="w-9 h-9 object-contain" />
+          <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#8700ff]/50 rounded-lg">
+            <img src={LOGO} alt="Lasglowtech logo" className="w-9 h-9 object-contain" width={36} height={36} />
             <span className="font-bold text-base text-white tracking-tight">
-              Lasglow<span className=" text-[#8700ff]">tech</span>
+              Lasglow<span className="text-[#8700ff]">tech</span>
             </span>
           </Link>
 
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-7">
-            {links.map(l => (
-              <NavLink key={l.to} to={l.to} end={l.to === "/"} className={lc}>{l.label}</NavLink>
+          <div className="hidden md:flex items-center gap-8">
+            {links.map((l) => (
+              <NavLink key={l.to} to={l.to} end={l.to === "/"} className={navLinkClass}>
+                {l.label}
+              </NavLink>
             ))}
           </div>
 
@@ -90,7 +109,8 @@ export default function Navbar() {
             </button>
           </div>
         </div>
-      </nav>
+        </nav>
+      </header>
 
       {/* Mobile drawer */}
       <div id="mobile-nav" className={`md:hidden fixed inset-0 z-40 transition-all duration-300 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>

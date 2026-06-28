@@ -52,7 +52,7 @@ const MyOrders = () => {
       <SEO
         title="My Orders | Lasglowtech"
         description="Track your service orders and payment status."
-        url="https://www.lasglowtech.com.ng/my/orders"
+        url="https://lasglowtech.com.ng/my/orders"
       />
 
       <section className="max-w-5xl mx-auto">
