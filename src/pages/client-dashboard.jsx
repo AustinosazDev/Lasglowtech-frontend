@@ -153,13 +153,25 @@ const ClientDashboard = () => {
                         {new Date(item.created_at).toLocaleDateString()} - {item.tx_ref}
                       </p>
                       {item.status === "paid" && (
-                        <button
-                          type="button"
-                          onClick={() => downloadInvoice(item.id, item.tx_ref)}
-                          className="mt-3 px-3 py-1.5 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/25 text-xs font-medium transition-colors"
-                        >
-                          Download Invoice
-                        </button>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <button
+                            type="button"
+                            onClick={() => downloadInvoice(item.id, item.tx_ref)}
+                            className="px-3 py-1.5 rounded-lg border border-Primarycolor/40 text-textcolor2 hover:bg-Primarycolor/25 text-xs font-medium transition-colors"
+                          >
+                            Download Invoice
+                          </button>
+                          {item.delivery?.isDigitalProduct && item.delivery.accessUrl && (
+                            <a
+                              href={item.delivery.accessUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-3 py-1.5 rounded-lg border border-green-500/40 text-green-300 hover:bg-green-500/25 text-xs font-medium transition-colors"
+                            >
+                              Access Your Item
+                            </a>
+                          )}
+                        </div>
                       )}
                     </article>
                   ))}

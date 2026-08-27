@@ -88,9 +88,9 @@ export default function Hero() {
 
           <motion.div variants={up} className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
             {[
-              { num: "100+", label: "Projects delivered" },
+              { num: "60+", label: "Projects delivered" },
               { num: "48h", label: "Avg. turnaround" },
-              { num: "4.9★", label: "Client rating" },
+              { num: "4.5★", label: "Client rating" },
               { num: "2021", label: "Year founded" },
             ].map(({ num, label }) => (
               <div key={label} className="brand-card p-4 sm:p-5 text-center">

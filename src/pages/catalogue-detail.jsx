@@ -15,6 +15,7 @@ import { addToCart, readCart, removeFromCart } from "../utils/cart";
 import { formatNaira } from "../utils/catalogue";
 import { cleanDisplayText } from "../utils/displayText";
 import CircularBackButton from "../components/CircularBackButton";
+import AgencyCallout from "../components/sections/AgencyCallout";
 
 const catalogueFallbacks = [
   "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800",
@@ -205,7 +206,17 @@ const ProductDetails = () => {
                 <p className="mt-2 text-gray-400">Quote on request</p>
               )}
 
+              {item.licenseNote && (
+                <p className="mt-1 text-xs text-gray-500">{item.licenseNote}</p>
+              )}
+
               <p className="mt-5 text-sm text-gray-400 leading-relaxed line-clamp-4">{descriptionText}</p>
+
+              {item.linkedCourseSlug && (
+                <p className="mt-3 text-xs text-Secondarycolor">
+                  Includes the <span className="font-medium">{item.linkedCourseSlug}</span> mini-course — access unlocks after purchase
+                </p>
+              )}
 
               <div className="mt-8 space-y-3">
                 {canPurchase ? (
@@ -260,6 +271,12 @@ const ProductDetails = () => {
                   </li>
                 ))}
               </ul>
+            </section>
+          )}
+
+          {item.assetFormat && (
+            <section className="mt-8">
+              <AgencyCallout />
             </section>
           )}
         </article>

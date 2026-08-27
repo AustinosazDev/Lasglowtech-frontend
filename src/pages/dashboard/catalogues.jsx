@@ -42,6 +42,10 @@ const defaultForm = {
   deliverableFileUrl: "",
   deliverableFileName: "",
   deliverableExternalUrl: "",
+  assetFormat: "",
+  licenseNote: "",
+  licenseTier: "",
+  linkedCourseSlug: "",
 };
 
 const premiumPackageTemplates = [
@@ -219,7 +223,8 @@ const CataloguesAdmin = () => {
       let deliverableFileUrl = form.deliverableFileUrl;
       let deliverableFileName = form.deliverableFileName;
 
-      if (imageFile) {
+      // Only upload file if a file is selected and no URL is provided
+      if (imageFile && !form.imageUrl) {
         const formData = new FormData();
         formData.append("file", imageFile);
         const uploadRes = await instance.post("/upload/images", formData);
@@ -284,6 +289,8 @@ const CataloguesAdmin = () => {
       isPaymentEnabled: template.isPaymentEnabled,
       isPublished: template.isPublished,
     }));
+    setImageFile(null);
+    setImagePreview("");
     toast.success(`${template.label} template applied.`);
   };
 
@@ -307,9 +314,18 @@ const CataloguesAdmin = () => {
       deliverableFileUrl: item.deliverableFileUrl || "",
       deliverableFileName: item.deliverableFileName || "",
       deliverableExternalUrl: item.deliverableExternalUrl || "",
+      assetFormat: item.assetFormat || "",
+      licenseNote: item.licenseNote || "",
+      licenseTier: item.licenseTier || "",
+      linkedCourseSlug: item.linkedCourseSlug || "",
     });
     setImageFile(null);
-    setImagePreview(item.imageUrl || "");
+    // Only set preview if it's a local file (starts with base URL or is relative)
+    const isLocalImage = item.imageUrl && (
+      item.imageUrl.includes(instance.defaults.baseURL) || 
+      !item.imageUrl.startsWith('http')
+    );
+    setImagePreview(isLocalImage ? item.imageUrl : "");
     setDeliverableFile(null);
   };
 
@@ -460,28 +476,113 @@ const CataloguesAdmin = () => {
             </div>
           )}
 
+          <div className="md:col-span-2 border-t border-white/10 pt-4 mt-2">
+            <p className={`text-sm font-medium text-textcolor2 mb-3`}>Digital Asset Settings (Optional)</p>
+          </div>
+
+          <select
+            name="assetFormat"
+            value={form.assetFormat}
+            onChange={handleChange}
+            className={adminInput}
+          >
+            <option value="">Asset format (optional)</option>
+            <option value="PSD">PSD Template</option>
+            <option value="AI">AI Template</option>
+            <option value="Canva">Canva Template</option>
+          </select>
+
+          <select
+            name="licenseTier"
+            value={form.licenseTier}
+            onChange={handleChange}
+            className={adminInput}
+          >
+            <option value="">License tier (optional)</option>
+            <option value="personal">Personal License</option>
+            <option value="commercial">Commercial License</option>
+            <option value="extended">Extended License</option>
+          </select>
+
+          <div className="md:col-span-2">
+            <input
+              name="licenseNote"
+              value={form.licenseNote}
+              onChange={handleChange}
+              placeholder="License note (e.g., 'Commercial license included')"
+              className={adminInput}
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <input
+              name="linkedCourseSlug"
+              value={form.linkedCourseSlug}
+              onChange={handleChange}
+              placeholder="Linked course slug (for template + course bundles)"
+              className={adminInput}
+            />
+          </div>
+
           <div className="md:col-span-2">
             <label className={adminFieldLabel}>Catalogue image</label>
             <p className={`text-xs ${adminMuted} mb-2`}>
               Best size: {PRODUCT_COVER_IMAGE_HINT}. Landscape photos fill the card without cropping awkwardly.
             </p>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0] || null;
-                setImageFile(file);
-                if (file) {
-                  setImagePreview(URL.createObjectURL(file));
-                }
-              }}
-              className={adminInput}
-            />
+            
+            <div className="mb-3">
+              <label className={`text-xs ${adminMuted} mb-1 block`}>Image URL (external link)</label>
+              <input
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={(e) => {
+                  handleChange(e);
+                  // Clear file preview when URL is entered
+                  if (e.target.value) {
+                    setImageFile(null);
+                    setImagePreview("");
+                  }
+                }}
+                placeholder="https://example.com/image.jpg"
+                className={adminInput}
+              />
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t border-white/10"></div>
+              </div>
+              <div className="relative flex justify-center text-xs">
+                <span className={`px-2 bg-bgcolor ${adminMuted}`}>OR upload file</span>
+              </div>
+            </div>
+            
+            <div className="mt-3">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  setImageFile(file);
+                  if (file) {
+                    setImagePreview(URL.createObjectURL(file));
+                    // Clear URL when file is selected
+                    setForm(prev => ({ ...prev, imageUrl: '' }));
+                  }
+                }}
+                className={adminInput}
+              />
+            </div>
+            
             {(imagePreview || form.imageUrl) && (
               <img
                 src={imagePreview || form.imageUrl}
                 alt="Catalogue preview"
                 className="mt-3 w-full max-w-sm aspect-[16/10] object-cover object-center rounded-2xl border border-Primarycolor/30"
+                onError={(e) => {
+                  // Fallback if URL fails to load
+                  e.target.style.display = 'none';
+                }}
               />
             )}
           </div>

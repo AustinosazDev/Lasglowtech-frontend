@@ -45,10 +45,12 @@ import CareerCourseDetail from "./pages/career-course-detail";
 const CareersAdmin = lazy(() => import("./pages/dashboard/careers"));
 import CareersDashboard from "./pages/careers-dashboard";
 const OrdersAdmin = lazy(() => import("./pages/dashboard/orders"));
+const BlogCommentsAdmin = lazy(() => import("./pages/dashboard/blogcomments"));
 import MyOrders from "./pages/my-orders";
 import ClientDashboard from "./pages/client-dashboard";
 const LmsAdmin = lazy(() => import("./pages/dashboard/lms"));
 const BulkEmailAdmin = lazy(() => import("./pages/dashboard/bulk-email"));
+const NewslettersAdmin = lazy(() => import("./pages/dashboard/newsletters"));
 import TermsOfServicePage from "./pages/terms-of-service";
 import PrivacyPolicyPage from "./pages/privacy-policy";
 import VerifyCertificatePage from "./pages/verify-certificate";
@@ -155,6 +157,9 @@ function App() {
           <Route path="orders" element={<OrdersAdmin />} />
           <Route path="bulk-email" element={<BulkEmailAdmin />} />
           <Route path="bloglist" element={<BlogList />} />
+          <Route path="blog-comments" element={<BlogCommentsAdmin />} />
+          <Route path="newsletters" element={<NewslettersAdmin />} />
+          <Route path="newsletters/:id" element={<NewslettersAdmin />} />
         </Route>
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/blogs" element={<Blogs />} />

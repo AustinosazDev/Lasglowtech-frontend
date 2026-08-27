@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getToken } from "../utils/auth";
 
 const isLocalhost =
   window.location.hostname === "localhost" ||
@@ -26,6 +27,15 @@ if (import.meta.env.DEV && !hasViteApiUrl) {
 const instance = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: false,
+});
+
+// Add auth token to requests if available
+instance.interceptors.request.use((config) => {
+  const token = getToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 export default instance;

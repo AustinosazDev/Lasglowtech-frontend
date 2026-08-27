@@ -1,7 +1,6 @@
 import { FaCirclePlus } from "react-icons/fa6";
 import React, { useState } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import RichTextEditor from "../../components/blog/RichTextEditor";
 
 import instance from '../../config/axios.config';
 import { useLocation, useNavigate } from "react-router-dom";
@@ -27,8 +26,11 @@ const Update = () => {
   const [content, setContent] = useState(state?.content || "");
   const [title, setTitle] = useState(state?.title || "");
   const [file, setFile] = useState(null);
-  const [existingImage, setExistingImage] = useState(state?.cover || "");
-  const [shares, setShares] = useState(state?.shares || 0);
+  const [existingImage, setExistingImage] = useState(state?.thumbnail || state?.thumbnailUrl || state?.cover || "");
+  const [excerpt, setExcerpt] = useState(state?.excerpt || "");
+  const [category, setCategory] = useState(state?.category || "Company News");
+  const [status, setStatus] = useState(state?.status || "draft");
+  const categories = ["Design", "Web & Mobile Development", "Latest Tech Trends", "Branding & Marketing", "Business & Startups", "Case Studies", "Company News"];
 
   const upload = async () => {
     try {
@@ -45,27 +47,31 @@ const Update = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const uploaded = file ? await upload() : null;
-    const cover = uploaded ? `${backendUploadsBase}/${uploaded}` : existingImage;
+    const thumbnail = uploaded || existingImage;
 
     try {
       if (postid) {
-        await instance.put(`/posts/${postid}`, {
+        await instance.put(`/blog/${postid}`, {
           title,
           content,
-          shares,
-          cover,
+          excerpt,
+          category,
+          status,
+          thumbnail,
         });
         toast.success('Blog updated successfully!');
       } else {
-        await instance.post(`/posts`, {
+        await instance.post(`/blog`, {
           title,
           content,
-          shares,
-          cover,
+          excerpt,
+          category,
+          status,
+          thumbnail,
         });
         toast.success('Blog created successfully!');
       }
-      navigate("/blogs");
+      navigate("/dashboard/bloglist");
     } catch (error) {
       if (error.response?.status === 400) {
         toast.error(error.response.data.error);
@@ -90,9 +96,14 @@ const Update = () => {
           onChange={(e) => setTitle(e.target.value)}
         />
 
-        <div className="rounded-xl border border-slate-200 overflow-hidden bg-white [&_.ql-container]:min-h-[220px] [&_.ql-editor]:min-h-[200px] [&_.ql-editor]:text-slate-800">
-          <ReactQuill theme="snow" value={content} onChange={setContent} />
+        <div className="grid gap-4 md:grid-cols-2">
+          <div><label className={adminFieldLabel}>Category</label><select className={adminInput} value={category} onChange={(e) => setCategory(e.target.value)}>{categories.map((item) => <option key={item} value={item}>{item}</option>)}</select></div>
+          <div><label className={adminFieldLabel}>Status</label><select className={adminInput} value={status} onChange={(e) => setStatus(e.target.value)}><option value="draft">Save as draft</option><option value="published">Publish now</option></select></div>
         </div>
+
+        <div><label className={adminFieldLabel}>Excerpt <span className="text-slate-400">({excerpt.length}/200)</span></label><textarea className={adminInput} rows="3" maxLength="200" value={excerpt} onChange={(e) => setExcerpt(e.target.value)} placeholder="Short summary for blog cards and search previews" /></div>
+
+        <div><label className={adminFieldLabel}>Content</label><RichTextEditor value={content} onChange={setContent} /></div>
 
         <div>
           <label className={adminFieldLabel}>Cover image</label>
@@ -116,7 +127,7 @@ const Update = () => {
         </div>
 
         <button type="button" className={adminBtnPrimary} onClick={handleSubmit}>
-          {postid ? "Update" : "Publish"}
+          {status === "published" ? "Publish changes" : "Save draft"}
         </button>
       </div>
     </section>

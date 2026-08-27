@@ -27,12 +27,14 @@ const menu = [
   { to: "/dashboard/createblog", label: "Create Blog", icon: <FaPlus /> },
   { to: "/dashboard/updateblog", label: "Update Blog", icon: <FaPlus /> },
   { to: "/dashboard/bloglist", label: "Blog Lists", icon: <FaListUl /> },
+  { to: "/dashboard/blog-comments", label: "Comment Moderation", icon: <FaEnvelope /> },
   { to: "/dashboard/subscriptions", label: "Subscribers", icon: <FaEnvelope /> },
   { to: "/dashboard/contacts", label: "Contacts", icon: <FaAddressBook /> },
   { to: "/dashboard/careers", label: "Careers", icon: <FaUserGraduate /> },
   { to: "/dashboard/lms", label: "LMS Courses", icon: <FaBookOpen /> },
   { to: "/dashboard/orders", label: "Orders", icon: <FaMoneyCheckAlt /> },
   { to: "/dashboard/bulk-email", label: "Bulk Email", icon: <FaPaperPlane /> },
+  { to: "/dashboard/newsletters", label: "Newsletters", icon: <FaPaperPlane /> },
 ];
 
 const AdminLayout = () => {

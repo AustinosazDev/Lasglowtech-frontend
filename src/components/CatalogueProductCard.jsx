@@ -28,6 +28,7 @@ const cardTags = (item) => {
   }
   if (item.isPopular) tags.push("Popular");
   if (item.isDigitalProduct) tags.push("Digital");
+  if (item.linkedCourseSlug) tags.push("+ Course included");
   return tags;
 };
 
@@ -68,11 +69,20 @@ const CatalogueProductCard = ({
 
       <div className="p-4 pt-3 flex flex-col flex-1 gap-3">
         <div className="flex items-start justify-between gap-3">
-          <Link to={detailHref} className="min-w-0 flex-1">
-            <h3 className="text-base font-semibold text-textcolor2 leading-snug line-clamp-2 hover:text-Secondarycolor transition-colors">
-              {item.title}
-            </h3>
-          </Link>
+          <div className="min-w-0 flex-1">
+            {item.assetFormat && (
+              <div className="mb-1.5">
+                <span className="text-[0.65rem] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-gray-400 font-medium uppercase tracking-wide">
+                  {item.assetFormat} TEMPLATE
+                </span>
+              </div>
+            )}
+            <Link to={detailHref} className="block">
+              <h3 className="text-base font-semibold text-textcolor2 leading-snug line-clamp-2 hover:text-Secondarycolor transition-colors">
+                {item.title}
+              </h3>
+            </Link>
+          </div>
           {canPurchase && (
             <span className="shrink-0 text-xs font-bold text-white bg-Primarycolor px-3 py-1.5 rounded-full">
               {formatNaira(item.price)}

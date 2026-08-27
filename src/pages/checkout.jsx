@@ -7,6 +7,7 @@ import { LOGO } from "../components/images";
 import CircularBackButton from "../components/CircularBackButton";
 import { getToken, getUser } from "../utils/auth";
 import { formatNaira, paymentTypeLabel } from "../utils/catalogue";
+import AgencyCallout from "../components/sections/AgencyCallout";
 
 const fieldClass =
   "w-full px-4 py-3 rounded-xl bg-white border border-Primarycolor/25 text-gray-900 text-sm placeholder:text-gray-500 caret-Primarycolor focus:outline-none focus:ring-2 focus:ring-Primarycolor/40 focus:border-Primarycolor/50 [&:-webkit-autofill]:shadow-[inset_0_0_0px_1000px_#ffffff] [&:-webkit-autofill]:[-webkit-text-fill-color:#111827]";
@@ -198,6 +199,12 @@ const Checkout = () => {
                 Secured by Flutterwave
               </p>
             </div>
+
+            {servicePackage?.assetFormat && (
+              <div className="mt-6">
+                <AgencyCallout />
+              </div>
+            )}
           </div>
         )}
       </main>
