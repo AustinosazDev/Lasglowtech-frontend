@@ -210,7 +210,7 @@ const CareerCourseDetail = () => {
         <header className="border-b border-slate-200 bg-white/95 backdrop-blur-sm">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
             <Link to="/careers" className="flex items-center gap-3 text-slate-900 hover:text-Primarycolor">
-              <img src={logoimg} width={34} height={34} alt="Lasglowtech" className="rounded-lg" />
+              <img src={LOGO} width={34} height={34} alt="Lasglowtech" className="rounded-lg" />
               <span className="text-sm font-semibold">Lasglowtech Academy</span>
             </Link>
             <Link to="/careers" className="inline-flex items-center gap-2 text-sm text-slate-500 hover:text-Primarycolor">

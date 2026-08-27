@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { MessageCircle, Send } from "lucide-react";
 import instance from "../../config/axios.config";
 import { toast } from "react-toastify";

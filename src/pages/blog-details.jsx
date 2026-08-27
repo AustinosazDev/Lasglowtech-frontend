@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import instance, { API_BASE_URL } from "../config/axios.config";
 import Subscription from "../components/sections/subscription";
-import { Calendar, Clock, Eye, MessageCircle, Heart, Share2 } from "lucide-react";
+import { Calendar, Clock, Eye } from "lucide-react";
 import moment from "moment";
 import { Osaz } from "../components/images";
 import SEO from "../utils/seo";
