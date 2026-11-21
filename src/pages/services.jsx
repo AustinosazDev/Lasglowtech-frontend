@@ -6,8 +6,9 @@ import { breadcrumbSchema } from "../utils/structuredData";
 import Subscription from "../components/sections/subscription";
 import TestimonialSection from "../components/sections/TestimonialSection";
 import ServicesData from "../assets/data/serviceslist";
+import servicePillars from "../assets/data/servicePillars";
 
-const tabs = ServicesData.map(s => ({ ...s, subtitle: s.title }));
+const tabs = servicePillars.map(p => ({ ...p, subtitle: p.title, image: `https://images.unsplash.com/photo-${['1517694712202-14dd9538aa97', '1626785774573-4b799314346d', '1558655146-d09347e92766'][['digital', 'brand-systems', 'print-production'].indexOf(p.id)]}?w=800&h=600&fit=crop` }));
 
 export default function Services() {
   const [active, setActive] = useState(0);
@@ -56,68 +57,60 @@ export default function Services() {
           </p>
         </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8">
-          {/* Vertical bar selectors */}
-          <div className="flex md:flex-col justify-center items-center gap-2 md:gap-3">
-            {tabs.map((_, i) => (
-              <button key={i} onClick={() => setActive(i)} aria-label={`Select ${tabs[i].title}`}
-                className={`transition-all duration-300 rounded-full ${active === i
-                  ? "bg-[#8700ff] shadow-lg shadow-[#8700ff]/40 scale-110"
-                  : "border border-[#8700ff]/40 hover:bg-[#8700ff]/20"
-                } w-12 h-2 md:w-2 md:h-12`}
-              />
+        <div className="flex flex-col items-center justify-center gap-8">
+          {/* Horizontal navigation */}
+          <div className="flex flex-wrap justify-center gap-3">
+            {tabs.map((tab, i) => (
+              <button key={i} onClick={() => setActive(i)} aria-label={`Select ${tab.title}`}
+                className={`transition-all duration-300 px-4 py-2 rounded-lg text-sm font-semibold ${
+                  active === i
+                    ? "bg-[#8700ff] text-white shadow-lg shadow-[#8700ff]/40"
+                    : "border border-[#8700ff]/40 text-[#c4b3d8] hover:bg-[#8700ff]/20"
+                }`}
+              >
+                {tab.title}
+              </button>
             ))}
           </div>
 
           {/* Detail panel */}
           <div className="flex-1 w-full brand-card overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
               <AnimatePresence mode="wait">
                 <motion.div key={active + "t"} initial={{ opacity:0, x:-16 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:16 }} transition={{ duration:0.3 }}
-                  className="p-7 md:p-10 flex flex-col justify-center order-2 lg:order-1">
+                  className="p-7 md:p-10 flex flex-col justify-center order-2 md:order-1">
                   <span className="text-xs font-bold uppercase tracking-widest text-orange-500 mb-2">{tabs[active].subtitle}</span>
-                  <h3 className="text-white mb-4">{tabs[active].title}</h3>
+                  <h3 className="text-white mb-4 text-2xl md:text-3xl">{tabs[active].title}</h3>
                   <p className="type-muted mb-6">{tabs[active].description}</p>
 
-                  {/* Feature pills */}
-                  {tabs[active].features && (
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {tabs[active].features.map(f => (
-                        <span key={f} className="text-xs font-semibold px-3 py-1 rounded-full bg-[#8700ff]/12 border border-[#8700ff]/25 text-[#c4b3d8]">{f}</span>
+                  {/* Service list */}
+                  {tabs[active].services && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+                      {tabs[active].services.map((service, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#8700ff]" />
+                          <span className="text-sm text-[#e8ddf8]">{service}</span>
+                        </div>
                       ))}
                     </div>
                   )}
 
                   <div className="flex flex-wrap gap-3">
-                    <Link to={tabs[active].link} className="btn-primary text-xs">Learn more</Link>
-                    <Link to="/catalogues" className="btn-outline text-xs">View catalogue</Link>
-                    <Link to="/careers" className="btn-outline text-xs">Tutoring</Link>
+                    <Link to={tabs[active].link} className="btn-primary text-xs">Explore {tabs[active].title}</Link>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              <div className="relative aspect-[4/3] lg:aspect-auto lg:min-h-[380px] order-1 lg:order-2">
+              <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[380px] order-1 md:order-2">
                 <AnimatePresence mode="wait">
                   <motion.img key={active + "i"} initial={{ opacity:0, scale:0.98 }} animate={{ opacity:1, scale:1 }} exit={{ opacity:0, scale:0.98 }} transition={{ duration:0.3 }}
-                    src={tabs[active].Picture} alt={tabs[active].title}
+                    src={tabs[active].image} alt={tabs[active].title}
                     className="absolute inset-0 w-full h-full object-cover" />
                 </AnimatePresence>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#1a1030]/60 to-transparent pointer-events-none" />
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Cards grid */}
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {tabs.map((s, i) => (
-            <Link to={s.link} key={s.link}
-              className="brand-card p-5 group block">
-              <span className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-2 block">{`0${i+1}`}</span>
-              <h3 className="text-white mb-2 group-hover:text-orange-500 transition-colors">{s.title}</h3>
-              <p className="type-muted line-clamp-3">{s.description}</p>
-            </Link>
-          ))}
         </div>
       </section>
 

@@ -2,6 +2,7 @@ import { FaCirclePlus } from "react-icons/fa6";
 import  { useState } from 'react';
 import RichTextEditor from "../../components/blog/RichTextEditor";
 import instance from '../../config/axios.config';
+import { getAdminToken } from "../../utils/adminAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -60,7 +61,7 @@ const Create = () => {
           category,
           status,
           thumbnail,
-        });
+        }, { headers: { Authorization: `Bearer ${getAdminToken()}` } });
       } else {
         await instance.post(`/blog`, {
           title,
@@ -69,7 +70,7 @@ const Create = () => {
           category,
           status,
           thumbnail,
-        });
+        }, { headers: { Authorization: `Bearer ${getAdminToken()}` } });
       }
 
       toast.success(status === "published" ? "Blog published successfully!" : "Blog saved as a draft.");

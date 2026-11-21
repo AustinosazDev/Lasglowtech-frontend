@@ -1,4 +1,4 @@
-import { Web1, Graphic1, Graphic2, Mobile1, UIUXImg, GraphicImg, ProjectImg, ProductManagementImg, DigitalImg, SocialImg } from "../../components/images";
+import { Web1, Graphic1, Graphic2, Mobile1, UIUXImg, GraphicImg, ProjectImg, ProductManagementImg, DigitalImg, SocialImg, BrandingPrintImg, ApparelImg, PackagingImg, VehicleImg } from "../../components/images";
 
 const Services = [
   {
@@ -119,6 +119,66 @@ const Services = [
       "Influencer collaboration",
       "Social listening & analytics",
       "Crisis management & brand protection"
+    ]
+  },
+  {
+    title: "Branding & Print",
+    description:
+      "Our comprehensive branding and print services help your brand make a lasting impression across all touchpoints. From logo design and brand identity development to print materials like business cards, flyers, brochures, and large-format signage, we ensure consistent visual communication. We combine creative design with production expertise to deliver high-quality printed materials that reflect your brand's personality. Whether you need corporate stationery, event banners, or promotional merchandise, we handle everything from concept to final production.",
+    link: "/services/branding-print",
+    Picture: BrandingPrintImg,
+    features: [
+      "Logo & brand identity design",
+      "Business cards & stationery",
+      "Flyers, brochures & posters",
+      "Large format printing & signage",
+      "Corporate merchandise",
+      "Print production management"
+    ]
+  },
+  {
+    title: "Apparel & T-Shirt Branding",
+    description:
+      "Transform your brand into wearable marketing with our custom apparel and T-shirt branding services. We design and produce high-quality custom clothing including T-shirts, polos, hoodies, caps, and uniforms that showcase your brand identity. From screen printing and embroidery to heat transfer and direct-to-garment printing, we use the best techniques for durable, vibrant results. Perfect for corporate uniforms, event merchandise, promotional giveaways, or retail apparel — we ensure your brand looks great on every garment.",
+    link: "/services/apparel-branding",
+    Picture: ApparelImg,
+    features: [
+      "Custom T-shirt design & printing",
+      "Corporate uniforms & workwear",
+      "Hoodies, polos & caps",
+      "Screen printing & embroidery",
+      "Event merchandise",
+      "Bulk production & sizing"
+    ]
+  },
+  {
+    title: "Product Packaging Design",
+    description:
+      "Our product packaging design services create packaging that protects your products and elevates your brand on the shelf. We design eye-catching labels, boxes, bags, and product packaging that communicates your brand's quality and values. From food packaging to retail boxes, we consider materials, sustainability, and production requirements while ensuring regulatory compliance. Our designs stand out in competitive markets and enhance the unboxing experience for your customers.",
+    link: "/services/packaging-design",
+    Picture: PackagingImg,
+    features: [
+      "Label & box design",
+      "Food & retail packaging",
+      "Sustainable packaging solutions",
+      "Regulatory compliance labeling",
+      "Brand consistency across SKUs",
+      "Production-ready artwork"
+    ]
+  },
+  {
+    title: "Vehicle Branding",
+    description:
+      "Turn your vehicles into mobile billboards with our professional vehicle branding services. We design and apply high-quality vinyl wraps, decals, and magnetic graphics for cars, vans, buses, and entire fleets. Our vehicle graphics are durable, weather-resistant, and designed to maximize brand visibility while on the move. Whether you need a single company car branded or an entire fleet transformed, we ensure your brand stands out on every road trip and delivers impressions wherever your vehicles travel.",
+    link: "/services/vehicle-branding",
+    Picture: VehicleImg,
+    features: [
+      "Car & van wraps",
+      "Fleet branding solutions",
+      "Vinyl decals & magnetic graphics",
+      "Design for maximum visibility",
+      "Durable & weather-resistant materials",
+      "Partial & full vehicle coverage"
     ]
   },
 ];

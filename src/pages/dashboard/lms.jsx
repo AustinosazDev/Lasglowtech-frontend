@@ -135,12 +135,20 @@ const LmsAdmin = () => {
   const quizCsvInputRef = useRef(null);
   const selectedModuleCourseId = moduleForm.courseId || "";
   const certificatePreviewRef = useRef(null);
-  const certificateLogoUrl = useMemo(() => buildCertificateAssetUrl("certificate-logo.png", certificateLogoVersion), [certificateLogoVersion]);
-  const certificateSealUrl = useMemo(() => buildCertificateAssetUrl("certificate-seal.png", certificateSealVersion), [certificateSealVersion]);
-  const certificateSignatureUrl = useMemo(
-    () => buildCertificateAssetUrl("certificate-signature.png", certificateSignatureVersion),
-    [certificateSignatureVersion]
-  );
+  const [certificateAssets, setCertificateAssets] = useState({});
+  const loadCertificateAssets = async () => {
+    try {
+      const r = await instance.get("/lms/certificate-assets");
+      setCertificateAssets(r.data || {});
+    } catch (_) {}
+  };
+  useEffect(() => {
+    loadCertificateAssets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const certificateLogoUrl = certificateAssets.logoUrl || "";
+  const certificateSealUrl = certificateAssets.sealUrl || "";
+  const certificateSignatureUrl = certificateAssets.signatureImageUrl || "";
 
   const loadCourses = async () => {
     setLoading(true);
@@ -643,6 +651,7 @@ const LmsAdmin = () => {
         headers: { ...headers, "Content-Type": undefined },
       });
       setCertificateSealVersion(Date.now());
+      loadCertificateAssets();
       toast.success("Certificate seal updated.");
     } catch (err) {
       toast.error(err.response?.data?.error || "Seal upload failed.");
@@ -667,6 +676,7 @@ const LmsAdmin = () => {
         headers: { ...headers, "Content-Type": undefined },
       });
       setCertificateSignatureVersion(Date.now());
+      loadCertificateAssets();
       toast.success("Signature image updated.");
     } catch (err) {
       toast.error(err.response?.data?.error || "Signature upload failed.");
@@ -691,6 +701,7 @@ const LmsAdmin = () => {
         headers: { ...headers, "Content-Type": undefined },
       });
       setCertificateLogoVersion(Date.now());
+      loadCertificateAssets();
       toast.success("Certificate logo updated.");
     } catch (err) {
       toast.error(err.response?.data?.error || "Logo upload failed.");

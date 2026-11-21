@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import instance from "../../config/axios.config";
+import { getAdminToken } from "../../utils/adminAuth";
 import { FaTrash, FaEdit, FaEye, FaPlus } from "react-icons/fa";
 import { toast } from "react-toastify";
 import {
@@ -40,7 +41,7 @@ const BlogList = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await instance.get("/blog/admin/all");
+        const res = await instance.get("/blog/admin/all", { headers: { Authorization: `Bearer ${getAdminToken()}` }, });
         setPosts(res.data || []);
         setFilteredPosts(res.data || []);
       } catch (error) {
@@ -78,7 +79,7 @@ const BlogList = () => {
     if (!window.confirm("Are you sure you want to delete this blog post?")) return;
 
     try {
-      await instance.delete(`/blog/${id}`);
+      await instance.delete(`/blog/${id}`, { headers: { Authorization: `Bearer ${getAdminToken()}` }, });
       setPosts((prev) => prev.filter((post) => post.id !== id));
       toast.success("Blog deleted successfully.");
     } catch (error) {
@@ -93,7 +94,7 @@ const BlogList = () => {
       await instance.put(`/blog/${post.id}`, {
         ...post,
         status: newStatus
-      });
+      }, { headers: { Authorization: `Bearer ${getAdminToken()}` } });
       
       setPosts((prev) =>
         prev.map((p) =>

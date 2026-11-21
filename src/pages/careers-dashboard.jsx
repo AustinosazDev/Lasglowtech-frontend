@@ -321,24 +321,16 @@ const CareersDashboard = () => {
     navigate("/auth/login", { replace: true });
   };
 
-  const certificateAssetBaseUrl = useMemo(() => (instance.defaults.baseURL || "").replace(/\/$/, ""), []);
-  const certificateLogoUrl = useMemo(
-    () =>
-      certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-logo.png?t=${certificateAssetBust}` : "",
-    [certificateAssetBaseUrl, certificateAssetBust]
-  );
-  const certificateSealUrl = useMemo(
-    () =>
-      certificateAssetBaseUrl ? `${certificateAssetBaseUrl}/uploads/certificate-seal.png?t=${certificateAssetBust}` : "",
-    [certificateAssetBaseUrl, certificateAssetBust]
-  );
-  const certificateSignatureUrl = useMemo(
-    () =>
-      certificateAssetBaseUrl
-        ? `${certificateAssetBaseUrl}/uploads/certificate-signature.png?t=${certificateAssetBust}`
-        : "",
-    [certificateAssetBaseUrl, certificateAssetBust]
-  );
+  const [certificateAssets, setCertificateAssets] = useState({});
+  useEffect(() => {
+    instance
+      .get("/lms/certificate-assets")
+      .then((r) => setCertificateAssets(r.data || {}))
+      .catch(() => {});
+  }, []);
+  const certificateLogoUrl = certificateAssets.logoUrl || "";
+  const certificateSealUrl = certificateAssets.sealUrl || "";
+  const certificateSignatureUrl = certificateAssets.signatureImageUrl || "";
 
   const firstName = String(latest?.full_name || user?.username || "Learner").split(" ")[0];
 

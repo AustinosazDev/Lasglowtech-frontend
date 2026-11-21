@@ -24,6 +24,7 @@ const menu = [
   { to: "/dashboard", label: "Overview", icon: <FaListUl /> },
   { to: "/dashboard/projects", label: "Projects", icon: <FaBriefcase /> },
   { to: "/dashboard/catalogues", label: "Catalogues", icon: <FaRegImages /> },
+  { to: "/dashboard/services", label: "Services", icon: <FaBriefcase /> },
   { to: "/dashboard/createblog", label: "Create Blog", icon: <FaPlus /> },
   { to: "/dashboard/updateblog", label: "Update Blog", icon: <FaPlus /> },
   { to: "/dashboard/bloglist", label: "Blog Lists", icon: <FaListUl /> },

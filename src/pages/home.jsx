@@ -12,6 +12,7 @@ import Subscription from "../components/sections/subscription";
 import SEO from "../utils/seo";
 import CataloguePreview from "../components/sections/CataloguePreview";
 import TestimonialSection from "../components/sections/TestimonialSection";
+import BrandedWorkBanner from "../components/sections/BrandedWorkBanner";
 import { DEFAULT_TITLE, DEFAULT_DESCRIPTION, SITE_URL } from "../utils/siteConfig";
 import { defaultSiteSchemas } from "../utils/structuredData";
 
@@ -41,6 +42,7 @@ export default function Home() {
       <Hero />
       <CompanySlider />
       <AboutSection />
+      <BrandedWorkBanner />
       <OurServices />
 
       <section className="py-20 md:py-28 px-6 md:px-12" aria-labelledby="why-heading">

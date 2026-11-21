@@ -14,6 +14,10 @@ import ProjectImg from '../assets/images/Project.png';
 import ProductManagementImg from '../assets/images/product.png';
 import DigitalImg from '../assets/images/Digital.png';
 import SocialImg from '../assets/images/Social.png';
+import BrandingPrintImg from '../assets/images/Graphic1.jpeg';
+import ApparelImg from '../assets/images/Graphic2.jpeg';
+import PackagingImg from '../assets/images/Graphic.png';
+import VehicleImg from '../assets/images/Graphic.png';
 import Slide1 from '../assets/images/slide1.jpg';     
 import Slide2 from '../assets/images/slide2.jpg';
 import Slide3 from '../assets/images/slide3.jpg';
@@ -102,6 +106,10 @@ export {
   ProductManagementImg,
   DigitalImg,
   SocialImg,
+  BrandingPrintImg,
+  ApparelImg,
+  PackagingImg,
+  VehicleImg,
   // Vertical
   Slide1,
   Slide2,

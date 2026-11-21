@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import instance from "../config/axios.config";
 import { getRoleHomePath, saveSession } from "../utils/auth";
 import AuthFormShell, { authInputCls } from "../components/AuthFormShell";
+import GoogleAuthButton from "../components/GoogleAuthButton";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -99,6 +100,12 @@ export default function LoginPage() {
             Forgot password?
           </Link>
         </div>
+        <div className="flex items-center gap-3">
+          <span className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-muted">or</span>
+          <span className="flex-1 h-px bg-gray-200" />
+        </div>
+        <GoogleAuthButton />
         <button
           type="submit"
           disabled={loading}

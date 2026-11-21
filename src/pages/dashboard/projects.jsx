@@ -143,8 +143,8 @@ const ProjectsAdmin = () => {
         const formData = new FormData();
         formData.append("file", imageFile);
         const uploadRes = await instance.post("/upload/images", formData);
-        const filename = uploadRes.data;
-        imageUrl = `${instance.defaults.baseURL}/uploads/images/${filename}`;
+        const uploaded = uploadRes.data;
+        imageUrl = /^https?:\/\//i.test(uploaded) ? uploaded : `${instance.defaults.baseURL}/uploads/images/${uploaded}`;
       }
 
       const payload = { ...form, imageUrl };

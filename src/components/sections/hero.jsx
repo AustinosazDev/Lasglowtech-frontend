@@ -86,19 +86,7 @@ export default function Hero() {
             </Link>
           </motion.div>
 
-          <motion.div variants={up} className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-5xl mx-auto">
-            {[
-              { num: "60+", label: "Projects delivered" },
-              { num: "48h", label: "Avg. turnaround" },
-              { num: "4.5★", label: "Client rating" },
-              { num: "2021", label: "Year founded" },
-            ].map(({ num, label }) => (
-              <div key={label} className="brand-card p-4 sm:p-5 text-center">
-                <p className="type-stat text-white">{num}</p>
-                <p className="text-xs text-[#9b8cb5] mt-2 uppercase tracking-widest">{label}</p>
-              </div>
-            ))}
-          </motion.div>
+        
         </motion.div>
       </section>
 

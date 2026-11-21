@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import RichTextEditor from "../../components/blog/RichTextEditor";
 
 import instance from '../../config/axios.config';
+import { getAdminToken } from "../../utils/adminAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import {
@@ -58,7 +59,7 @@ const Update = () => {
           category,
           status,
           thumbnail,
-        });
+        }, { headers: { Authorization: `Bearer ${getAdminToken()}` } });
         toast.success('Blog updated successfully!');
       } else {
         await instance.post(`/blog`, {
@@ -68,7 +69,7 @@ const Update = () => {
           category,
           status,
           thumbnail,
-        });
+        }, { headers: { Authorization: `Bearer ${getAdminToken()}` } });
         toast.success('Blog created successfully!');
       }
       navigate("/dashboard/bloglist");

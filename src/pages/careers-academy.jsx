@@ -180,8 +180,8 @@ const CareersAcademy = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             >
-              <h1 className="text-textcolor2 mb-5 mt-6 [text-wrap:balance]">
-                <span className="block text-white">Launch Your  Career </span>
+              <h1 className="text-textcolor2 mb-5 mt-6 [text-wrap:balance] font-black text-4xl md:text-5xl lg:text-6xl xl:text-7xl tracking-tight leading-[1.05]">
+                <span className="block text-white">Launch Your Career</span>
                 <span className="block mt-1.5 sm:mt-2 text-white">
                   for{"\u00a0"}the{" "}
                   <span className="bg-gradient-to-r from-Secondarycolor via-Secondarycolor to-Secondarycolor2 bg-clip-text text-transparent">

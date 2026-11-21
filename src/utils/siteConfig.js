@@ -8,7 +8,7 @@ export const DEFAULT_TITLE =
   "Lasglowtech | Creative Technology Company | Web, Apps, Branding & AI";
 
 export const DEFAULT_DESCRIPTION =
-  "Lasglowtech is a creative technology company in Nigeria. We build websites, mobile apps, UI/UX, branding, SEO, AI solutions, and digital products for ambitious brands.";
+  "Lasglowtech is a creative technology company in Nigeria. We build websites, mobile apps, UI/UX, branding, SEO, AI solutions, and digital products for ambitious brands — including packaging, apparel, and vehicle branding production.";
 
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 export const OG_IMAGE_WIDTH = 1200;
@@ -47,6 +47,10 @@ export const SERVICES_OFFERED = [
   "AI Solutions",
   "IT Training",
   "Digital Product Development",
+  "Product Packaging Design",
+  "Apparel & T-Shirt Branding",
+  "Vehicle Branding",
+  "Signage & Large Format Print",
 ];
 
 /** Build absolute URL from path segment. */

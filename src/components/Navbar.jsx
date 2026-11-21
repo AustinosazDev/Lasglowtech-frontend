@@ -4,11 +4,13 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { FiChevronDown } from "react-icons/fi";
 import { LOGO } from "./images";
 import { clearSession, getUser, isAuthenticated } from "../utils/auth";
+import servicePillars from "../assets/data/servicePillars";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [acctOpen, setAcctOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -28,7 +30,6 @@ export default function Navbar() {
   const links = [
     { label: "Home", to: "/" },
     { label: "About", to: "/about" },
-    { label: "Services", to: "/services" },
     { label: "Projects", to: "/projects" },
     { label: "Blog", to: "/blogs" },
     { label: "Careers", to: "/careers" },
@@ -70,6 +71,34 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
+            <div className="relative"
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}>
+              <button
+                className="flex items-center gap-1 text-sm font-semibold text-[#c4b3d8] hover:text-white transition-colors"
+                aria-haspopup="true"
+                aria-expanded={servicesOpen}
+                onClick={() => setServicesOpen(p => !p)}
+              >
+                Services <FiChevronDown className={`w-3 h-3 transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {servicesOpen && (
+                <div className="absolute left-0 top-full z-50 w-72 pt-2">
+                <div className="rounded-xl border border-[#8700ff]/30 bg-[#1a1030] shadow-2xl shadow-[#8700ff]/20 overflow-hidden">
+                  {servicePillars.map((pillar) => (
+                    <Link key={pillar.id} to={pillar.link} onClick={() => setServicesOpen(false)}
+                      className="block px-4 py-3 text-sm font-semibold text-[#e8ddf8] hover:bg-[#8700ff]/15 transition-all border-b border-[#8700ff]/15 last:border-b-0">
+                      {pillar.title} →
+                    </Link>
+                  ))}
+                  <Link to="/services" onClick={() => setServicesOpen(false)}
+                    className="block px-4 py-3 text-sm font-semibold text-[#8700ff] hover:bg-[#8700ff]/15 transition-all border-t border-[#8700ff]/15">
+                    View all services →
+                  </Link>
+                </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Desktop right */}
@@ -90,10 +119,12 @@ export default function Navbar() {
                   {user?.username || "Account"} <FiChevronDown className={`w-3 h-3 transition-transform ${acctOpen ? "rotate-180" : ""}`} />
                 </button>
                 {acctOpen && (
-                  <div className="absolute right-0 mt-2 w-52 rounded-xl border border-[#8700ff]/30 bg-[#1a1030] shadow-2xl shadow-[#8700ff]/20 z-50 overflow-hidden">
+                  <div className="absolute right-0 top-full z-50 w-52 pt-2">
+                  <div className="rounded-xl border border-[#8700ff]/30 bg-[#1a1030] shadow-2xl shadow-[#8700ff]/20 overflow-hidden">
                     {role === "client" && <Link to="/client/dashboard" onClick={() => setAcctOpen(false)} className="block px-4 py-3 text-sm text-[#e8ddf8] hover:bg-[#8700ff]/15 transition-all">Client Dashboard</Link>}
                     {["learner","student","talent"].includes(role) && <Link to="/careers/dashboard" onClick={() => setAcctOpen(false)} className="block px-4 py-3 text-sm text-[#e8ddf8] hover:bg-[#8700ff]/15 transition-all">Learner Dashboard</Link>}
                     <button onClick={() => { clearSession(); window.location.href = "/"; }} className="w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-all">Logout</button>
+                  </div>
                   </div>
                 )}
               </div>
@@ -123,6 +154,29 @@ export default function Navbar() {
                 {l.label}
               </NavLink>
             ))}
+            <div>
+              <button
+                onClick={() => setServicesOpen(!servicesOpen)}
+                className="w-full py-3 px-4 rounded-xl text-sm font-semibold text-[#c4b3d8] hover:bg-[#8700ff]/10 hover:text-white transition-all flex items-center justify-between"
+                aria-expanded={servicesOpen}
+              >
+                Services <FiChevronDown className={`w-3 h-3 transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+              </button>
+              {servicesOpen && (
+                <div className="ml-4 mt-1 flex flex-col gap-1">
+                  {servicePillars.map((pillar) => (
+                    <Link key={pillar.id} to={pillar.link} onClick={() => { setOpen(false); setServicesOpen(false); }}
+                      className="py-2 px-4 rounded-lg text-sm font-semibold text-[#c4b3d8] hover:bg-[#8700ff]/10 hover:text-white transition-all">
+                      {pillar.title} →
+                    </Link>
+                  ))}
+                  <Link to="/services" onClick={() => { setOpen(false); setServicesOpen(false); }}
+                    className="py-2 px-4 rounded-lg text-sm font-semibold text-[#8700ff] hover:bg-[#8700ff]/10 transition-all">
+                    View all services →
+                  </Link>
+                </div>
+              )}
+            </div>
             <div className="mt-4 pt-4 border-t border-[#8700ff]/20 flex flex-col gap-2">
               {!authed ? (
                 <>
@@ -132,7 +186,6 @@ export default function Navbar() {
               ) : (
                 <button onClick={() => { clearSession(); window.location.href = "/"; }} className="py-3 px-4 rounded-xl text-sm text-red-400 hover:bg-red-500/10 text-left">Logout</button>
               )}
-              
             </div>
           </div>
         </div>

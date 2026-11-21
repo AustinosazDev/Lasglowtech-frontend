@@ -151,7 +151,8 @@ const Careers = () => {
         const uploadRes = await instance.post("/upload/images", fd, {
           headers: { Authorization: `Bearer ${token}` },
         });
-        pictureUrl = `${instance.defaults.baseURL}/uploads/images/${uploadRes.data}`;
+        const uploaded = uploadRes.data;
+        pictureUrl = /^https?:\/\//i.test(uploaded) ? uploaded : `${instance.defaults.baseURL}/uploads/images/${uploaded}`;
       }
 
       await instance.post(
