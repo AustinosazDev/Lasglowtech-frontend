@@ -208,7 +208,7 @@ export default function RegisterPage() {
           <span className="text-xs text-muted">or</span>
           <span className="flex-1 h-px bg-gray-200" />
         </div>
-        <GoogleAuthButton label="Sign up with Google" />
+        <GoogleAuthButton label="Sign up with Google" role={formData.role} />
         <button
           type="submit"
           disabled={loading}
