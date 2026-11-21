@@ -12,9 +12,10 @@ const isLocalhost =
 const envApiUrl = import.meta.env.VITE_API_URL;
 const hasViteApiUrl = typeof envApiUrl === "string" && envApiUrl.trim() !== "";
 
-export const API_BASE_URL =
+export const API_BASE_URL = (
   (hasViteApiUrl ? envApiUrl.trim() : null) ||
-  (isLocalhost ? "http://localhost:5000" : window.location.origin);
+  (isLocalhost ? "http://localhost:5000" : window.location.origin)
+).replace(/\/+$/, "");
 
 if (import.meta.env.DEV && !hasViteApiUrl) {
   console.info(
